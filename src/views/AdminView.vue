@@ -1,8 +1,11 @@
 <script lang="ts">
 import AdminMenu from '@/components/AdminMenu.vue';
 import Error404 from '@/components/Error404.vue';
-import Dashboard from '@/components/Admin/Dashboard.vue';
 import Courses from '@/components/Admin/Courses.vue';
+import Dashboard from '@/components/Admin/Dashboard.vue';
+import Modules from '@/components/Admin/Modules.vue';
+import Testing from '@/components/Admin/Testing.vue';
+import Users from '@/components/Admin/Users.vue';
 
 export default {
   props: {
@@ -11,8 +14,11 @@ export default {
   components: {
     AdminMenu,
     Error404,
+    Courses,
     Dashboard,
-    Courses
+    Modules,
+    Testing,
+    Users
   },
   methods: {
     handleNavigation(string : string) {
