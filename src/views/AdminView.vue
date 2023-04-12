@@ -50,7 +50,7 @@ export default {
 
 <template>
   <div class="d-flex vw-100 vh-100">
-    <div id="admin-menu">
+    <div id="admin-menu" class="h-100">
       <nav>
         <AdminMenu @changeTab="handleNavigation"/>
       </nav>

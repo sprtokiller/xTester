@@ -1,5 +1,5 @@
 <script lang="ts">
-import { NMenu } from 'naive-ui'
+import { NMenu, NCard } from 'naive-ui'
 // import { h } from 'vue'
 // import type { Component } from 'vue'
 // import { RouterLink } from 'vue-router'
@@ -26,16 +26,18 @@ import type { MenuOption } from 'naive-ui'
 
 export default {
   components: {
-    NMenu
+    NMenu, NCard
   },
   methods: {
     changeTab(tabName: String) {
       this.$emit('changeTab', tabName)
     }
   },
-  // mounted() {
-  //   console.log("Menu");
-  // },
+  mounted() {
+    // let element: HTMLElement = document.querySelector('.n-menu-item-content') as HTMLElement;
+    // // add class to element
+    // element.classList.add('n-menu-item-content--selected');
+  },
   data() {
     return {
       menuOptions: [["Dashboard", "Home"], [], ["Courses"], ["Testing"], ["Users"], ["Modules"]].map((location : String[], index : number) => {
@@ -61,5 +63,17 @@ export default {
 
 
 <template>
-  <n-menu :options="menuOptions" />
+  <n-menu :options="menuOptions"/>
 </template>
+
+<style>
+.n-menu-item:first-child > .n-menu-item-content::before {
+  background-color: inherit !important;
+}
+.n-menu-item:first-child > .n-menu-item-content > .n-menu-item-content-header {
+  color: inherit !important;
+}
+.n-menu > .n-menu-item:first-child > .n-menu-item-content:not(.n-menu-item-content--disabled):hover::before {
+  background-color: var(--n-item-color-hover) !important;
+}
+</style>
