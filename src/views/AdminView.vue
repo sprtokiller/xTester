@@ -57,7 +57,7 @@ export default {
     </div>
     <div class="flex-fill h-100">
       <main class="h-100">
-        <div v-if="validatedComponent">
+        <div class="d-flex align-items-center justify-content-center" v-if="validatedComponent">
           <component :is="validatedComponent" ></component>
         </div>
         <div class="d-flex align-items-center justify-content-center h-100" v-else>
@@ -70,6 +70,8 @@ export default {
 
 <style scoped>
   #admin-menu {
-    width: 10rem;
+    width: 9rem;
+    /* add a right shadow */
+    box-shadow: 0 0 0.5rem 0.1rem rgba(0, 0, 0, 0.1);
   }
 </style>
