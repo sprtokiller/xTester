@@ -23,11 +23,15 @@ export default {
   methods: {
     handleNavigation(string : string) {
       this.selectedComponent = string
+      localStorage.setItem('selectedComponent', string)
     }
   },
-  // mounted() {
-  //   console.log("Nástěnka běží");
-  // },
+  mounted() {
+    const selectedComponent = localStorage.getItem('selectedComponent');
+    if (selectedComponent) {
+      this.selectedComponent = selectedComponent;
+    }
+  },
   data() {
     return {
       selectedComponent: 'Dashboard'
@@ -55,7 +59,7 @@ export default {
         <AdminMenu @changeTab="handleNavigation"/>
       </nav>
     </div>
-    <div class="flex-fill h-100">
+    <div class="flex-fill h-100 py-4">
       <main class="h-100">
         <div class="d-flex align-items-center justify-content-center" v-if="validatedComponent">
           <component :is="validatedComponent" ></component>
