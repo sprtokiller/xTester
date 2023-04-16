@@ -1,9 +1,15 @@
-<script setup lang="ts">
+<script lang="ts">
 import { RouterView } from 'vue-router'
+import { NMessageProvider } from 'naive-ui'
 
 const padTwo = (val : number) => (val > 9 ? "" : "0") + val;
 
-function formatDate(date : Date) {
+export default {
+  components: {
+    NMessageProvider
+  },
+  methods: {
+    formatDate(date : Date) {
       const year = date.getFullYear()
       const month = padTwo((date.getMonth() + 1))
       const day = padTwo((date.getDate()))
@@ -12,12 +18,16 @@ function formatDate(date : Date) {
       const seconds = padTwo((date.getSeconds()))
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
     }
+  }
+}
 
 </script>
 
 <template>
-  <RouterView />
-  <div id="dev-bar">Compiled at: {{ formatDate(new Date()) }}</div>
+  <n-message-provider>
+    <RouterView />
+    <div id="dev-bar">Compiled at: {{ formatDate(new Date()) }}</div>
+  </n-message-provider>
 </template>
 
 <style scoped>

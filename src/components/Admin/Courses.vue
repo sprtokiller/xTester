@@ -1,27 +1,29 @@
 <script lang="ts">
 
 import { inject } from 'vue'
-import { NList, NSpin, NScrollbar, NEmpty, NButton } from 'naive-ui';
+import { NList, NSpin, NScrollbar, NEmpty, NButton, useMessage } from 'naive-ui';
 import CourseItem from './Courses/CourseItem.vue';
 import type { CourseView } from '@/interfaces';
-import type { API } from '@/api';
-
+import type { API } from '@/services/api';
 
 export default {
   components: {
     NList, NSpin, NScrollbar, NEmpty, NButton,
     CourseItem
   },
-  mounted() {
+  setup () {
+    const MSG = useMessage();
     const API = inject('API') as API;
-
+    return { MSG, API }
+  },
+  mounted() {
     // fetch courses from the API
-    API.getCourseList().then(courses => {
+    this.API.getCourseList().then(courses => {
       this.loading = false;
-      this.courses = courses;
+      this.courses = courses;     
     }).catch(err => {
       this.loading = false;
-      console.error(err);
+      this.MSG.error(err.message);
     });
   },
   data() {
