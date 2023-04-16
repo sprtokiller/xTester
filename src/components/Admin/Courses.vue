@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import { inject } from 'vue'
-import { NList } from 'naive-ui';
+import { NList, NSpin, NScrollbar } from 'naive-ui';
 import CourseItem from './Courses/CourseItem.vue';
 import type { Course } from '@/interfaces';
 import type { API } from '@/api';
@@ -9,19 +9,21 @@ import type { API } from '@/api';
 
 export default {
   components: {
-    NList, CourseItem
+    NList, NSpin, NScrollbar,
+    CourseItem
   },
   mounted() {
     const API = inject('API') as API;
 
     // fetch courses from the API
     API.getCourses().then(courses => {
+      this.loading = false;
       this.courses = courses;
     })
   },
   data() {
     return {
-      // an array of courses
+      loading: true,
       courses: [] as Course[]
     }
   }
@@ -31,9 +33,14 @@ export default {
 
 <template>
   <div class="container">
-    <n-list hoverable clickable>
-      <!-- add a CourseItem for each course -->
-      <CourseItem v-for="course in courses" :course="course" />
-    </n-list>
+    <h2>Added courses</h2>
+    <n-scrollbar>
+      <n-spin :show="loading" style="min-height: 200px;">
+        <n-list hoverable clickable>
+          <!-- add a CourseItem for each course -->
+          <CourseItem v-for="course in courses" :course="course" />
+        </n-list>
+      </n-spin>
+    </n-scrollbar>
   </div>
 </template>
