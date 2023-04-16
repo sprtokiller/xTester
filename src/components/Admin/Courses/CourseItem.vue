@@ -2,7 +2,7 @@
 
 import { NListItem, NThing, NSpace, NTag, NButton, NImage, NPopover, NIcon } from 'naive-ui';
 import { InfoOutlined, EditFilled, DeleteFilled } from '@vicons/material'
-import type { Course } from '@/interfaces';
+import type { CourseView } from '@/interfaces';
 
 export default {
   components: {
@@ -11,7 +11,7 @@ export default {
   },
   props: {
     course: {
-      type: Object as () => Course,
+      type: Object as () => CourseView,
       required: true
     },
   }
@@ -47,8 +47,17 @@ export default {
       </template>
       <template #description>
         <n-space size="small" style="margin-top: 4px">
-          <n-tag :bordered="false" type="default" size="small">
-            No active testing
+          <n-tag :bordered="false" type="default" size="small" v-if="!(course.active_tests || course.finished_tests || course.prepared_tests)">
+            No tests
+          </n-tag>
+          <n-tag :bordered="false" type="info" size="small" v-if="course.active_tests">
+            Active: {{ course.active_tests }}
+          </n-tag>
+          <n-tag :bordered="false" type="success" size="small" v-if="course.finished_tests">
+            Finished: {{ course.finished_tests }}
+          </n-tag>
+          <n-tag :bordered="false" type="warning" size="small" v-if="course.prepared_tests">
+            Prepared: {{ course.prepared_tests }}
           </n-tag>
         </n-space>
       </template>

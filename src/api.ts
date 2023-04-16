@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Course } from '@/interfaces';
+import type { CourseView } from '@/interfaces';
 import { mockCourses } from '@/_mock';
 const api = axios.create({
   baseURL: 'https://api.example.com/',
@@ -7,13 +7,13 @@ const api = axios.create({
 
 
 export interface API {
-    getCourses(): Promise<Course[]>;
+    getCourseList(): Promise<CourseView[]>;
     // updateUser(id: string, data: any): Promise<void>;
     // add other methods and properties here
   }
 
 export const API = {
-  getCourses() {
+  getCourseList() {
     //return api.get(url, config);
     //return promise resolve after 1 second
     return new Promise((resolve) => {

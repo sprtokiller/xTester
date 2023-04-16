@@ -3,7 +3,7 @@
 import { inject } from 'vue'
 import { NList, NSpin, NScrollbar } from 'naive-ui';
 import CourseItem from './Courses/CourseItem.vue';
-import type { Course } from '@/interfaces';
+import type { CourseView } from '@/interfaces';
 import type { API } from '@/api';
 
 
@@ -16,15 +16,17 @@ export default {
     const API = inject('API') as API;
 
     // fetch courses from the API
-    API.getCourses().then(courses => {
+    API.getCourseList().then(courses => {
       this.loading = false;
       this.courses = courses;
+    }).catch(err => {
+      console.error(err);
     })
   },
   data() {
     return {
       loading: true,
-      courses: [] as Course[]
+      courses: [] as CourseView[]
     }
   }
 }
