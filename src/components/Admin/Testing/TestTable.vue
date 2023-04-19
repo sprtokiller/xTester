@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import { inject, h } from 'vue'
-import { NDataTable, useMessage, NButton, NTag } from 'naive-ui';
+import { NDataTable, useMessage, NButton, NTag, NH2 } from 'naive-ui';
 import type { API } from '@/services/api';
 import type { TestView } from '@/interfaces';
 import type { DataTableColumns } from 'naive-ui';
@@ -96,7 +96,7 @@ const createColumns = ({ play } : { play: (test: TestView) => void}): DataTableC
 
 export default {
   components: {
-    NDataTable, NButton, NTag, RemoveRedEyeRound
+    NDataTable, NButton, NTag, RemoveRedEyeRound, NH2
   },
   setup() {
     const MSG = useMessage();
@@ -136,5 +136,6 @@ export default {
 
 
 <template>
+  <n-h2>List of tests</n-h2>
   <n-data-table :columns="columns" :data="tests" :bordered="false" :loading="loading" />
 </template>

@@ -9,6 +9,12 @@ export default {
     NListItem, NThing, NSpace, NTag, NButton, NImage, NPopover, InfoOutlined,
     NIcon, EditFilled, DeleteFilled
   },
+  methods: {
+    openDetail () {
+      // emit an event to the parent component
+      this.$emit('open-detail', this.course.course_id);
+      }
+  },
   props: {
     course: {
       type: Object as () => CourseView,
@@ -20,7 +26,7 @@ export default {
 
 
 <template>
-  <n-list-item>
+  <n-list-item v-on:click="openDetail">
     <template #prefix>
       <div class="xratio xratio-16x9" style="background-color: wheat; width: 96px; height: 54px;">
       </div>

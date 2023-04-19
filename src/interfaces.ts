@@ -13,6 +13,8 @@ export interface CourseView extends Course {
 }
 
 export interface CourseDetail extends Course {
+  course_hash: string;
+  tests?: TestView[];
 }
 
 export interface Test {
