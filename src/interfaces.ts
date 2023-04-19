@@ -1,5 +1,5 @@
 export interface Course {
-  id: number;
+  course_id: number;
   name: string;
   author: string;
   version: number;
@@ -7,7 +7,24 @@ export interface Course {
 }
 
 export interface CourseView extends Course {
-  active_tests: number;
-  finished_tests: number;
-  prepared_tests: number;
+  planned_tests: number;
+  running_tests: number;
+  completed_tests: number;
+}
+
+export interface CourseDetail extends Course {
+}
+
+export interface Test {
+  test_id: number;
+  name: string;
+  course_id: number;
+  created_at: Date;
+  start_at?: Date;
+  end_type?: "PLAN" | "MANUAL" | "AUTO";
+  end_at?: Date;
+}
+
+export interface TestView extends Test {
+  modules?: number[];
 }

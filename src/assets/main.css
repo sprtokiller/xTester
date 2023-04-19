@@ -3,3 +3,10 @@
 .icon-no-align svg{
     vertical-align: baseline;
 }
+
+.btn-less-visible {
+  color: var(--gray-2)
+}
+.btn-less-visible:hover {
+  color: var(--gray-1)
+}
