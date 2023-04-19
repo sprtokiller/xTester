@@ -2,7 +2,7 @@
 
 import { inject } from 'vue'
 import { NList, NSpin, NScrollbar, NEmpty, NButton, useMessage } from 'naive-ui';
-import CourseItem from './Courses/CourseItem.vue';
+import CourseItem from '@/components/Admin/Courses/CourseItem.vue';
 import type { CourseView } from '@/interfaces';
 import type { API } from '@/services/api';
 

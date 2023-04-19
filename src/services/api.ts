@@ -26,7 +26,7 @@ export const API = {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(mockTests);
-        }, 1000);
+        }, 2000);
     });
   }
 }
