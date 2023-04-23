@@ -22,8 +22,9 @@ export default {
   },
   methods: {
     handleNavigation(string : string) {
-      this.selectedComponent = string
-      localStorage.setItem('selectedComponent', string)
+      this.selectedComponent = string;
+      this.reloadKey++;
+      localStorage.setItem('selectedComponent', string);
     }
   },
   mounted() {
@@ -34,7 +35,8 @@ export default {
   },
   data() {
     return {
-      selectedComponent: 'Dashboard'
+      selectedComponent: 'Dashboard',
+      reloadKey: 0
     }
   },
   computed: {
@@ -62,7 +64,7 @@ export default {
     <div class="flex-fill h-100 py-4">
       <main class="h-100">
         <div class="d-flex align-items-center justify-content-center" v-if="validatedComponent">
-          <component :is="validatedComponent" ></component>
+          <component :is="validatedComponent" :key="reloadKey"></component>
         </div>
         <div class="d-flex align-items-center justify-content-center h-100" v-else>
           <Error404 />
