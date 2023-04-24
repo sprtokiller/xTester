@@ -24,11 +24,11 @@ function getChip(type: 'success' | 'error' | 'warning' | 'info' | 'default', tex
 const getState = (test: TestView) => {
   const currentTime = new Date();
 
-  if (!test.start_at) return null;
+  if (!test.startAt) return null;
 
-  if (test.start_at > currentTime) {
+  if (test.startAt > currentTime) {
     return getChip('warning', 'Planned')
-  } else if (!test.end_at || test.end_at > currentTime) {
+  } else if (!test.endAt || test.endAt > currentTime) {
     return getChip('info', 'Running')
   } else {
     return getChip('success', 'Completed')
@@ -67,7 +67,7 @@ const createColumns = ({ play } : { play: (test: TestView) => void}): DataTableC
     },
     {
       title: 'Course',
-      key: 'course_view',
+      key: 'courseView',
       align: 'center',
       width: 80,
       render(row) {

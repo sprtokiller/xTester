@@ -31,7 +31,8 @@ export default {
     return {
       detail: 0 as number,
       loading: true as boolean,
-      courses: [] as CourseView[]
+      courses: [] as CourseView[],
+      reloadKey: 0 as number
     }
   },
   computed: {
@@ -41,8 +42,12 @@ export default {
   },
   // get signal from CourseItem to show the CourseDetail
   methods: {
-    showDetail(courseId: number) {
-      this.detail = courseId;
+    showDetail(courseID: number) {
+      this.detail = courseID;
+      this.reloadKey++;
+    },
+    closeDetail() {
+      this.detail = 0;
     }
   }
 }
@@ -51,7 +56,7 @@ export default {
 
 <template>
   <div class="container">
-    <CourseDetail v-if="detail" :courseId="detail" @close="detail=0" />
+    <CourseDetail v-if="detail" :courseID="detail" @close-detail="closeDetail" @open-detail="showDetail" :key="reloadKey"/>
 
     <div v-else>
       <n-h2>List of courses</n-h2>
@@ -59,7 +64,7 @@ export default {
         <n-spin :show="loading" style="min-height: 200px;">
           <n-list hoverable clickable>
             <!-- add a CourseItem for each course -->
-            <CourseItem v-for="course in courses" :course="course" @open-detail="showDetail" />
+            <CourseItem v-for="course in courses" :course="course" @open-detail="showDetail"/>
           </n-list>
           <n-empty description="No e-learning courses found :(" v-if="!loading && isEmpty">
             <template #extra>

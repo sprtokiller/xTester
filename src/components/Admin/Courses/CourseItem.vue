@@ -12,7 +12,7 @@ export default {
   methods: {
     openDetail () {
       // emit an event to the parent component
-      this.$emit('open-detail', this.course.course_id);
+      this.$emit('open-detail', this.course.courseID);
       }
   },
   props: {
@@ -53,17 +53,17 @@ export default {
       </template>
       <template #description>
         <n-space size="small" style="margin-top: 4px">
-          <n-tag :bordered="false" type="default" size="small" v-if="!(course.running_tests || course.completed_tests || course.planned_tests)">
+          <n-tag :bordered="false" type="default" size="small" v-if="!(course.runningTests || course.completedTests || course.plannedTests)">
             No tests
           </n-tag>
-          <n-tag :bordered="false" type="warning" size="small" v-if="course.planned_tests">
-            Planned: {{ course.planned_tests }}
+          <n-tag :bordered="false" type="warning" size="small" v-if="course.plannedTests">
+            Planned: {{ course.plannedTests }}
           </n-tag>
-          <n-tag :bordered="false" type="info" size="small" v-if="course.running_tests">
-            Active: {{ course.running_tests }}
+          <n-tag :bordered="false" type="info" size="small" v-if="course.runningTests">
+            Active: {{ course.runningTests }}
           </n-tag>
-          <n-tag :bordered="false" type="success" size="small" v-if="course.completed_tests">
-            Finished: {{ course.completed_tests }}
+          <n-tag :bordered="false" type="success" size="small" v-if="course.completedTests">
+            Finished: {{ course.completedTests }}
           </n-tag>
         </n-space>
       </template>

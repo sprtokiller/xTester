@@ -31,10 +31,10 @@ export const API = {
     });
   },
 
-  getCourseDetail(courseId: number) { // TODO: Real API
+  getCourseDetail(courseID: number) { // TODO: Real API
     return new Promise((resolve) => {
         setTimeout(() => {
-            resolve(mockCourseDetails.find((c) => c.course_id === courseId));
+            resolve(mockCourseDetails.find((c) => c.courseID === courseID));
         }, 2000);
     });
   }

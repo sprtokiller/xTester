@@ -1,30 +1,31 @@
 export interface Course {
-  course_id: number;
+  courseID: number;
   name: string;
   author: string;
   version: number;
-  group_hash: string;
+  groupHash: string;
 }
 
 export interface CourseView extends Course {
-  planned_tests: number;
-  running_tests: number;
-  completed_tests: number;
+  plannedTests: number;
+  runningTests: number;
+  completedTests: number;
 }
 
 export interface CourseDetail extends Course {
-  course_hash: string;
+  courseHash: string;
   tests?: TestView[];
+  otherVersions?: Course[];
 }
 
 export interface Test {
-  test_id: number;
+  testID: number;
   name: string;
-  course_id: number;
-  created_at: Date;
-  start_at?: Date;
-  end_type?: "PLAN" | "MANUAL" | "AUTO";
-  end_at?: Date;
+  courseID: number;
+  createdAt: Date;
+  startAt?: Date;
+  endType?: "PLAN" | "MANUAL" | "AUTO";
+  endAt?: Date;
 }
 
 export interface TestView extends Test {
