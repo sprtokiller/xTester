@@ -98,14 +98,15 @@ export default {
   components: {
     NDataTable, NButton, NTag, RemoveRedEyeRound, NH2
   },
-  setup() {
+  setup(props, context) {
     const MSG = useMessage();
     const API = inject('API') as API;
     return {
       MSG, API,
       columns: createColumns({
         play(test: TestView) {
-          MSG.info(`Play ${test.name}`)
+          localStorage.setItem('selectedCourse', test.courseID.toString());
+          context.emit('changeTab', "Courses");
         }
       })
     }

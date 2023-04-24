@@ -58,13 +58,13 @@ export default {
   <div class="d-flex vw-100 vh-100">
     <div id="admin-menu" class="h-100">
       <nav>
-        <AdminMenu @changeTab="handleNavigation"/>
+        <AdminMenu @changeTab="handleNavigation" />
       </nav>
     </div>
     <div class="flex-fill h-100 py-4">
       <main class="h-100">
         <div class="d-flex align-items-center justify-content-center" v-if="validatedComponent">
-          <component :is="validatedComponent" :key="reloadKey"></component>
+          <component :is="validatedComponent" :key="reloadKey" @changeTab="handleNavigation"></component>
         </div>
         <div class="d-flex align-items-center justify-content-center h-100" v-else>
           <Error404 />

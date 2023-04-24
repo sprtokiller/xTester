@@ -5,6 +5,11 @@ import TestTable from '@/components/Admin/Testing/TestTable.vue'
 export default {
   components: {
     TestTable
+  },
+  methods: {
+    changeTab(tab: string) {
+      this.$emit('changeTab', tab)
+    }
   }
 }
 </script>
@@ -12,6 +17,6 @@ export default {
 
 <template>
   <div class="container">
-    <TestTable />
+    <TestTable @changeTab="changeTab" />
   </div>
 </template>

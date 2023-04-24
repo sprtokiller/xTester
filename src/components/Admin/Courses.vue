@@ -26,6 +26,12 @@ export default {
       this.loading = false;
       this.MSG.error(err.message);
     });
+
+    // if there is a selected course, show the detail automatically
+    const selectedCourse = localStorage.getItem('selectedCourse');
+    if (selectedCourse) {
+      this.detail = parseInt(selectedCourse);
+    }
   },
   data() {
     return {
@@ -44,10 +50,12 @@ export default {
   methods: {
     showDetail(courseID: number) {
       this.detail = courseID;
+      localStorage.setItem('selectedCourse', courseID.toString());
       this.reloadKey++;
     },
     closeDetail() {
       this.detail = 0;
+      localStorage.removeItem('selectedCourse');
     }
   }
 }

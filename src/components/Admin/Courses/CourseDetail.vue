@@ -101,6 +101,7 @@ export default {
 
 
 <template>
+  <!-- Loading state -->
   <div v-if="loading">
     <div class="d-flex align-items-center">
       <n-button size="large" @click="handleBack" quaternary ghost circle>
@@ -114,6 +115,8 @@ export default {
     </div>
     <n-spin :show="loading" class="w-100" style="min-height: 200px;" />
   </div>
+  
+  <!-- Loaded state -->
   <div v-else>
     <div class="row">
       <div class="col-9">
@@ -128,6 +131,7 @@ export default {
           <n-h3 class="course-name">{{ course.name }}</n-h3>
         </div>
       </div>
+      <!-- preview, list of other versions -->
       <div class="col-3">
         <div class="iframe-container">
           <iframe allowfullscreen="true" class="player" :src="getURL" scrolling="no"
