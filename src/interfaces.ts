@@ -31,3 +31,17 @@ export interface Test {
 export interface TestView extends Test {
   modules?: number[];
 }
+
+export interface User {
+  userUUID: string;
+  firstname?: string;
+  lastname?: string;
+  email?: string;
+}
+
+export interface UserGroup {
+  name: string;
+  userUUIDs: User[];
+  groupUUID: string;
+  colorID: number;
+}

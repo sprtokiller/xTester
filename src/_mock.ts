@@ -11,7 +11,7 @@ const OCTOBER = 9;
 const NOVEMBER = 10;
 const DECEMBER = 11;
 
-import type { CourseView, TestView, CourseDetail } from '@/interfaces';
+import type { CourseView, TestView, CourseDetail, User, UserGroup } from '@/interfaces';
 
 export const mockCourseDetails: CourseDetail[] = [
     {
@@ -215,5 +215,14 @@ export const mockTests: TestView[] = [
         courseID: 2,
         // no start -> 'WIP' (no chip)
         createdAt: new Date(2023, APRIL, 14, 12, 13, 2),
+    }
+];
+
+export const mockUsers: User[] = [
+    {
+        userUUID: 'f2c9bdc0-31c8-41e5-92a1-8a0d68c0321d',
+        firstname: 'Vítězslav',
+        lastname: 'Kříž',
+        email: 'sprtokiller.6c@gmail.com'
     }
 ];
