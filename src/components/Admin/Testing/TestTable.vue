@@ -3,7 +3,7 @@
 import { inject, h } from 'vue'
 import { NDataTable, useMessage, NButton, NTag, NH2 } from 'naive-ui';
 import type { API } from '@/services/api';
-import type { TestView } from '@/interfaces';
+import type { ITestView } from '@/interfaces';
 import type { DataTableColumns } from 'naive-ui';
 import { RemoveRedEyeRound } from '@vicons/material'
 
@@ -21,7 +21,7 @@ function getChip(type: 'success' | 'error' | 'warning' | 'info' | 'default', tex
   )
 }
 
-const getState = (test: TestView) => {
+const getState = (test: ITestView) => {
   const currentTime = new Date();
 
   if (!test.startAt) return null;
@@ -43,14 +43,14 @@ function getModuleName(id: number) {
   return moduleNames[id];
 }
 
-const getModules = (test: TestView) => {
+const getModules = (test: ITestView) => {
   if (!test.modules) return null;
   return test.modules.map(module => {
     return getChip('default', getModuleName(module), 'tiny')
   })
 }
 
-const createColumns = ({ play } : { play: (test: TestView) => void}): DataTableColumns<TestView> => {
+const createColumns = ({ play } : { play: (test: ITestView) => void}): DataTableColumns<ITestView> => {
   return [
     {
       title: 'Test name',
@@ -104,7 +104,7 @@ export default {
     return {
       MSG, API,
       columns: createColumns({
-        play(test: TestView) {
+        play(test: ITestView) {
           localStorage.setItem('selectedCourse', test.courseUUID);
           context.emit('changeTab', "Courses");
         }
@@ -124,7 +124,7 @@ export default {
   data() {
     return {
       loading: true,
-      tests: [] as TestView[]
+      tests: [] as ITestView[]
     }
   },
   computed: {

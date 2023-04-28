@@ -4,7 +4,7 @@ import { inject } from 'vue'
 import { NList, NSpin, NScrollbar, NEmpty, NButton, useMessage, NH2 } from 'naive-ui';
 import CourseItem from '@/components/Admin/Courses/CourseItem.vue';
 import CourseDetail from '@/components/Admin/Courses/CourseDetail.vue';
-import type { CourseView } from '@/interfaces';
+import type { ICourseView } from '@/interfaces';
 import type { API } from '@/services/api';
 
 export default {
@@ -37,7 +37,7 @@ export default {
     return {
       detail: '' as string,
       loading: true as boolean,
-      courses: [] as CourseView[],
+      courses: [] as ICourseView[],
       reloadKey: 0 as number
     }
   },

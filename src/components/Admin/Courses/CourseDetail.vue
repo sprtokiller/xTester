@@ -4,12 +4,12 @@ import { inject, h } from 'vue'
 import { useMessage, NPageHeader, NButton, NIcon, NH3, NDataTable, NSpin } from 'naive-ui';
 import { ArrowBackFilled } from '@vicons/material'
 import type { API } from '@/services/api';
-import type { CourseDetail, Course } from '@/interfaces';
+import type { ICourseDetail, ICourse } from '@/interfaces';
 import type { DataTableColumns } from 'naive-ui';
 import { RemoveRedEyeRound } from '@vicons/material'
 
 
-const createColumns = ({ changeDetail } : { changeDetail: (newCourseUUID : string) => void}): DataTableColumns<Course> => {
+const createColumns = ({ changeDetail } : { changeDetail: (newCourseUUID : string) => void}): DataTableColumns<ICourse> => {
   return [
     {
       title: 'Other versions',
@@ -69,7 +69,7 @@ export default {
   data() {
     return {
       loading: true,
-      course: {} as CourseDetail
+      course: {} as ICourseDetail
     }
   },
   components: {

@@ -2,7 +2,7 @@
 
 import { inject } from 'vue'
 import { NSpin, NButton, useMessage, NH2 } from 'naive-ui';
-import type { CourseView } from '@/interfaces';
+import type { ICourseView } from '@/interfaces';
 import type { API } from '@/services/api';
 
 export default {

@@ -1,4 +1,4 @@
-export interface Course {
+export interface ICourse {
   courseUUID: string;
   name: string;
   author: string;
@@ -6,42 +6,45 @@ export interface Course {
   groupHash: string;
 }
 
-export interface CourseView extends Course {
-  plannedTests: number;
-  runningTests: number;
-  completedTests: number;
+export interface ITimeSpan {
+  startAt?: Date;
+  endAt?: Date;
 }
 
-export interface CourseDetail extends Course {
+export interface ICourseView extends ICourse {
+  tests: ITimeSpan[];
+}
+
+export interface ICourseDetail extends ICourse {
   courseHash: string;
-  tests?: TestView[];
-  otherVersions?: Course[];
+  tests?: ITestView[];
+  otherVersions?: ICourse[];
 }
 
-export interface Test {
+export interface ITest {
   testUUID: string;
   name: string;
   courseUUID: string;
   createdAt: Date;
   startAt?: Date;
-  endType?: "PLAN" | "MANUAL" | "AUTO";
+  endType: "PLAN" | "MANUAL" | "AUTO";
   endAt?: Date;
 }
 
-export interface TestView extends Test {
+export interface ITestView extends ITest {
   modules?: number[];
 }
 
-export interface User {
+export interface IUser {
   userUUID: string;
   firstname?: string;
   lastname?: string;
   email?: string;
 }
 
-export interface UserGroup {
+export interface IUserGroup {
   name: string;
-  userUUIDs: User[];
+  userUUIDs: IUser[];
   groupUUID: string;
   colorID: number;
 }

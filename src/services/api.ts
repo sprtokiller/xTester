@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { CourseView, TestView, CourseDetail } from '@/interfaces';
+import type { ICourseView, ITestView, ICourseDetail } from '@/interfaces';
 import { mockCourses, mockTests, mockCourseDetails } from '@/_mock';
 
 const api = axios.create({
@@ -12,9 +12,9 @@ export interface API {
     logout(): Promise<void>;
     check(): Promise<void>;
 
-    getCourseList(): Promise<CourseView[]>;
-    getTestList(): Promise<TestView[]>;
-    getCourseDetail(courseUUID: string): Promise<CourseDetail>;
+    getCourseList(): Promise<ICourseView[]>;
+    getTestList(): Promise<ITestView[]>;
+    getCourseDetail(courseUUID: string): Promise<ICourseDetail>;
   }
 
 export const API = {
@@ -30,14 +30,10 @@ export const API = {
     return api.get('/user/check');
   },
 
-  getCourseList() { // TODO: Real API
-    //return api.get(url, config);
-    //return promise resolve after 1 second
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(mockCourses);
-        }, 1000);
-    });
+  async getCourseList(): Promise<ICourseView[]> {
+    const response = await api.get('/course/list');
+    const data: ICourseView[] = response.data;
+    return data;
   },
 
   getTestList() { // TODO: Real API

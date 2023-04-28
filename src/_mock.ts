@@ -11,9 +11,9 @@ const OCTOBER = 9;
 const NOVEMBER = 10;
 const DECEMBER = 11;
 
-import type { CourseView, TestView, CourseDetail, User, UserGroup } from '@/interfaces';
+import type { ICourseView, ITestView, ICourseDetail, IUser, IUserGroup } from '@/interfaces';
 
-export const mockCourseDetails: CourseDetail[] = [
+export const mockCourseDetails: ICourseDetail[] = [
     {
         courseUUID: '98f3ee48-7593-4504-9d48-3ace56f96c93',
         name: 'xAPI_simple',
@@ -74,13 +74,14 @@ export const mockCourseDetails: CourseDetail[] = [
                 testUUID: '3a8fccb1-9113-43f4-b410-e10eb947e33a',
                 name: 'WIP test of \'xAPI_simple\' (version 7)',
                 courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
+                endType: 'MANUAL',
                 // no start -> 'WIP' (no chip)
                 createdAt: new Date(2023, APRIL, 14, 12, 13, 2),
             }
         ]
     },
     {
-        courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
+        courseUUID: 'cd2654ab-be0e-4bdb-b4b3-41c968354291',
         name: 'Tvorba WWW stránek 1',
         author: 'Kateřina Chromčáková',
         version: 8,
@@ -90,7 +91,7 @@ export const mockCourseDetails: CourseDetail[] = [
             {
                 testUUID: 'cfcd95eb-4c13-4432-9a96-1892b4268b97',
                 name: 'Test 01 of \'Tvorba WWW stránek 1\' (version 8)',
-                courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
+                courseUUID: 'cd2654ab-be0e-4bdb-b4b3-41c968354291',
                 // start in past and MANUAL end -> 'Active'
                 createdAt: new Date(2023, MARCH, 16, 10, 45, 16),
                 startAt: new Date(2023, MARCH, 18, 8, 0, 0),
@@ -100,7 +101,7 @@ export const mockCourseDetails: CourseDetail[] = [
             {
                 testUUID: '76ec0911-7a99-43a0-9d9c-ae3aa38180fc',
                 name: 'Test 02 of \'Tvorba WWW stránek 1\' (version 8)',
-                courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
+                courseUUID: 'cd2654ab-be0e-4bdb-b4b3-41c968354291',
                 // started and end in future -> 'Active'
                 createdAt: new Date(2023, MARCH, 16, 10, 51, 18),
                 startAt: new Date(2023, MARCH, 18, 8, 0, 0),
@@ -111,7 +112,7 @@ export const mockCourseDetails: CourseDetail[] = [
             {
                 testUUID: '51e60bef-24d7-48a2-9e27-4e3f7e6c9fff',
                 name: 'Test 03 of \'Tvorba WWW stránek 1\' (version 8)',
-                courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
+                courseUUID: 'cd2654ab-be0e-4bdb-b4b3-41c968354291',
                 // start in future and MANUAL/future end -> 'Planned'
                 createdAt: new Date(2023, MARCH, 17, 12, 13, 2),
                 startAt: new Date(2024, MARCH, 18, 8, 0, 0),
@@ -122,16 +123,14 @@ export const mockCourseDetails: CourseDetail[] = [
     }
 ];
 
-export const mockCourses: CourseView[] = [
+export const mockCourses: ICourseView[] = [
     {
         courseUUID: '98f3ee48-7593-4504-9d48-3ace56f96c93',
         name: 'xAPI_simple',
         author: 'Vítězslav Kříž',
         version: 5,
         groupHash: 'da41b34d-fbd7-4428-a4b5-7028cd401bdb',
-        runningTests: 0,
-        completedTests: 0,
-        plannedTests: 0
+        tests: []
     },
     {
         courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
@@ -139,27 +138,29 @@ export const mockCourses: CourseView[] = [
         author: 'Vítězslav Kříž',
         version: 7,
         groupHash: 'da41b34d-fbd7-4428-a4b5-7028cd401bdb',
-        runningTests: 0,
-        completedTests: 2,
-        plannedTests: 0
+        tests: []
+        // runningTests: 0,
+        // completedTests: 2,
+        // plannedTests: 0
     },
     {
-        courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
+        courseUUID: 'cd2654ab-be0e-4bdb-b4b3-41c968354291',
         name: 'Tvorba WWW stránek 1',
         author: 'Kateřina Chromčáková',
         version: 8,
         groupHash: 'd9fb6a33-e073-4603-aa7e-4c16b4b3b759',
-        runningTests: 2,
-        completedTests: 0,
-        plannedTests: 1
+        tests: []
+        // runningTests: 2,
+        // completedTests: 0,
+        // plannedTests: 1
     }
 ];
 
-export const mockTests: TestView[] = [
+export const mockTests: ITestView[] = [
     {
         testUUID: 'cfcd95eb-4c13-4432-9a96-1892b4268b97',
         name: 'Test 01 of \'Tvorba WWW stránek 1\' (version 8)',
-        courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
+        courseUUID: 'cd2654ab-be0e-4bdb-b4b3-41c968354291',
         // start in past and MANUAL end -> 'Active'
         createdAt: new Date(2023, MARCH, 16, 10, 45, 16),
         startAt: new Date(2023, MARCH, 18, 8, 0, 0),
@@ -169,7 +170,7 @@ export const mockTests: TestView[] = [
     {
         testUUID: '76ec0911-7a99-43a0-9d9c-ae3aa38180fc',
         name: 'Test 02 of \'Tvorba WWW stránek 1\' (version 8)',
-        courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
+        courseUUID: 'cd2654ab-be0e-4bdb-b4b3-41c968354291',
         // started and end in future -> 'Active'
         createdAt: new Date(2023, MARCH, 16, 10, 51, 18),
         startAt: new Date(2023, MARCH, 18, 8, 0, 0),
@@ -180,7 +181,7 @@ export const mockTests: TestView[] = [
     {
         testUUID: '51e60bef-24d7-48a2-9e27-4e3f7e6c9fff',
         name: 'Test 03 of \'Tvorba WWW stránek 1\' (version 8)',
-        courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
+        courseUUID: 'cd2654ab-be0e-4bdb-b4b3-41c968354291',
         // start in future and MANUAL/future end -> 'Planned'
         createdAt: new Date(2023, MARCH, 17, 12, 13, 2),
         startAt: new Date(2024, MARCH, 18, 8, 0, 0),
@@ -213,12 +214,13 @@ export const mockTests: TestView[] = [
         testUUID: '3a8fccb1-9113-43f4-b410-e10eb947e33a',
         name: 'WIP test of \'xAPI_simple\' (version 7)',
         courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
+        endType: 'MANUAL',
         // no start -> 'WIP' (no chip)
         createdAt: new Date(2023, APRIL, 14, 12, 13, 2),
     }
 ];
 
-export const mockUsers: User[] = [
+export const mockUsers: IUser[] = [
     {
         userUUID: 'f2c9bdc0-31c8-41e5-92a1-8a0d68c0321d',
         firstname: 'Vítězslav',

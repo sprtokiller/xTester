@@ -2,7 +2,7 @@
 
 import { NListItem, NThing, NSpace, NTag, NButton, NImage, NPopover, NIcon } from 'naive-ui';
 import { InfoOutlined, EditFilled, DeleteFilled } from '@vicons/material'
-import type { CourseView } from '@/interfaces';
+import type { ICourseView } from '@/interfaces';
 
 export default {
   components: {
@@ -17,10 +17,24 @@ export default {
   },
   props: {
     course: {
-      type: Object as () => CourseView,
+      type: Object as () => ICourseView,
       required: true
     },
-  }
+  },
+  computed: {
+    plannedTests() : number {
+      const currentTime = new Date();
+      return this.course.tests.filter(t => t.startAt && new Date(t.startAt) > currentTime).length;
+    },
+    runningTests() : number {
+      const currentTime = new Date();
+      return this.course.tests.filter(t => (t.startAt && new Date(t.startAt) <= currentTime) && (!t.endAt || new Date(t.endAt) > currentTime)).length;
+    },
+    completedTests() : number {
+      const currentTime = new Date();
+      return this.course.tests.filter(t => t.endAt && new Date(t.endAt) <= currentTime).length;
+    }
+  } 
 }
 </script>
 
@@ -53,17 +67,17 @@ export default {
       </template>
       <template #description>
         <n-space size="small" style="margin-top: 4px">
-          <n-tag :bordered="false" type="default" size="small" v-if="!(course.runningTests || course.completedTests || course.plannedTests)">
+          <n-tag :bordered="false" type="default" size="small" v-if="!(runningTests || completedTests || plannedTests)">
             No tests
           </n-tag>
-          <n-tag :bordered="false" type="warning" size="small" v-if="course.plannedTests">
-            Planned: {{ course.plannedTests }}
+          <n-tag :bordered="false" type="warning" size="small" v-if="plannedTests">
+            Planned: {{ plannedTests }}
           </n-tag>
-          <n-tag :bordered="false" type="info" size="small" v-if="course.runningTests">
-            Active: {{ course.runningTests }}
+          <n-tag :bordered="false" type="info" size="small" v-if="runningTests">
+            Active: {{ runningTests }}
           </n-tag>
-          <n-tag :bordered="false" type="success" size="small" v-if="course.completedTests">
-            Finished: {{ course.completedTests }}
+          <n-tag :bordered="false" type="success" size="small" v-if="completedTests">
+            Finished: {{ completedTests }}
           </n-tag>
         </n-space>
       </template>
