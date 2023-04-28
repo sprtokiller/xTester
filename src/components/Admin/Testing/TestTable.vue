@@ -105,7 +105,7 @@ export default {
       MSG, API,
       columns: createColumns({
         play(test: TestView) {
-          localStorage.setItem('selectedCourse', test.courseID.toString());
+          localStorage.setItem('selectedCourse', test.courseUUID);
           context.emit('changeTab', "Courses");
         }
       })

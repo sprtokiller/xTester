@@ -12,7 +12,7 @@ export default {
   methods: {
     openDetail () {
       // emit an event to the parent component
-      this.$emit('open-detail', this.course.courseID);
+      this.$emit('open-detail', this.course.courseUUID);
       }
   },
   props: {

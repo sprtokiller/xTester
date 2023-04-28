@@ -1,5 +1,5 @@
 export interface Course {
-  courseID: number;
+  courseUUID: string;
   name: string;
   author: string;
   version: number;
@@ -19,9 +19,9 @@ export interface CourseDetail extends Course {
 }
 
 export interface Test {
-  testID: number;
+  testUUID: string;
   name: string;
-  courseID: number;
+  courseUUID: string;
   createdAt: Date;
   startAt?: Date;
   endType?: "PLAN" | "MANUAL" | "AUTO";

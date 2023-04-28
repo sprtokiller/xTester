@@ -40,25 +40,6 @@ export default {
 
 <template>
   <div class="container">
-    <!-- <CourseDetail v-if="detail" :courseID="detail" @close-detail="closeDetail" @open-detail="showDetail" :key="reloadKey"/>
-
-    <div v-else>
-      <n-h2>List of courses</n-h2>
-      <n-scrollbar>
-        <n-spin :show="loading" style="min-height: 200px;">
-          <n-list hoverable clickable>
-            <!-/- add a CourseItem for each course -/->
-            <CourseItem v-for="course in courses" :course="course" @open-detail="showDetail"/>
-          </n-list>
-          <n-empty description="No e-learning courses found :(" v-if="!loading && isEmpty">
-            <template #extra>
-              <n-button size="small">
-                Start by adding a course! <!-/- TODO: take me to a tutorial page -/->
-              </n-button>
-            </template>
-          </n-empty>
-        </n-spin>
-      </n-scrollbar>
-    </div> -->
+    No content yet
   </div> 
 </template>

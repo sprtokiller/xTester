@@ -9,7 +9,7 @@ import type { DataTableColumns } from 'naive-ui';
 import { RemoveRedEyeRound } from '@vicons/material'
 
 
-const createColumns = ({ changeDetail } : { changeDetail: (newCourseID : number) => void}): DataTableColumns<Course> => {
+const createColumns = ({ changeDetail } : { changeDetail: (newCourseUUID : string) => void}): DataTableColumns<Course> => {
   return [
     {
       title: 'Other versions',
@@ -36,7 +36,7 @@ const createColumns = ({ changeDetail } : { changeDetail: (newCourseID : number)
             size: 'small',
             class: 'btn-less-visible',
             renderIcon: () => h(RemoveRedEyeRound),
-            onClick: () => changeDetail(row.courseID)
+            onClick: () => changeDetail(row.courseUUID)
           }
         )
       }
@@ -50,15 +50,15 @@ export default {
     const API = inject('API') as API;
     return { MSG, API,
       columns: createColumns({
-        changeDetail(newCourseID: number) {
-          context.emit('open-detail', newCourseID)
+        changeDetail(newCourseUUID: string) {
+          context.emit('open-detail', newCourseUUID)
         }
       })
     }
   },
   mounted() {
     // fetch courses from the API
-    this.API.getCourseDetail(this.courseID).then(course => {
+    this.API.getCourseDetail(this.courseUUID).then(course => {
       this.loading = false;
       this.course = course;
     }).catch(err => {
@@ -76,8 +76,8 @@ export default {
     NPageHeader, NButton, NIcon, ArrowBackFilled, NH3, NDataTable, RemoveRedEyeRound, NSpin
   },
   props: {
-    courseID: {
-      type: Number,
+    courseUUID: {
+      type: String,
       required: true
     }
   },
@@ -115,7 +115,7 @@ export default {
     </div>
     <n-spin :show="loading" class="w-100" style="min-height: 200px;" />
   </div>
-  
+
   <!-- Loaded state -->
   <div v-else>
     <div class="row">

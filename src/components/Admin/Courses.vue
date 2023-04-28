@@ -30,12 +30,12 @@ export default {
     // if there is a selected course, show the detail automatically
     const selectedCourse = localStorage.getItem('selectedCourse');
     if (selectedCourse) {
-      this.detail = parseInt(selectedCourse);
+      this.detail = selectedCourse;
     }
   },
   data() {
     return {
-      detail: 0 as number,
+      detail: '' as string,
       loading: true as boolean,
       courses: [] as CourseView[],
       reloadKey: 0 as number
@@ -48,13 +48,13 @@ export default {
   },
   // get signal from CourseItem to show the CourseDetail
   methods: {
-    showDetail(courseID: number) {
-      this.detail = courseID;
-      localStorage.setItem('selectedCourse', courseID.toString());
+    showDetail(courseUUID: string) {
+      this.detail = courseUUID;
+      localStorage.setItem('selectedCourse', courseUUID);
       this.reloadKey++;
     },
     closeDetail() {
-      this.detail = 0;
+      this.detail = '';
       localStorage.removeItem('selectedCourse');
     }
   }
@@ -64,7 +64,7 @@ export default {
 
 <template>
   <div class="container">
-    <CourseDetail v-if="detail" :courseID="detail" @close-detail="closeDetail" @open-detail="showDetail" :key="reloadKey"/>
+    <CourseDetail v-if="detail" :courseUUID="detail" @close-detail="closeDetail" @open-detail="showDetail" :key="reloadKey"/>
 
     <div v-else>
       <n-h2>List of courses</n-h2>

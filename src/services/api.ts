@@ -9,12 +9,12 @@ const api = axios.create({
 
 export interface API {
     login(googleCredential: string): Promise<void>;
-    getSession(): Promise<void>;
-    setSession(): Promise<void>;
+    logout(): Promise<void>;
+    check(): Promise<void>;
 
     getCourseList(): Promise<CourseView[]>;
     getTestList(): Promise<TestView[]>;
-    getCourseDetail(courseId: number): Promise<CourseDetail>;
+    getCourseDetail(courseUUID: string): Promise<CourseDetail>;
   }
 
 export const API = {
@@ -22,12 +22,12 @@ export const API = {
     return api.post('/user/login', { googleCredential });
   },
 
-  getSession() {
-    return api.get('/user/get');
+  logout() {
+    return api.post('/user/logout');
   },
 
-  setSession() {
-    return api.get('/user/set');
+  check() {
+    return api.get('/user/check');
   },
 
   getCourseList() { // TODO: Real API
@@ -48,10 +48,10 @@ export const API = {
     });
   },
 
-  getCourseDetail(courseID: number) { // TODO: Real API
+  getCourseDetail(courseUUID: string) { // TODO: Real API
     return new Promise((resolve) => {
         setTimeout(() => {
-            resolve(mockCourseDetails.find((c) => c.courseID === courseID));
+            resolve(mockCourseDetails.find((c) => c.courseUUID === courseUUID));
         }, 2000);
     });
   }

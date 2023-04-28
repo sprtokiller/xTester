@@ -15,7 +15,7 @@ import type { CourseView, TestView, CourseDetail, User, UserGroup } from '@/inte
 
 export const mockCourseDetails: CourseDetail[] = [
     {
-        courseID: 1,
+        courseUUID: '98f3ee48-7593-4504-9d48-3ace56f96c93',
         name: 'xAPI_simple',
         author: 'Vítězslav Kříž',
         version: 5,
@@ -23,7 +23,7 @@ export const mockCourseDetails: CourseDetail[] = [
         courseHash: 'x76CxTXo7UHsz92k',
         otherVersions: [
             {
-                courseID: 2,
+                courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
                 name: 'xAPI_simple',
                 author: 'Vítězslav Kříž',
                 version: 7,
@@ -32,7 +32,7 @@ export const mockCourseDetails: CourseDetail[] = [
         ]
     },
     {
-        courseID: 2,
+        courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
         name: 'xAPI_simple',
         author: 'Vítězslav Kříž',
         version: 7,
@@ -40,7 +40,7 @@ export const mockCourseDetails: CourseDetail[] = [
         courseHash: 'bxR_bN7eF90WPICq',
         otherVersions: [
             {
-                courseID: 1,
+                courseUUID: '98f3ee48-7593-4504-9d48-3ace56f96c93',
                 name: 'xAPI_simple',
                 author: 'Vítězslav Kříž',
                 version: 5,
@@ -49,9 +49,9 @@ export const mockCourseDetails: CourseDetail[] = [
         ],
         tests: [
             {
-                testID: 5,
+                testUUID: '018244af-c099-43e0-9be6-0eb928fb12d6',
                 name: 'Můj pojmenovaný test \'xAPI_simple\' AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-                courseID: 2,
+                courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
                 // start in past and end in past -> 'Finished'
                 createdAt: new Date(2023, APRIL, 9, 12, 13, 2),
                 startAt: new Date(2023, APRIL, 10, 8, 0, 0),
@@ -60,9 +60,9 @@ export const mockCourseDetails: CourseDetail[] = [
                 modules: [1, 2, 4]
             },
             {
-                testID: 6,
+                testUUID: 'dcc0c679-3ae1-473a-a042-b7c72fb9b553',
                 name: 'Test 02 of \'xAPI_simple\' (version 7)',
-                courseID: 2,
+                courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
                 // start in past and end in past -> 'Finished'
                 createdAt: new Date(2023, APRIL, 9, 12, 13, 2),
                 startAt: new Date(2023, APRIL, 10, 8, 0, 0),
@@ -71,16 +71,16 @@ export const mockCourseDetails: CourseDetail[] = [
                 modules: [3, 5]
             },
             {
-                testID: 7,
+                testUUID: '3a8fccb1-9113-43f4-b410-e10eb947e33a',
                 name: 'WIP test of \'xAPI_simple\' (version 7)',
-                courseID: 2,
+                courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
                 // no start -> 'WIP' (no chip)
                 createdAt: new Date(2023, APRIL, 14, 12, 13, 2),
             }
         ]
     },
     {
-        courseID: 4,
+        courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
         name: 'Tvorba WWW stránek 1',
         author: 'Kateřina Chromčáková',
         version: 8,
@@ -88,9 +88,9 @@ export const mockCourseDetails: CourseDetail[] = [
         courseHash: '1cyFXEPcCxqzyOzf',
         tests: [
             {
-                testID: 1,
+                testUUID: 'cfcd95eb-4c13-4432-9a96-1892b4268b97',
                 name: 'Test 01 of \'Tvorba WWW stránek 1\' (version 8)',
-                courseID: 4,
+                courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
                 // start in past and MANUAL end -> 'Active'
                 createdAt: new Date(2023, MARCH, 16, 10, 45, 16),
                 startAt: new Date(2023, MARCH, 18, 8, 0, 0),
@@ -98,9 +98,9 @@ export const mockCourseDetails: CourseDetail[] = [
                 modules: [1, 2, 3, 4, 5]
             },
             {
-                testID: 2,
+                testUUID: '76ec0911-7a99-43a0-9d9c-ae3aa38180fc',
                 name: 'Test 02 of \'Tvorba WWW stránek 1\' (version 8)',
-                courseID: 4,
+                courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
                 // started and end in future -> 'Active'
                 createdAt: new Date(2023, MARCH, 16, 10, 51, 18),
                 startAt: new Date(2023, MARCH, 18, 8, 0, 0),
@@ -109,9 +109,9 @@ export const mockCourseDetails: CourseDetail[] = [
                 modules: [1, 4]
             },
             {
-                testID: 3,
+                testUUID: '51e60bef-24d7-48a2-9e27-4e3f7e6c9fff',
                 name: 'Test 03 of \'Tvorba WWW stránek 1\' (version 8)',
-                courseID: 4,
+                courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
                 // start in future and MANUAL/future end -> 'Planned'
                 createdAt: new Date(2023, MARCH, 17, 12, 13, 2),
                 startAt: new Date(2024, MARCH, 18, 8, 0, 0),
@@ -124,7 +124,7 @@ export const mockCourseDetails: CourseDetail[] = [
 
 export const mockCourses: CourseView[] = [
     {
-        courseID: 1,
+        courseUUID: '98f3ee48-7593-4504-9d48-3ace56f96c93',
         name: 'xAPI_simple',
         author: 'Vítězslav Kříž',
         version: 5,
@@ -134,7 +134,7 @@ export const mockCourses: CourseView[] = [
         plannedTests: 0
     },
     {
-        courseID: 2,
+        courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
         name: 'xAPI_simple',
         author: 'Vítězslav Kříž',
         version: 7,
@@ -144,7 +144,7 @@ export const mockCourses: CourseView[] = [
         plannedTests: 0
     },
     {
-        courseID: 4,
+        courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
         name: 'Tvorba WWW stránek 1',
         author: 'Kateřina Chromčáková',
         version: 8,
@@ -157,9 +157,9 @@ export const mockCourses: CourseView[] = [
 
 export const mockTests: TestView[] = [
     {
-        testID: 1,
+        testUUID: 'cfcd95eb-4c13-4432-9a96-1892b4268b97',
         name: 'Test 01 of \'Tvorba WWW stránek 1\' (version 8)',
-        courseID: 4,
+        courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
         // start in past and MANUAL end -> 'Active'
         createdAt: new Date(2023, MARCH, 16, 10, 45, 16),
         startAt: new Date(2023, MARCH, 18, 8, 0, 0),
@@ -167,9 +167,9 @@ export const mockTests: TestView[] = [
         modules: [1, 2, 3, 4, 5]
     },
     {
-        testID: 2,
+        testUUID: '76ec0911-7a99-43a0-9d9c-ae3aa38180fc',
         name: 'Test 02 of \'Tvorba WWW stránek 1\' (version 8)',
-        courseID: 4,
+        courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
         // started and end in future -> 'Active'
         createdAt: new Date(2023, MARCH, 16, 10, 51, 18),
         startAt: new Date(2023, MARCH, 18, 8, 0, 0),
@@ -178,9 +178,9 @@ export const mockTests: TestView[] = [
         modules: [1, 4]
     },
     {
-        testID: 3,
+        testUUID: '51e60bef-24d7-48a2-9e27-4e3f7e6c9fff',
         name: 'Test 03 of \'Tvorba WWW stránek 1\' (version 8)',
-        courseID: 4,
+        courseUUID: '0cd1da66-5db8-4218-9ab1-06134a0c7bf6',
         // start in future and MANUAL/future end -> 'Planned'
         createdAt: new Date(2023, MARCH, 17, 12, 13, 2),
         startAt: new Date(2024, MARCH, 18, 8, 0, 0),
@@ -188,9 +188,9 @@ export const mockTests: TestView[] = [
         modules: [1, 4, 5]
     },
     {
-        testID: 5,
+        testUUID: '018244af-c099-43e0-9be6-0eb928fb12d6',
         name: 'Můj pojmenovaný test \'xAPI_simple\' AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-        courseID: 2,
+        courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
         // start in past and end in past -> 'Finished'
         createdAt: new Date(2023, APRIL, 9, 12, 13, 2),
         startAt: new Date(2023, APRIL, 10, 8, 0, 0),
@@ -199,9 +199,9 @@ export const mockTests: TestView[] = [
         modules: [1, 2, 4]
     },
     {
-        testID: 6,
+        testUUID: 'dcc0c679-3ae1-473a-a042-b7c72fb9b553',
         name: 'Test 02 of \'xAPI_simple\' (version 7)',
-        courseID: 2,
+        courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
         // start in past and end in past -> 'Finished'
         createdAt: new Date(2023, APRIL, 9, 12, 13, 2),
         startAt: new Date(2023, APRIL, 10, 8, 0, 0),
@@ -210,9 +210,9 @@ export const mockTests: TestView[] = [
         modules: [3, 5]
     },
     {
-        testID: 7,
+        testUUID: '3a8fccb1-9113-43f4-b410-e10eb947e33a',
         name: 'WIP test of \'xAPI_simple\' (version 7)',
-        courseID: 2,
+        courseUUID: '5e06909d-12ff-4c50-a460-c28d9eca69b7',
         // no start -> 'WIP' (no chip)
         createdAt: new Date(2023, APRIL, 14, 12, 13, 2),
     }

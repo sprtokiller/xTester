@@ -19,21 +19,21 @@ export default {
   methods: {
     callback: function (response: any) {
       API.login(response.credential).then(res => {
-        console.info(res);
+        this.MSG.info("OK");
       }).catch(err => {
         console.error(err);
       });
     },
-    fakeGet() {
-      API.getSession().then(res => {
-        console.info(res);
+    logout() {
+      API.logout().then(res => {
+        this.MSG.info("OK");
       }).catch(err => {
         console.error(err);
       });
     },
-    fakeSet() {
-      API.setSession().then(res => {
-        console.info(res);
+    check() {
+      API.check().then(res => {
+        this.MSG.info("OK");
       }).catch(err => {
         console.error(err);
       });
@@ -46,8 +46,8 @@ export default {
   <main>
     <div>Welcome</div>
     <GoogleLogin :callback="callback" prompt auto-login/>
-    <n-button @click="fakeGet">Get</n-button>
-    <n-button @click="fakeSet">Set</n-button>
+    <n-button @click="logout">Logout</n-button>
+    <n-button @click="check">Check</n-button>
 
   </main>
 </template>
