@@ -64,7 +64,7 @@ export default {
 
 <template>
   <div class="container">
-    <CourseDetail v-if="detail" :courseUUID="detail" @close-detail="closeDetail" @open-detail="showDetail" :key="reloadKey"/>
+    <CourseDetail v-if="detail" :courseUUID="detail" @closeDetail="closeDetail" @openDetail="showDetail" :key="reloadKey"/>
 
     <div v-else>
       <n-h2>List of courses</n-h2>
@@ -72,7 +72,7 @@ export default {
         <n-spin :show="loading" style="min-height: 200px;">
           <n-list hoverable clickable>
             <!-- add a CourseItem for each course -->
-            <CourseItem v-for="course in courses" :course="course" @open-detail="showDetail"/>
+            <CourseItem v-for="course in courses" :course="course" @openDetail="showDetail"/>
           </n-list>
           <n-empty description="No e-learning courses found :(" v-if="!loading && isEmpty">
             <template #extra>

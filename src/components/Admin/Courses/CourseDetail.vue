@@ -51,17 +51,19 @@ export default {
     return { MSG, API,
       columns: createColumns({
         changeDetail(newCourseUUID: string) {
-          context.emit('open-detail', newCourseUUID)
+          context.emit('openDetail', newCourseUUID)
         }
       })
     }
   },
+  emits: ["openDetail", "closeDetail"],
   mounted() {
     // fetch courses from the API
     this.API.getCourseDetail(this.courseUUID).then(course => {
+      console.log(course);
       this.loading = false;
       this.course = course;
-    }).catch(err => {
+    }).catch(err => { // TODO: handle error in better way
       this.loading = false;
       this.MSG.error(err.message);
     });
@@ -83,7 +85,7 @@ export default {
   },
   methods: {
     handleBack() {
-      this.$emit('close-detail');
+      this.$emit('closeDetail');
     }
   },
   computed: {
@@ -104,7 +106,7 @@ export default {
   <!-- Loading state -->
   <div v-if="loading">
     <div class="d-flex align-items-center">
-      <n-button size="large" @click="handleBack" quaternary ghost circle>
+      <n-button size="large" @click="handleBack" quaternary circle>
         <template #icon>
           <n-icon class="icon-no-align">
             <ArrowBackFilled />
@@ -121,7 +123,7 @@ export default {
     <div class="row">
       <div class="col-9">
         <div class="d-flex align-items-center">
-          <n-button size="large" @click="handleBack" quaternary ghost circle>
+          <n-button size="large" @click="handleBack" quaternary circle>
             <template #icon>
               <n-icon class="icon-no-align">
                 <ArrowBackFilled />
