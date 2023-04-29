@@ -3,6 +3,7 @@
 import TestTable from '@/components/Admin/Testing/TestTable.vue'
 
 export default {
+  emits: ["changeTab"],
   components: {
     TestTable
   },

@@ -26,7 +26,7 @@ export default {
       const currentTime = new Date();
       return this.course.tests.filter(t => t.startAt && new Date(t.startAt) > currentTime).length;
     },
-    runningTests() : number {
+    activeTests() : number {
       const currentTime = new Date();
       return this.course.tests.filter(t => (t.startAt && new Date(t.startAt) <= currentTime) && (!t.endAt || new Date(t.endAt) > currentTime)).length;
     },
@@ -67,17 +67,17 @@ export default {
       </template>
       <template #description>
         <n-space size="small" style="margin-top: 4px">
-          <n-tag :bordered="false" type="default" size="small" v-if="!(runningTests || completedTests || plannedTests)">
+          <n-tag :bordered="false" type="default" size="small" v-if="!(activeTests || completedTests || plannedTests)">
             No tests
           </n-tag>
           <n-tag :bordered="false" type="warning" size="small" v-if="plannedTests">
             Planned: {{ plannedTests }}
           </n-tag>
-          <n-tag :bordered="false" type="info" size="small" v-if="runningTests">
-            Active: {{ runningTests }}
+          <n-tag :bordered="false" type="info" size="small" v-if="activeTests">
+            Active: {{ activeTests }}
           </n-tag>
           <n-tag :bordered="false" type="success" size="small" v-if="completedTests">
-            Finished: {{ completedTests }}
+            Completed: {{ completedTests }}
           </n-tag>
         </n-space>
       </template>

@@ -1,54 +1,46 @@
-import axios from 'axios';
+import axios, { type AxiosInstance } from 'axios';
 import type { ICourseView, ITestView, ICourseDetail } from '@/interfaces';
-import { mockCourses, mockTests, mockCourseDetails } from '@/_mock';
 
-const api = axios.create({
-  baseURL: 'http://localhost:7331/api/',
-  withCredentials: true
-});
+export class API {
+  private api: AxiosInstance;
 
-export interface API {
-    login(googleCredential: string): Promise<void>;
-    logout(): Promise<void>;
-    check(): Promise<void>;
-
-    getCourseList(): Promise<ICourseView[]>;
-    getTestList(): Promise<ITestView[]>;
-    getCourseDetail(courseUUID: string): Promise<ICourseDetail>;
+  private async fetchData<T>(endpoint: string): Promise<T> {
+    try {
+      const response = await this.api.get(endpoint);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 
-export const API = {
-  login(googleCredential: string) {
-    return api.post('/user/login', { googleCredential });
-  },
+  constructor(baseURL: string) {
+    this.api = axios.create({
+      baseURL: baseURL,
+      withCredentials: true
+    });
+  }
 
-  logout() {
-    return api.post('/user/logout');
-  },
+  async login(googleCredential: string): Promise<void>{
+    return this.api.post('/user/login', { googleCredential });
+  }
 
-  check() {
-    return api.get('/user/check');
-  },
+  async logout(): Promise<void> {
+    return this.api.post('/user/logout');
+  }
+
+  async check(): Promise<void> {
+    return this.api.get('/user/check');
+  }
 
   async getCourseList(): Promise<ICourseView[]> {
-    const response = await api.get('/course/list');
-    const data: ICourseView[] = response.data;
-    return data;
-  },
-
-  getTestList() { // TODO: Real API
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(mockTests);
-        }, 2000);
-    });
-  },
-
-  getCourseDetail(courseUUID: string) { // TODO: Real API
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(mockCourseDetails.find((c) => c.courseUUID === courseUUID));
-        }, 2000);
-    });
+    return this.fetchData<ICourseView[]>('/course/list');
+  }
+  
+  async getTestList(): Promise<ITestView[]> {
+    return this.fetchData<ITestView[]>('/test/list');
+  }
+  
+  async getCourseDetail(courseUUID: string): Promise<ICourseDetail> {
+    return this.fetchData<ICourseDetail>(`/course/detail/${courseUUID}`);
   }
 }

@@ -23,13 +23,15 @@ function getChip(type: 'success' | 'error' | 'warning' | 'info' | 'default', tex
 
 const getState = (test: ITestView) => {
   const currentTime = new Date();
+  const start = test.startAt ? new Date(test.startAt) : null;
+  const end = test.endAt ? new Date(test.endAt) : null;
 
-  if (!test.startAt) return null;
+  if (!start) return null;
 
-  if (test.startAt > currentTime) {
+  if (start > currentTime) {
     return getChip('warning', 'Planned')
-  } else if (!test.endAt || test.endAt > currentTime) {
-    return getChip('info', 'Running')
+  } else if (!end || end > currentTime) {
+    return getChip('info', 'Active')
   } else {
     return getChip('success', 'Completed')
   }
@@ -98,7 +100,8 @@ export default {
   components: {
     NDataTable, NButton, NTag, RemoveRedEyeRound, NH2
   },
-  setup(props, context) {
+  emits: ['changeTab'],
+  setup(_props, context) {
     const MSG = useMessage();
     const API = inject('API') as API;
     return {

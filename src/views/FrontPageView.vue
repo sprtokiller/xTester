@@ -2,7 +2,7 @@
 
 import { inject } from 'vue'
 import { useMessage, NButton } from 'naive-ui';
-import { API } from '@/services/api';
+import type { API } from '@/services/api';
 
 export default {
   components: {
@@ -13,26 +13,23 @@ export default {
     const API = inject('API') as API;
     return { MSG, API }
   },
-  // mounted() {
-  //   console.info("Hello");
-  // },
   methods: {
     callback: function (response: any) {
-      API.login(response.credential).then(res => {
+      this.API.login(response.credential).then(res => {
         this.MSG.info("OK");
       }).catch(err => {
         console.error(err);
       });
     },
     logout() {
-      API.logout().then(res => {
-        this.MSG.info("OK");
+      this.API.logout().then(res => {
+        this.MSG.info("OK"); //TODO: redirect to login page
       }).catch(err => {
         console.error(err);
       });
     },
     check() {
-      API.check().then(res => {
+      this.API.check().then(res => {
         this.MSG.info("OK");
       }).catch(err => {
         console.error(err);
