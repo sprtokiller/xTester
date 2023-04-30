@@ -38,7 +38,8 @@ export default {
       detail: '' as string,
       loading: true as boolean,
       courses: [] as ICourseView[],
-      reloadKey: 0 as number
+      reloadKey: 0 as number,
+      editUUID: '' as string
     }
   },
   computed: {
@@ -56,6 +57,9 @@ export default {
     closeDetail() {
       this.detail = '';
       localStorage.removeItem('selectedCourse');
+    },
+    editStart(courseUUID: string) {
+      this.editUUID = courseUUID;
     }
   }
 }
@@ -72,7 +76,7 @@ export default {
         <n-spin :show="loading" style="min-height: 200px;">
           <n-list hoverable clickable>
             <!-- add a CourseItem for each course -->
-            <CourseItem v-for="course in courses" :course="course" @openDetail="showDetail"/>
+            <CourseItem v-for="course in courses" :course="course" @openDetail="showDetail" v-bind:editUUID="editUUID" @editStart="editStart"/>
           </n-list>
           <n-empty description="No e-learning courses found :(" v-if="!loading && isEmpty">
             <template #extra>
