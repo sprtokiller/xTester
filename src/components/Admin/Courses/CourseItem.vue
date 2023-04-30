@@ -1,8 +1,8 @@
 <script lang="ts">
 
-import { NListItem, NThing, NSpace, NTag, NButton, NImage, NPopover, NIcon, NInput } from 'naive-ui';
-import { ref } from 'vue';
-import type { InputInst } from 'naive-ui';
+import { NListItem, NThing, NSpace, NTag, NButton, NImage, NPopover, NIcon, NInput, useMessage } from 'naive-ui';
+import { inject } from 'vue';
+import type { API } from '@/services/api';
 import { InfoOutlined, EditFilled, DeleteFilled } from '@vicons/material'
 import type { ICourseView } from '@/interfaces';
 import { clickOutside, focus } from "@/directives";
@@ -15,25 +15,68 @@ export default {
   directives: {
     clickOutside, focus
   },
-  emits: ["editStart", "openDetail"],
+  setup() {
+    const MSG = useMessage();
+    const API = inject('API') as API;
+    return { MSG, API }
+  },
+  data() {
+    return {
+      courseNameInput: this.course.name,
+      inputIsSaving: false as boolean
+    }
+  },
+  emits: ["editSelect", "openDetail"],
   methods: {
-    openDetail () {
+    openDetail() {
       // emit an event to the parent component
       this.$emit('openDetail', this.course.courseUUID);
-      },
-    editCourse (event : Event) {
+    },
+    editCourse(event: Event) {
       event.stopPropagation();
-      this.$emit('editStart', this.course.courseUUID);
+      this.$emit('editSelect', this.course.courseUUID);
     },
     handleClickOutside() {
       // if it is in edit mode, emit an event to the parent component
-      if (this.inEditMode)
-        this.$emit('editStart', '');
+      if (this.inEditMode) {
+        this.renameCourse();
+      }
     },
-    deleteCourse (event : Event) {
+    deleteCourse(event: Event) {
       event.stopPropagation();
       console.log('Called delete');
     },
+    handleKeyUp(event: KeyboardEvent) {
+      if (event.key === 'Enter') {
+        this.renameCourse();
+      } else
+        if (event.key === 'Escape') {
+          // revoke to original value, then exit edit mode
+          this.courseNameInput = this.course.name;
+          this.$emit('editSelect', '');
+        }
+    },
+    renameCourse() {
+      // save, then exit edit mode
+      this.inputIsSaving = true;
+      this.courseNameInput = this.courseNameInput.trim();
+      // if the name is not changed, exit edit mode
+      if (this.courseNameInput === this.course.name) {
+        this.$emit('editSelect', '');
+        return;
+      }
+
+      this.API.renameCourse(this.course.courseUUID, this.courseNameInput).then(() => {
+        this.course.name = this.courseNameInput;
+        this.MSG.success('Course name changed successfully');
+        this.inputIsSaving = false;
+        this.$emit('editSelect', '');
+      }).catch((err) => {
+        this.MSG.error(err.message)
+        this.inputIsSaving = false;
+        this.$emit('editSelect', '');
+      })
+    }
   },
   props: {
     editUUID: {
@@ -46,22 +89,22 @@ export default {
     },
   },
   computed: {
-    inEditMode() : boolean {
+    inEditMode(): boolean {
       return this.editUUID === this.course.courseUUID;
     },
-    plannedTests() : number {
+    plannedTests(): number {
       const currentTime = new Date();
       return this.course.tests.filter(t => t.startAt && new Date(t.startAt) > currentTime).length;
     },
-    activeTests() : number {
+    activeTests(): number {
       const currentTime = new Date();
       return this.course.tests.filter(t => (t.startAt && new Date(t.startAt) <= currentTime) && (!t.endAt || new Date(t.endAt) > currentTime)).length;
     },
-    completedTests() : number {
+    completedTests(): number {
       const currentTime = new Date();
       return this.course.tests.filter(t => t.endAt && new Date(t.endAt) <= currentTime).length;
     }
-  } 
+  }
 }
 </script>
 
@@ -79,7 +122,9 @@ export default {
 
     <n-thing>
       <template #header>
-        <n-input v-if="inEditMode" v-focus ref="courseNameInputRef" class="course-name-input" v-bind:placeholder="course.name" onclick="event.stopPropagation();" autosize/>
+        <n-input v-if="inEditMode" v-focus ref="courseNameInputRef" class="course-name-input" placeholder="Course name"
+          v-model:value="courseNameInput" onclick="event.stopPropagation();" autosize :passively-activated="true" :loading="inputIsSaving" :disabled="inputIsSaving"
+          @keyup="handleKeyUp" />
         <div v-else>
           {{ course.name }}
           <n-popover placement="right-start" trigger="hover">
@@ -94,11 +139,12 @@ export default {
             </div>
           </n-popover>
         </div>
-        
+
       </template>
       <template #description>
         <n-space size="small" style="margin-top: 4px">
-          <n-tag class="tag-chip" :bordered="false" type="default" size="small" v-if="!(activeTests || completedTests || plannedTests)">
+          <n-tag class="tag-chip" :bordered="false" type="default" size="small"
+            v-if="!(activeTests || completedTests || plannedTests)">
             No tests
           </n-tag>
           <n-tag class="tag-chip" :bordered="false" type="warning" size="small" v-if="plannedTests">
@@ -117,7 +163,8 @@ export default {
     <template #suffix>
       <div style="white-space: nowrap;">
 
-        <n-button v-on:click.stop="editCourse" v-click-outside="handleClickOutside" class="btn-course-action" size="small" quaternary circle type="success">
+        <n-button v-on:click.stop="editCourse" v-click-outside="handleClickOutside" class="btn-course-action" size="small"
+          quaternary circle type="success">
           <template #icon>
             <n-icon class="icon-no-align">
               <EditFilled />
@@ -138,10 +185,10 @@ export default {
 </template>
 
 <style scoped>
-
-.tag-chip{
+.tag-chip {
   cursor: pointer;
 }
+
 .course-name-input {
   width: 100%;
   font-size: 1rem;

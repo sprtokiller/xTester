@@ -58,7 +58,7 @@ export default {
       this.detail = '';
       localStorage.removeItem('selectedCourse');
     },
-    editStart(courseUUID: string) {
+    editSelect(courseUUID: string) {
       this.editUUID = courseUUID;
     }
   }
@@ -76,7 +76,7 @@ export default {
         <n-spin :show="loading" style="min-height: 200px;">
           <n-list hoverable clickable>
             <!-- add a CourseItem for each course -->
-            <CourseItem v-for="course in courses" :course="course" @openDetail="showDetail" v-bind:editUUID="editUUID" @editStart="editStart"/>
+            <CourseItem v-for="course in courses" :course="course" @openDetail="showDetail" v-bind:editUUID="editUUID" @editSelect="editSelect"/>
           </n-list>
           <n-empty description="No e-learning courses found :(" v-if="!loading && isEmpty">
             <template #extra>

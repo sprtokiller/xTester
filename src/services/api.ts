@@ -21,26 +21,31 @@ export class API {
   }
 
   async login(googleCredential: string): Promise<void>{
-    return this.api.post('/user/login', { googleCredential });
+    return this.api.post(`/user/login`, { googleCredential });
   }
 
   async logout(): Promise<void> {
-    return this.api.post('/user/logout');
+    return this.api.post(`/user/logout`);
   }
 
   async check(): Promise<void> {
-    return this.api.get('/user/check');
+    return this.api.get(`/user/check`);
   }
-
+  /* COURSE */
   async getCourseList(): Promise<ICourseView[]> {
-    return this.fetchData<ICourseView[]>('/course/list');
-  }
-  
-  async getTestList(): Promise<ITestView[]> {
-    return this.fetchData<ITestView[]>('/test/list');
+    return this.fetchData<ICourseView[]>(`/course/list`);
   }
   
   async getCourseDetail(courseUUID: string): Promise<ICourseDetail> {
     return this.fetchData<ICourseDetail>(`/course/detail/${courseUUID}`);
+  }
+
+  async renameCourse(courseUUID: string, courseName: string): Promise<void> {
+    return this.api.post(`/course/rename/${courseUUID}`, { courseName });
+  }
+
+  /* TEST */
+  async getTestList(): Promise<ITestView[]> {
+    return this.fetchData<ITestView[]>(`/test/list`);
   }
 }
