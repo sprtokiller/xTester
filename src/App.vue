@@ -1,12 +1,12 @@
 <script lang="ts">
 import { RouterView } from 'vue-router'
-import { NMessageProvider } from 'naive-ui'
+import { NMessageProvider, NDialogProvider } from 'naive-ui'
 
 const padTwo = (val : number) => (val > 9 ? "" : "0") + val;
 
 export default {
   components: {
-    NMessageProvider
+    NMessageProvider, NDialogProvider
   },
   methods: {
     formatDate(date : Date) {
@@ -25,8 +25,10 @@ export default {
 
 <template>
   <n-message-provider>
-    <RouterView />
-    <div id="dev-bar">Compiled at: {{ formatDate(new Date()) }}</div>
+    <n-dialog-provider>
+      <RouterView />
+      <div id="dev-bar">Compiled at: {{ formatDate(new Date()) }}</div>
+    </n-dialog-provider>
   </n-message-provider>
 </template>
 

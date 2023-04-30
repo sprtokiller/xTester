@@ -1,6 +1,6 @@
 <script lang="ts">
 
-import { NListItem, NThing, NSpace, NTag, NButton, NImage, NPopover, NIcon, NInput, useMessage } from 'naive-ui';
+import { NListItem, NThing, NSpace, NTag, NButton, NImage, NPopover, NIcon, NInput, NSpin, useMessage, useDialog } from 'naive-ui';
 import { inject } from 'vue';
 import type { API } from '@/services/api';
 import { InfoOutlined, EditFilled, DeleteFilled } from '@vicons/material'
@@ -10,23 +10,25 @@ import { clickOutside, focus } from "@/directives";
 export default {
   components: {
     NListItem, NThing, NSpace, NTag, NButton, NImage, NPopover, InfoOutlined,
-    NIcon, EditFilled, DeleteFilled, NInput
+    NIcon, EditFilled, DeleteFilled, NInput, NSpin
   },
   directives: {
     clickOutside, focus
   },
   setup() {
+    const DLG = useDialog();
     const MSG = useMessage();
     const API = inject('API') as API;
-    return { MSG, API }
+    return { DLG, MSG, API }
   },
   data() {
     return {
       courseNameInput: this.course.name,
-      inputIsSaving: false as boolean
+      inputIsSaving: false as boolean,
+      courseIsDeleting: false as boolean
     }
   },
-  emits: ["editSelect", "openDetail"],
+  emits: ["editSelect", "openDetail", "deleteCourse"],
   methods: {
     openDetail() {
       // emit an event to the parent component
@@ -44,6 +46,29 @@ export default {
     },
     deleteCourse(event: Event) {
       event.stopPropagation();
+      var contetnt = 'Are you sure you want to delete this course?';
+      const len = this.course.tests.length;
+      if (len) {
+        contetnt += ` This will also delete ${len} test${len == 1 ? '' : 's'}.`;
+      }
+      this.DLG.warning({
+          title: 'Confirm',
+          content: contetnt,
+          positiveText: 'Delete',
+          negativeText: 'Cancel',
+          onPositiveClick: () => {
+            this.courseIsDeleting = true;
+            this.API.deleteCourse(this.course.courseUUID).then(() => {
+              this.courseIsDeleting = false;
+              // delete this course from the parent component
+              this.MSG.success('Course deleted successfully');
+              this.$emit('deleteCourse', this.course.courseUUID);
+            }).catch((err) => {
+              this.courseIsDeleting = false;
+              this.MSG.error(err.message)
+            })
+          }
+        })
       console.log('Called delete');
     },
     handleKeyUp(event: KeyboardEvent) {
@@ -110,6 +135,7 @@ export default {
 
 
 <template>
+  <n-spin :show="courseIsDeleting">
   <n-list-item v-on:click="openDetail">
     <template #prefix>
       <div class="xratio xratio-16x9" style="background-color: wheat; width: 96px; height: 54px;">
@@ -182,6 +208,7 @@ export default {
       </div>
     </template>
   </n-list-item>
+  </n-spin>
 </template>
 
 <style scoped>

@@ -10,3 +10,7 @@
 .btn-less-visible:hover {
   color: var(--gray-1)
 }
+
+.n-dialog svg {
+  vertical-align: baseline !important;
+}

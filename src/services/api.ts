@@ -44,6 +44,10 @@ export class API {
     return this.api.post(`/course/rename/${courseUUID}`, { courseName });
   }
 
+  async deleteCourse(courseUUID: string): Promise<void> {
+    return this.api.delete(`/course/delete/${courseUUID}`);
+  }
+
   /* TEST */
   async getTestList(): Promise<ITestView[]> {
     return this.fetchData<ITestView[]>(`/test/list`);

@@ -60,6 +60,11 @@ export default {
     },
     editSelect(courseUUID: string) {
       this.editUUID = courseUUID;
+    },
+    deleteCourse(courseUUID: string) {
+      // delete the course from the array
+      this.courses = this.courses.filter(course => course.courseUUID !== courseUUID);
+      console.log(this.courses.length);
     }
   }
 }
@@ -76,7 +81,7 @@ export default {
         <n-spin :show="loading" style="min-height: 200px;">
           <n-list hoverable clickable>
             <!-- add a CourseItem for each course -->
-            <CourseItem v-for="course in courses" :course="course" @openDetail="showDetail" v-bind:editUUID="editUUID" @editSelect="editSelect"/>
+            <CourseItem v-for="course in courses" :course="course" @openDetail="showDetail" v-bind:editUUID="editUUID" @editSelect="editSelect" @deleteCourse="deleteCourse"/>
           </n-list>
           <n-empty description="No e-learning courses found :(" v-if="!loading && isEmpty">
             <template #extra>
