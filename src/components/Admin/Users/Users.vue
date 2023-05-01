@@ -39,7 +39,5 @@ export default {
 
 
 <template>
-  <div class="container">
-    No content yet
-  </div> 
+  No content yet
 </template>

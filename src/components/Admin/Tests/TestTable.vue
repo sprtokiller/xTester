@@ -2,6 +2,7 @@
 
 import { inject, h } from 'vue'
 import { NDataTable, useMessage, NButton, NTag, NH2 } from 'naive-ui';
+import { useRouter } from 'vue-router'
 import type { API } from '@/services/api';
 import type { ITestView } from '@/interfaces';
 import type { DataTableColumns } from 'naive-ui';
@@ -100,16 +101,17 @@ export default {
   components: {
     NDataTable, NButton, NTag, RemoveRedEyeRound, NH2
   },
-  emits: ['changeTab'],
-  setup(_props, context) {
+  setup() {
+    const router = useRouter();
     const MSG = useMessage();
     const API = inject('API') as API;
     return {
       MSG, API,
       columns: createColumns({
         play(test: ITestView) {
+
           localStorage.setItem('selectedCourse', test.courseUUID);
-          context.emit('changeTab', "Courses");
+          router.push({ name: 'courseDetail', params: { courseUUID: test.courseUUID } });
         }
       })
     }

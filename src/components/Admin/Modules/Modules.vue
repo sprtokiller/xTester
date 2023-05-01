@@ -1,6 +1,6 @@
 <script lang="ts">
 
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 
 export default {
   // components: {
@@ -24,4 +24,5 @@ export default {
 
 <template>
   <p>I am Modules</p>
+  <router-link to="/app">Go to Dashboard</router-link>
 </template>

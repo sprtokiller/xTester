@@ -11,6 +11,6 @@
   color: var(--gray-1)
 }
 
-.n-dialog svg {
+.n-dialog svg, .n-message svg {
   vertical-align: baseline !important;
 }

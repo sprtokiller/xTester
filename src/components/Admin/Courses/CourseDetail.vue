@@ -7,9 +7,10 @@ import type { API } from '@/services/api';
 import type { ICourseDetail, ICourse } from '@/interfaces';
 import type { DataTableColumns } from 'naive-ui';
 import { RemoveRedEyeRound } from '@vicons/material'
+import { useRouter } from 'vue-router';
 
 
-const createColumns = ({ changeDetail } : { changeDetail: (newCourseUUID : string) => void}): DataTableColumns<ICourse> => {
+const createColumns = ({ changeDetail }: { changeDetail: (newCourseUUID: string) => void }): DataTableColumns<ICourse> => {
   return [
     {
       title: 'Other versions',
@@ -45,28 +46,21 @@ const createColumns = ({ changeDetail } : { changeDetail: (newCourseUUID : strin
 }
 
 export default {
-  setup(props, context) {
+  setup() {
+    const router = useRouter();
     const MSG = useMessage();
     const API = inject('API') as API;
-    return { MSG, API,
+    return {
+      router, MSG, API,
       columns: createColumns({
         changeDetail(newCourseUUID: string) {
-          context.emit('openDetail', newCourseUUID)
+          router.push({ name: 'courseDetail', params: { courseUUID: newCourseUUID } });
         }
       })
     }
   },
-  emits: ["openDetail", "closeDetail"],
   mounted() {
-    // fetch courses from the API
-    this.API.getCourseDetail(this.courseUUID).then(course => {
-      console.log(course);
-      this.loading = false;
-      this.course = course;
-    }).catch(err => { // TODO: handle error in better way
-      this.loading = false;
-      this.MSG.error(err.message);
-    });
+    this.fetchDetail(this.courseUUID);
   },
   data() {
     return {
@@ -83,19 +77,32 @@ export default {
       required: true
     }
   },
+  watch: {
+    courseUUID(newCourseUUID) {
+      this.fetchDetail(newCourseUUID);
+    }
+  },
   methods: {
+    fetchDetail(courseUUID : string) {
+      // fetch courses from the API
+      this.loading = true;
+      this.API.getCourseDetail(courseUUID).then(course => {
+        this.loading = false;
+        this.course = course;
+      }).catch(err => { // TODO: handle error in better way
+        this.loading = false;
+        this.MSG.error(err.message);
+      });
+    },
     handleBack() {
-      this.$emit('closeDetail');
+      this.$router.back();
     }
   },
   computed: {
     getURL(): string | undefined {
-      if (this.course) {
-        return `https://articulateusercontent.com/review/items/${this.course.courseHash}/story.html`;
-      }
-      else {
-        return undefined;
-      }
+      if (!this.course) return undefined;
+
+      return `https://articulateusercontent.com/review/items/${this.course.courseHash}/story.html`;
     }
   },
 }

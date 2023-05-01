@@ -1,24 +1,11 @@
 <script lang="ts">
 import AdminMenu from '@/components/AdminMenu.vue';
 import Error404 from '@/components/Error404.vue';
-import Courses from '@/components/Admin/Courses.vue';
-import Dashboard from '@/components/Admin/Dashboard.vue';
-import Modules from '@/components/Admin/Modules.vue';
-import Testing from '@/components/Admin/Testing.vue';
-import Users from '@/components/Admin/Users.vue';
 
 export default {
-  props: {
-    userHash: String,
-  },
   components: {
     AdminMenu,
-    Error404,
-    Courses,
-    Dashboard,
-    Modules,
-    Testing,
-    Users
+    Error404
   },
   methods: {
     handleNavigation(string : string) {
@@ -58,17 +45,20 @@ export default {
   <div class="d-flex vw-100 vh-100">
     <div id="admin-menu" class="h-100">
       <nav>
-        <AdminMenu @changeTab="handleNavigation" />
+        <AdminMenu />
       </nav>
     </div>
     <div class="flex-fill h-100 py-4">
       <main class="h-100">
-        <div class="d-flex align-items-center justify-content-center" v-if="validatedComponent">
-          <component :is="validatedComponent" :key="reloadKey" @changeTab="handleNavigation"></component>
+        <div class="d-flex align-items-center justify-content-center"> <!--v-if="validatedComponent"-->
+          <div class="container">
+            <router-view />
+          </div>
+          <!-- <component :is="validatedComponent" :key="reloadKey" @changeTab="handleNavigation"></component> -->
         </div>
-        <div class="d-flex align-items-center justify-content-center h-100" v-else>
+        <!-- <div class="d-flex align-items-center justify-content-center h-100" v-else>
           <Error404 />
-        </div>
+        </div> -->
       </main>
     </div>
   </div>

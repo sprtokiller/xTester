@@ -28,11 +28,10 @@ export default {
       courseIsDeleting: false as boolean
     }
   },
-  emits: ["editSelect", "openDetail", "deleteCourse"],
+  emits: ["editSelect", "deleteCourse"],
   methods: {
     openDetail() {
-      // emit an event to the parent component
-      this.$emit('openDetail', this.course.courseUUID);
+      this.$router.push({ name: 'courseDetail', params: { courseUUID : this.course.courseUUID } });
     },
     editCourse(event: Event) {
       event.stopPropagation();
@@ -69,7 +68,6 @@ export default {
             })
           }
         })
-      console.log('Called delete');
     },
     handleKeyUp(event: KeyboardEvent) {
       if (event.key === 'Enter') {
@@ -83,13 +81,14 @@ export default {
     },
     renameCourse() {
       // save, then exit edit mode
-      this.inputIsSaving = true;
       this.courseNameInput = this.courseNameInput.trim();
       // if the name is not changed, exit edit mode
       if (this.courseNameInput === this.course.name) {
         this.$emit('editSelect', '');
         return;
       }
+      
+      this.inputIsSaving = true;
 
       this.API.renameCourse(this.course.courseUUID, this.courseNameInput).then(() => {
         this.course.name = this.courseNameInput;
