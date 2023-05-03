@@ -8,6 +8,7 @@ import PageNotFoundView from '../views/PageNotFoundView.vue'
 /* Admin content will lazy load */
 import Courses from '@/components/Admin/Courses/Courses.vue'
 import CourseDetail from '@/components/Admin/Courses/CourseDetail.vue'
+import CourseAdd from '@/components/Admin/Courses/CourseAdd.vue'
 import Dashboard from '@/components/Admin/Dashboard/Dashboard.vue'
 import Modules from '@/components/Admin/Modules/Modules.vue'
 import Tests from '@/components/Admin/Tests/Tests.vue'
@@ -38,6 +39,18 @@ const router = createRouter({
           name: 'courseDetail',
           component: CourseDetail,
           props: true
+        },
+        {
+          path: 'course/new',
+          name: 'courseAdd',
+          component: CourseAdd,
+          props: (route) => ({ 
+              name: route.query.name,
+              author: route.query.author,
+              version: route.query.version,
+              courseHash: route.query.courseHash,
+              groupHash: route.query.groupHash
+            })
         },
         {
           path: '',

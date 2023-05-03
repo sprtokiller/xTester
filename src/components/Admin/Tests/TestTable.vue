@@ -1,11 +1,10 @@
 <script lang="ts">
 
 import { inject, h } from 'vue'
-import { NDataTable, useMessage, NButton, NTag, NH2 } from 'naive-ui';
-import { useRouter } from 'vue-router'
+import { NDataTable, useMessage, NButton, NTag, NH2, type DataTableColumns } from 'naive-ui';
+import { useRouter, type Router } from 'vue-router'
 import type { API } from '@/services/api';
 import type { ITestView } from '@/interfaces';
-import type { DataTableColumns } from 'naive-ui';
 import { RemoveRedEyeRound } from '@vicons/material'
 
 
@@ -40,7 +39,7 @@ const getState = (test: ITestView) => {
 
 
 function getModuleName(id: number) {
-  const moduleNames : string[] = ["Unknown", "I/O Test", "I/O Evaluation", "Timed retency", "Feedback", "Live comments"]
+  const moduleNames: string[] = ["Unknown", "I/O Test", "I/O Evaluation", "Timed retency", "Feedback", "Live comments"]
   // check if id is valid
   if (id < 0 || id >= moduleNames.length) return moduleNames[0];
   return moduleNames[id];
@@ -53,7 +52,7 @@ const getModules = (test: ITestView) => {
   })
 }
 
-const createColumns = ({ play } : { play: (test: ITestView) => void}): DataTableColumns<ITestView> => {
+const createColumns = ({ viewDetail: viewDetail }: { viewDetail: (test: ITestView) => void }): DataTableColumns<ITestView> => {
   return [
     {
       title: 'Test name',
@@ -64,8 +63,8 @@ const createColumns = ({ play } : { play: (test: ITestView) => void}): DataTable
       title: 'State',
       key: 'state',
       width: 160,
-      render(test) {
-        return getState(test);
+      render(row) {
+        return getState(row);
       }
     },
     {
@@ -82,7 +81,7 @@ const createColumns = ({ play } : { play: (test: ITestView) => void}): DataTable
             size: 'small',
             class: 'btn-less-visible',
             renderIcon: () => h(RemoveRedEyeRound),
-            onClick: () => play(row) // TODO: add a view link to course
+            onClick: () => {viewDetail(row)}
           }
         )
       }
@@ -94,6 +93,7 @@ const createColumns = ({ play } : { play: (test: ITestView) => void}): DataTable
         return getModules(test);
       }
     }
+    // TODO: Add delete and copy buttons
   ]
 }
 
@@ -102,15 +102,13 @@ export default {
     NDataTable, NButton, NTag, RemoveRedEyeRound, NH2
   },
   setup() {
-    const router = useRouter();
+    const router : Router = useRouter();
     const MSG = useMessage();
     const API = inject('API') as API;
     return {
       MSG, API,
       columns: createColumns({
-        play(test: ITestView) {
-
-          localStorage.setItem('selectedCourse', test.courseUUID);
+        viewDetail(test: ITestView) {
           router.push({ name: 'courseDetail', params: { courseUUID: test.courseUUID } });
         }
       })
@@ -129,7 +127,19 @@ export default {
   data() {
     return {
       loading: true,
-      tests: [] as ITestView[]
+      tests: [] as ITestView[],
+      rowProps: (test: ITestView) => {
+        return {
+          style: 'cursor: pointer',
+          onClick: () => this.handleRowClick(test)
+        }
+      } 
+    }
+  },
+  methods: {
+    handleRowClick(row: ITestView) {
+      console.log(row.testUUID)
+      //this.$router.push({ name: 'testDetail', params: { testUUID: row.testUUID } });
     }
   },
   computed: {
@@ -143,5 +153,5 @@ export default {
 
 <template>
   <n-h2>List of tests</n-h2>
-  <n-data-table :columns="columns" :data="tests" :bordered="false" :loading="loading" />
+  <n-data-table :columns="columns" :data="tests" :bordered="false" :loading="loading" :row-props="rowProps" />
 </template>

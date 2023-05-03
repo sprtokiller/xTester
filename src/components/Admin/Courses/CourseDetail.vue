@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import { inject, h } from 'vue'
-import { useMessage, NPageHeader, NButton, NIcon, NH3, NDataTable, NSpin } from 'naive-ui';
+import { useMessage, NButton, NIcon, NH3, NDataTable, NSpin } from 'naive-ui';
 import { ArrowBackFilled } from '@vicons/material'
 import type { API } from '@/services/api';
 import type { ICourseDetail, ICourse } from '@/interfaces';
@@ -69,7 +69,7 @@ export default {
     }
   },
   components: {
-    NPageHeader, NButton, NIcon, ArrowBackFilled, NH3, NDataTable, RemoveRedEyeRound, NSpin
+    NButton, NIcon, ArrowBackFilled, NH3, NDataTable, RemoveRedEyeRound, NSpin
   },
   props: {
     courseUUID: {
@@ -102,7 +102,7 @@ export default {
     getURL(): string | undefined {
       if (!this.course) return undefined;
 
-      return `https://articulateusercontent.com/review/items/${this.course.courseHash}/story.html`;
+      return `https://articulateusercontent.com/review/${this.course.courseHash}`;
     }
   },
 }
