@@ -13,6 +13,10 @@ export class API {
     }
   }
 
+  private e(toEncode: string): string {
+    return encodeURIComponent(toEncode);
+  }
+
   constructor(baseURL: string) {
     this.api = axios.create({
       baseURL: baseURL,
@@ -37,15 +41,22 @@ export class API {
   }
   
   async getCourseDetail(courseUUID: string): Promise<ICourseDetail> {
-    return this.fetchData<ICourseDetail>(`/course/detail/${courseUUID}`);
+    return this.fetchData<ICourseDetail>(`/course/detail/${this.e(courseUUID)}`);
   }
 
   async renameCourse(courseUUID: string, courseName: string): Promise<void> {
-    return this.api.post(`/course/rename/${courseUUID}`, { courseName });
+    return this.api.put(`/course/rename/${this.e(courseUUID)}`, { courseName });
   }
 
   async deleteCourse(courseUUID: string): Promise<void> {
-    return this.api.delete(`/course/delete/${courseUUID}`);
+    return this.api.delete(`/course/delete/${this.e(courseUUID)}`);
+  }
+
+  /**
+   * @returns course UUID if exists, null if not
+   */
+  async checkCourseExists(courseHash: string, groupHash: string): Promise<string> {
+    return this.fetchData<string>(`/course/check/${this.e(groupHash)}/${this.e(courseHash)}`);
   }
 
   /* TEST */

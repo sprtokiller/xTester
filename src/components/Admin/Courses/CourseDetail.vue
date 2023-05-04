@@ -59,9 +59,6 @@ export default {
       })
     }
   },
-  mounted() {
-    this.fetchDetail(this.courseUUID);
-  },
   data() {
     return {
       loading: true,
@@ -78,8 +75,11 @@ export default {
     }
   },
   watch: {
-    courseUUID(newCourseUUID) {
-      this.fetchDetail(newCourseUUID);
+    courseUUID: {
+      handler(newCourseUUID) {
+        this.fetchDetail(newCourseUUID);
+      },
+      immediate: true
     }
   },
   methods: {
