@@ -2,65 +2,76 @@ import axios, { type AxiosInstance } from 'axios';
 import type { ICourseView, ITestView, ICourseDetail } from '@/interfaces';
 
 export class API {
-  private api: AxiosInstance;
+  private static api: AxiosInstance;
 
-  private async fetchData<T>(endpoint: string): Promise<T> {
+  private static async request<T>(method: string, endpoint: string, body?: any): Promise<T> {
     try {
-      const response = await this.api.get(endpoint);
-      return response.data;
+      const response = await API.api.request({
+        method,
+        url: endpoint,
+        data: body,
+      });
+      return response?.data;
     } catch (error) {
       throw error;
     }
   }
-
-  private e(toEncode: string): string {
+  
+  private static e(toEncode: string): string {
     return encodeURIComponent(toEncode);
   }
 
   constructor(baseURL: string) {
-    this.api = axios.create({
+    API.api = axios.create({
       baseURL: baseURL,
       withCredentials: true
     });
   }
 
   async login(googleCredential: string): Promise<void>{
-    return this.api.post(`/user/login`, { googleCredential });
+    return API.request<void>(`POST`, `/user/login`, { googleCredential });
   }
 
   async logout(): Promise<void> {
-    return this.api.post(`/user/logout`);
+    return API.request<void>(`POST`, `/user/logout`);
   }
 
   async check(): Promise<void> {
-    return this.api.get(`/user/check`);
+    return API.request<void>(`GET`, `/user/check`);
   }
-  /* COURSE */
-  async getCourseList(): Promise<ICourseView[]> {
-    return this.fetchData<ICourseView[]>(`/course/list`);
+
+  /* ------------- COURSE ------------- */
+
+  // C
+  async addCourse(name: string, author: string, version: number, groupHash: string, courseLocation: string): Promise<string> {
+    return API.request<string>(`POST`, `/course/add`, {name, author, version, groupHash, courseLocation })
   }
-  
+  // R
   async getCourseDetail(courseUUID: string): Promise<ICourseDetail> {
-    return this.fetchData<ICourseDetail>(`/course/detail/${this.e(courseUUID)}`);
+    return API.request<ICourseDetail>(`GET`, `/course/detail/${API.e(courseUUID)}`);
   }
-
-  async renameCourse(courseUUID: string, courseName: string): Promise<void> {
-    return this.api.put(`/course/rename/${this.e(courseUUID)}`, { courseName });
+  // U
+  async renameCourse(courseUUID: string, name: string): Promise<void> {
+    return API.request<void>(`PUT`, `/course/rename/${API.e(courseUUID)}`, { name });
   }
-
+  // D
   async deleteCourse(courseUUID: string): Promise<void> {
-    return this.api.delete(`/course/delete/${this.e(courseUUID)}`);
+    return API.request<void>(`DELETE`, `/course/delete/${API.e(courseUUID)}`);
+  }
+  // L
+  async getCourseList(): Promise<ICourseView[]> {
+    return API.request<ICourseView[]>(`GET`, `/course/list`);
   }
 
   /**
    * @returns course UUID if exists, null if not
    */
-  async checkCourseExists(courseHash: string, groupHash: string): Promise<string> {
-    return this.fetchData<string>(`/course/check/${this.e(groupHash)}/${this.e(courseHash)}`);
+  async checkCourseExists(courseLocation: string, groupHash: string): Promise<string> {
+    return API.request<string>(`GET`, `/course/check/${API.e(groupHash)}/${API.e(courseLocation)}`);
   }
 
   /* TEST */
   async getTestList(): Promise<ITestView[]> {
-    return this.fetchData<ITestView[]>(`/test/list`);
+    return API.request<ITestView[]>(`GET`, `/test/list`);
   }
 }

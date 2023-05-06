@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       checking: true,
+      uploading: false,
     }
   },
   components: {
@@ -35,7 +36,7 @@ export default {
       type: String,
       required: true
     },
-    courseHash: {
+    courseLocation: {
       type: String,
       required: true
     },
@@ -46,8 +47,7 @@ export default {
   },
   watch: {
     watchIDs: {
-      handler(newIDs) {
-        console.log(newIDs)
+      handler() {
         this.checkAvailability();
       },
       immediate: true,
@@ -57,20 +57,20 @@ export default {
   computed: { // we have to use computed to watch for changes in both IDs
     watchIDs() {
       return {
-        courseHash: this.courseHash,
+        courseLocation: this.courseLocation,
         groupHash: this.groupHash
       }
     },
     loadingClass() {
       return {
-        'dim-on-loading': this.checking
+        'dim-on-loading': this.checking || this.uploading
       }
     }
   },
   methods: {
     checkAvailability() {
       this.checking = true;
-      this.API.checkCourseExists(this.courseHash, this.groupHash).then(courseUUID => {
+      this.API.checkCourseExists(this.courseLocation, this.groupHash).then(courseUUID => {
         this.checking = false;
         if (courseUUID) {
           // redirect to course detail
@@ -81,6 +81,19 @@ export default {
         this.checking = false;
         this.MSG.error(err.message);
       });
+    },
+    cancel() {
+      this.$router.push({ name: 'courses' });
+    },
+    addCourse() {
+      this.uploading = true;
+      this.API.addCourse(this.name, this.author, parseInt(this.version), this.groupHash, this.courseLocation).then(courseUUID => {
+        this.uploading = false;
+        this.$router.push({ name: 'courseDetail', params: { courseUUID } });
+      }).catch(err => {
+        this.uploading = false;
+        this.MSG.error(err.message);
+      });
     }
   }
 }
@@ -89,9 +102,9 @@ export default {
 
 <template>
   <n-h3>Add a new course...</n-h3>
-  <n-spin :show="checking">
+  <n-spin :show="checking || uploading">
     <template #description>
-      Checking if course is available...
+      {{ uploading ? "Uploading the course..." : "Checking if course is available..." }}
     </template>
     <n-card style="max-width: 50rem; margin-left: auto; margin-right: auto; margin-top: 5%;">
       <n-descriptions :class="loadingClass" title="Details" label-placement="left" bordered size="small">
@@ -105,7 +118,7 @@ export default {
           {{ version }}
         </n-descriptions-item>
         <n-descriptions-item label="Course location:">
-          {{ courseHash }}
+          {{ courseLocation }}
         </n-descriptions-item>
         <n-descriptions-item label="Course URL:">
           {{ groupHash }}
@@ -114,8 +127,8 @@ export default {
       <template #footer>
         <!-- align to right -->
         <div class="d-flex justify-content-end">
-          <n-button style="margin-right: .5rem;" ghost>Cancel</n-button>
-          <n-button type="primary">Add</n-button>
+          <n-button @click="cancel" style="margin-right: .5rem;" ghost>Cancel</n-button>
+          <n-button @click="addCourse" type="primary">Add</n-button>
         </div>
       </template>
     </n-card>
