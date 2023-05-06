@@ -13,10 +13,11 @@ export interface ITimeSpan {
 
 export interface ICourseView extends ICourse {
   tests: ITimeSpan[];
+  contentType: "RISE" | "STORYLINE" | "STUDIO" | "OTHER";
 }
 
 export interface ICourseDetail extends ICourse {
-  courseHash: string;
+  courseLocation: string;
   tests?: ITestView[];
   otherVersions?: ICourse[];
 }

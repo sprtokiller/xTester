@@ -127,6 +127,24 @@ export default {
     completedTests(): number {
       const currentTime = new Date();
       return this.course.tests.filter(t => t.endAt && new Date(t.endAt) <= currentTime).length;
+    },
+    bgImageStyle(): any {
+      return {
+        'background-image': `url('${this.imageURL}')`
+      }
+    },
+    imageURL(): string {
+      switch (this.course.contentType) {
+        case "RISE":
+          return "/rise.svg"
+        case "STORYLINE":
+          return "/storyline.svg"
+        case "STUDIO":
+          return "/studio.svg"
+        case "OTHER":
+        default:
+          return "/unknown.svg"
+      }
     }
   }
 }
@@ -135,14 +153,10 @@ export default {
 
 <template>
   <n-spin :show="courseIsDeleting">
-  <n-list-item v-on:click="openDetail">
+  <n-list-item @click="openDetail">
     <template #prefix>
-      <div class="xratio xratio-16x9" style="background-color: wheat; width: 96px; height: 54px;">
+      <div class="course-avatar" :style="bgImageStyle">
       </div>
-      <!-- <n-image
-                width="100"
-                src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-              /> -->
     </template>
 
     <n-thing>
@@ -188,7 +202,7 @@ export default {
     <template #suffix>
       <div style="white-space: nowrap;">
 
-        <n-button v-on:click.stop="editCourse" v-click-outside="handleClickOutside" class="btn-course-action" size="small"
+        <n-button @click.stop="editCourse" v-click-outside="handleClickOutside" class="btn-course-action" size="small"
           quaternary circle type="success">
           <template #icon>
             <n-icon class="icon-no-align">
@@ -197,7 +211,7 @@ export default {
           </template>
         </n-button>
 
-        <n-button v-on:click.stop="deleteCourse" class="btn-course-action" size="small" quaternary circle type="error">
+        <n-button @click.stop="deleteCourse" class="btn-course-action" size="small" quaternary circle type="error">
           <template #icon>
             <n-icon class="icon-no-align">
               <DeleteFilled />
@@ -213,6 +227,13 @@ export default {
 <style scoped>
 .tag-chip {
   cursor: pointer;
+}
+
+.course-avatar {
+  width: 32px;
+  height: 32px;
+  background-size: cover;
+  background-position: center;
 }
 
 .course-name-input {

@@ -95,14 +95,15 @@ export default {
       });
     },
     handleBack() {
-      this.$router.back();
+      // print the router history
+      this.router.back();
     }
   },
   computed: {
     getURL(): string | undefined {
       if (!this.course) return undefined;
 
-      return `https://articulateusercontent.com/review/${this.course.courseHash}`;
+      return `https://articulateusercontent.com/review/${this.course.courseLocation}`;
     }
   },
 }

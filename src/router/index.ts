@@ -47,7 +47,7 @@ const router = createRouter({
               name: route.query.name,
               author: route.query.author,
               version: route.query.version,
-              courseHash: route.query.courseHash,
+              courseLocation: route.query.courseLocation,
               groupHash: route.query.groupHash
             })
         },
