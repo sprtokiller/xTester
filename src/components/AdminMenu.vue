@@ -2,7 +2,7 @@
 import { NMenu } from 'naive-ui'
 import { h } from 'vue'
 // import type { Component } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, type RouteLocationNormalized } from 'vue-router'
 // import { NIcon, useMessage } from 'naive-ui'
 import type { MenuOption } from 'naive-ui'
 // import {
@@ -32,12 +32,19 @@ export default (await import('vue')).defineComponent({
   components: {
     NMenu
   },
-  mounted() {
-    // let element: HTMLElement = document.querySelector('.n-menu-item-content') as HTMLElement;
-    // // add class to element
-    // element.classList.add('n-menu-item-content--selected');
+  watch: {
+    $route: {
+      handler(to) {
+        this.$nextTick(() => {
+          this.onRouteChange(to);
+        });
+      },
+      immediate: true
+    }
   },
   data() {
+    const pathGroups = ["dashboard", "course", "test", "user", "module"]
+    
     const menuPaths = [
       ["dashboard", "Home"],
       [],
@@ -47,7 +54,8 @@ export default (await import('vue')).defineComponent({
       ["modules", "Modules"]
     ]
     return {
-      menuOptions: menuPaths.map((location : string[], index : number) => {
+      pathGroups,
+      menuOptions: menuPaths.map((location: string[], index: number) => {
         return location.length === 2 ? {
           label: () => createRouterLinkVnode(location[0], location[1]),
           key: location[0],
@@ -58,23 +66,25 @@ export default (await import('vue')).defineComponent({
         }
       }) as unknown as MenuOption[],
     }
+  },
+  methods: {
+    onRouteChange(to: RouteLocationNormalized) {
+      const name = to.name as string
+      // find the index of path group that is the substring of the current path
+      const index = this.pathGroups.findIndex((pathGroup: string) => name.includes(pathGroup))
+      const menuItem: HTMLElement = document.querySelectorAll('.n-menu-item-content')[index] as HTMLElement
+      if (menuItem)
+        menuItem.click();
+    }
   }
 })
 </script>
 
 
 <template>
-  <n-menu :options="menuOptions"/>
+  <n-menu :options="menuOptions" />
 </template>
 
-<style>
-.n-menu-item:first-child > .n-menu-item-content::before {
-  background-color: inherit !important;
-}
-.n-menu-item:first-child > .n-menu-item-content > .n-menu-item-content-header {
-  color: inherit !important;
-}
-.n-menu > .n-menu-item:first-child > .n-menu-item-content:not(.n-menu-item-content--disabled):hover::before {
-  background-color: var(--n-item-color-hover) !important;
-}
+<style scoped>
+
 </style>
