@@ -1,15 +1,18 @@
 <script lang="ts">
-
 import { inject, h } from 'vue'
-import { useMessage, NButton, NIcon, NH3, NDataTable, NSpin } from 'naive-ui';
+import { useMessage, NButton, NIcon, NH3, NDataTable, NSpin } from 'naive-ui'
 import { ArrowBackFilled, RemoveRedEyeFilled, AddRound } from '@vicons/material'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 
-import type { API } from '@/services/api';
-import type { ICourseDetail, ICourse } from '@/interfaces';
-import type { DataTableColumns } from 'naive-ui';
+import type { API } from '@/services/api'
+import type { ICourseDetail, ICourse } from '@/interfaces'
+import type { DataTableColumns } from 'naive-ui'
 
-const createColumns = ({ changeDetail }: { changeDetail: (newCourseUUID: string) => void }): DataTableColumns<ICourse> => {
+const createColumns = ({
+  changeDetail
+}: {
+  changeDetail: (newCourseUUID: string) => void
+}): DataTableColumns<ICourse> => {
   return [
     {
       title: 'Other versions',
@@ -28,17 +31,14 @@ const createColumns = ({ changeDetail }: { changeDetail: (newCourseUUID: string)
       align: 'center',
       width: 80,
       render(row) {
-        return h(
-          NButton,
-          {
-            circle: true,
-            quaternary: true,
-            size: 'small',
-            class: 'btn-less-visible',
-            renderIcon: () => h(RemoveRedEyeFilled),
-            onClick: () => changeDetail(row.courseUUID)
-          }
-        )
+        return h(NButton, {
+          circle: true,
+          quaternary: true,
+          size: 'small',
+          class: 'btn-less-visible',
+          renderIcon: () => h(RemoveRedEyeFilled),
+          onClick: () => changeDetail(row.courseUUID)
+        })
       }
     }
   ]
@@ -46,14 +46,16 @@ const createColumns = ({ changeDetail }: { changeDetail: (newCourseUUID: string)
 
 export default (await import('vue')).defineComponent({
   setup() {
-    const router = useRouter();
-    const MSG = useMessage();
-    const API = inject('API') as API;
+    const router = useRouter()
+    const MSG = useMessage()
+    const API = inject('API') as API
     return {
-      router, MSG, API,
+      router,
+      MSG,
+      API,
       columns: createColumns({
         changeDetail(newCourseUUID: string) {
-          router.push({ name: 'courseDetail', params: { courseUUID: newCourseUUID } });
+          router.push({ name: 'courseDetail', params: { courseUUID: newCourseUUID } })
         }
       })
     }
@@ -65,7 +67,13 @@ export default (await import('vue')).defineComponent({
     }
   },
   components: {
-    NButton, NIcon, ArrowBackFilled, NH3, NDataTable, NSpin, AddRound
+    NButton,
+    NIcon,
+    ArrowBackFilled,
+    NH3,
+    NDataTable,
+    NSpin,
+    AddRound
   },
   props: {
     courseUUID: {
@@ -76,38 +84,40 @@ export default (await import('vue')).defineComponent({
   watch: {
     courseUUID: {
       handler(newCourseUUID) {
-        this.fetchDetail(newCourseUUID);
+        this.fetchDetail(newCourseUUID)
       },
       immediate: true
     }
   },
   methods: {
-    fetchDetail(courseUUID : string) {
+    fetchDetail(courseUUID: string) {
       // fetch courses from the API
-      this.loading = true;
-      this.API.getCourseDetail(courseUUID).then(course => {
-        this.loading = false;
-        this.course = course;
-      }).catch(err => { // TODO: handle error in better way
-        this.loading = false;
-        this.MSG.error(err.message);
-      });
+      this.loading = true
+      this.API.getCourseDetail(courseUUID)
+        .then((course) => {
+          this.loading = false
+          this.course = course
+        })
+        .catch((err) => {
+          // TODO: handle error in better way
+          this.loading = false
+          this.MSG.error(err.message)
+        })
     },
     handleBack() {
       // print the router history
-      this.router.back();
+      this.router.back()
     }
   },
   computed: {
     getURL(): string | undefined {
-      if (!this.course) return undefined;
+      if (!this.course) return undefined
 
-      return `https://articulateusercontent.com/review/${this.course.courseLocation}`;
+      return `https://articulateusercontent.com/review/${this.course.courseLocation}`
     }
-  },
+  }
 })
 </script>
-
 
 <template>
   <!-- Loading state -->
@@ -122,7 +132,7 @@ export default (await import('vue')).defineComponent({
       </n-button>
       <n-h3 class="course-name">Loading...</n-h3>
     </div>
-    <n-spin :show="loading" class="w-100" style="min-height: 200px;" />
+    <n-spin :show="loading" class="w-100" style="min-height: 200px" />
   </div>
 
   <!-- Loaded state -->
@@ -138,7 +148,8 @@ export default (await import('vue')).defineComponent({
             </template>
           </n-button>
           <n-h3 class="course-name">{{ course.name }}</n-h3>
-          <n-button size="large" type="primary" secondary class="button-add-test">Add test
+          <n-button size="large" type="primary" secondary class="button-add-test"
+            >Add test
             <template #icon>
               <n-icon class="icon-no-align">
                 <AddRound />
@@ -150,13 +161,23 @@ export default (await import('vue')).defineComponent({
       <!-- preview, list of other versions -->
       <div class="col-3">
         <div class="iframe-container">
-          <iframe allowfullscreen="true" class="player" :src="getURL" scrolling="no"
-            style="width: 100%; height: 100%;"></iframe> <!-- TODO: make read-only -->
+          <iframe
+            allowfullscreen="true"
+            class="player"
+            :src="getURL"
+            scrolling="no"
+            style="width: 100%; height: 100%"
+          ></iframe>
+          <!-- TODO: make read-only -->
         </div>
-        <n-data-table :columns="columns" :data="course.otherVersions" :single-line="true" size="small" />
+        <n-data-table
+          :columns="columns"
+          :data="course.otherVersions"
+          :single-line="true"
+          size="small"
+        />
       </div>
     </div>
-
   </div>
 </template>
 
