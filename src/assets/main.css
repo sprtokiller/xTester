@@ -14,3 +14,7 @@
 .n-dialog svg, .n-message svg {
   vertical-align: baseline !important;
 }
+
+.h3-item-name {
+  margin: 0 0 0 0.8rem;
+}

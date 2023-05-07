@@ -5,16 +5,12 @@ export class API {
   private static api: AxiosInstance;
 
   private static async request<T>(method: string, endpoint: string, body?: any): Promise<T> {
-    try {
-      const response = await API.api.request({
-        method,
-        url: endpoint,
-        data: body,
-      });
-      return response?.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await API.api.request({
+      method,
+      url: endpoint,
+      data: body,
+    });
+    return response?.data;
   }
   
   private static e(toEncode: string): string {

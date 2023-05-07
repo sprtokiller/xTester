@@ -5,13 +5,13 @@ import AdminView from '../views/AdminView.vue'
 import PageNotFoundView from '../views/PageNotFoundView.vue'
 
 /* Admin content will lazy load */
-import Courses from '@/components/Admin/Courses/Courses.vue'
+import CourseOverview from '@/components/Admin/Courses/CourseOverview.vue'
 import CourseDetail from '@/components/Admin/Courses/CourseDetail.vue'
 import CourseImport from '@/components/Admin/Courses/CourseImport.vue'
-import Dashboard from '@/components/Admin/Dashboard/Dashboard.vue'
-import Modules from '@/components/Admin/Modules/Modules.vue'
-import Tests from '@/components/Admin/Tests/Tests.vue'
-import Users from '@/components/Admin/Users/Users.vue'
+import DashboardOverview from '@/components/Admin/Dashboard/DashboardOverview.vue'
+import ModuleOverview from '@/components/Admin/Modules/ModuleOverview.vue'
+import TestOverview from '@/components/Admin/Tests/TestOverview.vue'
+import UserOverview from '@/components/Admin/Users/UserOverview.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,7 +31,7 @@ const router = createRouter({
         {
           path: 'courses',
           name: 'courses',
-          component: Courses,
+          component: CourseOverview,
         },
         {
           path: 'course/detail/:courseUUID',
@@ -54,22 +54,22 @@ const router = createRouter({
         {
           path: '',
           name: 'dashboard',
-          component: Dashboard
+          component: DashboardOverview
         },
         {
           path: 'modules',
           name: 'modules',
-          component: Modules
+          component: ModuleOverview
         },
         {
           path: 'tests',
           name: 'tests',
-          component: Tests
+          component: TestOverview
         },
         {
           path: 'users',
           name: 'users',
-          component: Users
+          component: UserOverview
         },
         // {
         // implement not found here

@@ -15,21 +15,21 @@ export default {
   },
   methods: {
     callback: function (response: any) {
-      this.API.login(response.credential).then(res => {
+      this.API.login(response.credential).then(() => {
         this.MSG.info("OK");
       }).catch(err => {
         console.error(err);
       });
     },
     logout() {
-      this.API.logout().then(res => {
+      this.API.logout().then(() => {
         this.MSG.info("OK"); //TODO: redirect to login page
       }).catch(err => {
         console.error(err);
       });
     },
     check() {
-      this.API.check().then(res => {
+      this.API.check().then(() => {
         this.MSG.info("OK");
       }).catch(err => {
         console.error(err);

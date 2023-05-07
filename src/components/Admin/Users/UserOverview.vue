@@ -1,13 +1,12 @@
 <script lang="ts">
 
 import { inject } from 'vue'
-import { NSpin, NButton, useMessage, NH2 } from 'naive-ui';
-import type { ICourseView } from '@/interfaces';
+import { /* NSpin, NButton, NH2, */ useMessage } from 'naive-ui';
 import type { API } from '@/services/api';
 
 export default {
   components: {
-    NSpin, NButton, NH2
+    // NSpin, NButton, NH2
   },
   setup () {
     const MSG = useMessage();
@@ -15,13 +14,13 @@ export default {
     return { MSG, API }
   },
   mounted() {
-    // fetch users and user groups from the API
-    this.API.getCourseList().then(courses => {
-      this.loading = false;
-    }).catch(err => {
-      this.loading = false;
-      this.MSG.error(err.message);
-    });
+    // fetch users and user groups from the API TODO: implement
+    // this.API.getCourseList().then(courses => {
+    //   this.loading = false;
+    // }).catch(err => {
+    //   this.loading = false;
+    //   this.MSG.error(err.message);
+    // });
   },
   data() {
     return {

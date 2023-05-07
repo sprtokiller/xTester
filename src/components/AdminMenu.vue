@@ -1,5 +1,5 @@
 <script lang="ts">
-import { NMenu, NCard } from 'naive-ui'
+import { NMenu } from 'naive-ui'
 import { h } from 'vue'
 // import type { Component } from 'vue'
 import { RouterLink } from 'vue-router'
@@ -30,7 +30,7 @@ function createRouterLinkVnode(where: string, label: string) {
 
 export default {
   components: {
-    NMenu, NCard
+    NMenu
   },
   mounted() {
     // let element: HTMLElement = document.querySelector('.n-menu-item-content') as HTMLElement;

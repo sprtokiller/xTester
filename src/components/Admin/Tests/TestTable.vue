@@ -99,7 +99,7 @@ const createColumns = ({ viewDetail: viewDetail }: { viewDetail: (test: ITestVie
 
 export default {
   components: {
-    NDataTable, NButton, NTag, RemoveRedEyeRound, NH2
+    NDataTable, NH2
   },
   setup() {
     const router : Router = useRouter();

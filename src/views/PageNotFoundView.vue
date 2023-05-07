@@ -1,9 +1,9 @@
 <script lang="ts">
-import Error404 from '@/components/Error404.vue';
+import ErrorPage404 from '@/components/ErrorPage404.vue';
 
 export default {
   components: {
-    Error404
+    ErrorPage404
   }
 };
 </script>
@@ -11,7 +11,7 @@ export default {
 <template>
   <div class="d-flex align-items-center justify-content-center vh-100 vw-100">
     <main>
-      <Error404 />
+      <ErrorPage404 />
     </main>
   </div>
 </template>

@@ -1,5 +1,4 @@
 <script lang="ts">
-import { RouterView } from 'vue-router'
 import { NMessageProvider, NDialogProvider } from 'naive-ui'
 
 const padTwo = (val : number) => (val > 9 ? "" : "0") + val;

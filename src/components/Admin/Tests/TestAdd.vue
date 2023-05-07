@@ -137,7 +137,7 @@ export default {
               </n-icon>
             </template>
           </n-button>
-          <n-h3 class="h3-item-name">{{ course.name }}</n-h3>
+          <n-h3 class="course-name">{{ course.name }}</n-h3>
           <n-button size="large" type="primary" secondary class="button-add-test">Add test
             <template #icon>
               <n-icon class="icon-no-align">
@@ -176,6 +176,10 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+.course-name {
+  margin: 0 0 0 0.8rem;
 }
 
 .button-add-test {

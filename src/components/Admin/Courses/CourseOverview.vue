@@ -2,7 +2,6 @@
 
 import { inject } from 'vue'
 import { NList, NSpin, NScrollbar, NEmpty, NButton, useMessage, NH2 } from 'naive-ui';
-import CourseDetail from './CourseDetail.vue';
 import CourseItem from './CourseItem.vue';
 import type { ICourseView } from '@/interfaces';
 import type { API } from '@/services/api';
@@ -10,7 +9,7 @@ import type { API } from '@/services/api';
 export default {
   components: {
     NList, NSpin, NScrollbar, NEmpty, NButton, NH2,
-    CourseItem, CourseDetail
+    CourseItem
   },
   setup() {
     const MSG = useMessage();
@@ -47,6 +46,15 @@ export default {
     deleteCourse(courseUUID: string) {
       // delete the course from the array
       this.courses = this.courses.filter(course => course.courseUUID !== courseUUID);
+    },
+    renameCourse(courseUUID: string, newName: string) {
+      // rename the course in the array
+      this.courses = this.courses.map(course => {
+        if (course.courseUUID === courseUUID) {
+          course.name = newName;
+        }
+        return course;
+      });
     }
   }
 }
@@ -59,8 +67,8 @@ export default {
     <n-spin :show="loading" style="min-height: 200px;">
       <n-list hoverable clickable>
         <!-- add a CourseItem for each course -->
-        <CourseItem v-for="course in courses" :course="course" v-bind:editUUID="editUUID"
-          @editSelect="editSelect" @deleteCourse="deleteCourse" />
+        <CourseItem v-for="course in courses" :course="course" v-bind:editUUID="editUUID" v-bind:key="course.courseUUID"
+          @editSelect="editSelect" @deleteCourse="deleteCourse" @renameCourse="renameCourse" />
       </n-list>
       <n-empty description="No e-learning courses found :(" v-if="!loading && isEmpty">
         <template #extra>

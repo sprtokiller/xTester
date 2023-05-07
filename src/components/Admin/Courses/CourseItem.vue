@@ -1,6 +1,6 @@
 <script lang="ts">
 
-import { NListItem, NThing, NSpace, NTag, NButton, NImage, NPopover, NIcon, NInput, NSpin, useMessage, useDialog } from 'naive-ui';
+import { NListItem, NThing, NSpace, NTag, NButton, NPopover, NIcon, NInput, NSpin, useMessage, useDialog } from 'naive-ui';
 import { inject } from 'vue';
 import type { API } from '@/services/api';
 import { InfoOutlined, EditFilled, DeleteFilled } from '@vicons/material'
@@ -9,7 +9,7 @@ import { clickOutside, focus } from "@/directives";
 
 export default {
   components: {
-    NListItem, NThing, NSpace, NTag, NButton, NImage, NPopover, InfoOutlined,
+    NListItem, NThing, NSpace, NTag, NButton, NPopover, InfoOutlined,
     NIcon, EditFilled, DeleteFilled, NInput, NSpin
   },
   directives: {
@@ -28,7 +28,7 @@ export default {
       courseIsDeleting: false as boolean
     }
   },
-  emits: ["editSelect", "deleteCourse"],
+  emits: ["editSelect", "deleteCourse", "renameCourse"],
   methods: {
     openDetail() {
       this.$router.push({ name: 'courseDetail', params: { courseUUID : this.course.courseUUID } });
@@ -91,7 +91,7 @@ export default {
       this.inputIsSaving = true;
 
       this.API.renameCourse(this.course.courseUUID, this.courseNameInput).then(() => {
-        this.course.name = this.courseNameInput;
+        this.$emit('renameCourse', this.course.courseUUID, this.courseNameInput);
         this.MSG.success('Course name changed successfully');
         this.inputIsSaving = false;
         this.$emit('editSelect', '');
