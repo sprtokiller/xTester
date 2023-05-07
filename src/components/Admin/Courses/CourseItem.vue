@@ -34,7 +34,6 @@ export default (await import('vue')).defineComponent({
       this.$router.push({ name: 'courseDetail', params: { courseUUID: this.course.courseUUID } });
     },
     editCourse(event: Event) {
-      event.stopPropagation();
       this.$emit('editSelect', this.course.courseUUID);
     },
     handleClickOutside() {
@@ -44,7 +43,6 @@ export default (await import('vue')).defineComponent({
       }
     },
     deleteCourse(event: Event) {
-      event.stopPropagation();
       var contetnt = 'Are you sure you want to delete this course?';
       const len = this.course.tests.length;
       if (len) {
@@ -161,7 +159,7 @@ export default (await import('vue')).defineComponent({
       <n-thing>
         <template #header>
           <n-input v-if="inEditMode" v-focus ref="courseNameInputRef" class="course-name-input" placeholder="Course name"
-            v-model:value="courseNameInput" onclick="event.stopPropagation();" autosize :passively-activated="true"
+            v-model:value="courseNameInput" @click.stop autosize :passively-activated="true"
             :loading="inputIsSaving" :disabled="inputIsSaving" @keyup="handleKeyUp" />
           <div v-else>
             {{ course.name }}

@@ -81,7 +81,7 @@ const createColumns = ({ viewDetail: viewDetail }: { viewDetail: (test: ITestVie
             size: 'small',
             class: 'btn-less-visible',
             renderIcon: () => h(RemoveRedEyeRound),
-            onClick: () => {viewDetail(row)}
+            onClick: (event) => {event.stopPropagation(); viewDetail(row)}
           }
         )
       }
