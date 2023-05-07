@@ -6,7 +6,7 @@ import CourseItem from './CourseItem.vue';
 import type { ICourseView } from '@/interfaces';
 import type { API } from '@/services/api';
 
-export default {
+export default (await import('vue')).defineComponent({
   components: {
     NList, NSpin, NScrollbar, NEmpty, NButton, NH2,
     CourseItem
@@ -16,15 +16,16 @@ export default {
     const API = inject('API') as API;
     return { MSG, API }
   },
-  mounted() {
-    // fetch courses from the API
-    this.API.getCourseList().then(courses => {
-      this.loading = false;
+  async mounted() {
+    try {
+      this.loading = true;
+      const courses = await this.API.getCourseList();
       this.courses = courses;
-    }).catch(err => {
+    } catch (err) {
+      this.MSG.error(err instanceof Error ? err.message : "Unknown error");
+    } finally {
       this.loading = false;
-      this.MSG.error(err.message);
-    });
+    }
   },
   data() {
     return {
@@ -57,7 +58,7 @@ export default {
       });
     }
   }
-}
+})
 </script>
 
 

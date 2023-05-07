@@ -5,7 +5,7 @@ import { useMessage, NH3, NButton, NCard, NDescriptions, NDescriptionsItem, NSpi
 import type { API } from '@/services/api';
 import { useRouter } from 'vue-router';
 
-export default {
+export default (await import('vue')).defineComponent({
   setup() {
     const router = useRouter();
     const MSG = useMessage();
@@ -24,26 +24,11 @@ export default {
     NButton, NH3, NCard, NDescriptions, NDescriptionsItem, NSpin
   },
   props: {
-    name: {
-      type: String,
-      required: true
-    },
-    author: {
-      type: String,
-      required: true
-    },
-    version: {
-      type: String,
-      required: true
-    },
-    courseLocation: {
-      type: String,
-      required: true
-    },
-    groupHash: {
-      type: String,
-      required: true
-    }
+    name: { type: String, required: true },
+    author: { type: String, required: true },
+    version: { type: String, required: true },
+    courseLocation: { type: String, required: true },
+    groupHash: { type: String, required: true }
   },
   watch: {
     watchIDs: {
@@ -68,35 +53,36 @@ export default {
     }
   },
   methods: {
-    checkAvailability() {
-      this.checking = true;
-      this.API.checkCourseExists(this.courseLocation, this.groupHash).then(courseUUID => {
-        this.checking = false;
+    async checkAvailability() {
+      try {
+        this.checking = true;
+        const courseUUID = await this.API.checkCourseExists(this.courseLocation, this.groupHash);
         if (courseUUID) {
           // redirect to course detail
-          this.$router.replace({ name: 'courses' })
-          this.$router.push({ name: 'courseDetail', params: { courseUUID : courseUUID } });
+          this.$router.push({ name: 'courseDetail', params: { courseUUID: courseUUID } });
         }
-      }).catch(err => {
+      } catch (err) {
+        this.MSG.error(err instanceof Error ? err.message : "Unknown error");
+      } finally {
         this.checking = false;
-        this.MSG.error(err.message);
-      });
+      }
     },
     cancel() {
       this.$router.push({ name: 'courses' });
     },
-    addCourse() {
-      this.uploading = true;
-      this.API.addCourse(this.name, this.author, parseInt(this.version), this.groupHash, this.courseLocation).then(courseUUID => {
-        this.uploading = false;
+    async addCourse() {
+      try {
+        this.uploading = true;
+        const courseUUID = await this.API.addCourse(this.name, this.author, parseInt(this.version), this.groupHash, this.courseLocation);
         this.$router.push({ name: 'courseDetail', params: { courseUUID } });
-      }).catch(err => {
+      } catch (err) {
+        this.MSG.error(err instanceof Error ? err.message : "Unknown error");
+      } finally {
         this.uploading = false;
-        this.MSG.error(err.message);
-      });
+      }
     }
   }
-}
+})
 </script>
 
 

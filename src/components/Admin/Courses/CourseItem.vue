@@ -7,7 +7,7 @@ import { InfoOutlined, EditFilled, DeleteFilled } from '@vicons/material'
 import type { ICourseView } from '@/interfaces';
 import { clickOutside, focus } from "@/directives";
 
-export default {
+export default (await import('vue')).defineComponent({
   components: {
     NListItem, NThing, NSpace, NTag, NButton, NPopover, InfoOutlined,
     NIcon, EditFilled, DeleteFilled, NInput, NSpin
@@ -31,7 +31,7 @@ export default {
   emits: ["editSelect", "deleteCourse", "renameCourse"],
   methods: {
     openDetail() {
-      this.$router.push({ name: 'courseDetail', params: { courseUUID : this.course.courseUUID } });
+      this.$router.push({ name: 'courseDetail', params: { courseUUID: this.course.courseUUID } });
     },
     editCourse(event: Event) {
       event.stopPropagation();
@@ -51,23 +51,23 @@ export default {
         contetnt += ` This will also delete ${len} test${len == 1 ? '' : 's'}.`;
       }
       this.DLG.warning({
-          title: 'Confirm',
-          content: contetnt,
-          positiveText: 'Delete',
-          negativeText: 'Cancel',
-          onPositiveClick: () => {
+        title: 'Confirm',
+        content: contetnt,
+        positiveText: 'Delete',
+        negativeText: 'Cancel',
+        onPositiveClick: async () => {
+          try {
             this.courseIsDeleting = true;
-            this.API.deleteCourse(this.course.courseUUID).then(() => {
-              this.courseIsDeleting = false;
-              // delete this course from the parent component
-              this.MSG.success('Course deleted successfully');
-              this.$emit('deleteCourse', this.course.courseUUID);
-            }).catch((err) => {
-              this.courseIsDeleting = false;
-              this.MSG.error(err.message)
-            })
+            await this.API.deleteCourse(this.course.courseUUID);
+            this.MSG.success('Course deleted successfully');
+            this.$emit('deleteCourse', this.course.courseUUID);
+          } catch (err) {
+            this.MSG.error(err instanceof Error ? err.message : "Unknown error");
+          } finally {
+            this.courseIsDeleting = false;
           }
-        })
+        }
+      })
     },
     handleKeyUp(event: KeyboardEvent) {
       if (event.key === 'Enter') {
@@ -79,7 +79,7 @@ export default {
           this.$emit('editSelect', '');
         }
     },
-    renameCourse() {
+    async renameCourse() {
       // save, then exit edit mode
       this.courseNameInput = this.courseNameInput.trim();
       // if the name is not changed, exit edit mode
@@ -87,19 +87,18 @@ export default {
         this.$emit('editSelect', '');
         return;
       }
-      
-      this.inputIsSaving = true;
 
-      this.API.renameCourse(this.course.courseUUID, this.courseNameInput).then(() => {
+      try {
+        this.inputIsSaving = true;
+        await this.API.renameCourse(this.course.courseUUID, this.courseNameInput)
         this.$emit('renameCourse', this.course.courseUUID, this.courseNameInput);
         this.MSG.success('Course name changed successfully');
+      } catch (err) {
+        this.MSG.error(err instanceof Error ? err.message : "Unknown error");
+      } finally {
         this.inputIsSaving = false;
         this.$emit('editSelect', '');
-      }).catch((err) => {
-        this.MSG.error(err.message)
-        this.inputIsSaving = false;
-        this.$emit('editSelect', '');
-      })
+      }
     }
   },
   props: {
@@ -147,80 +146,80 @@ export default {
       }
     }
   }
-}
+})
 </script>
 
 
 <template>
   <n-spin :show="courseIsDeleting">
-  <n-list-item @click="openDetail">
-    <template #prefix>
-      <div class="course-avatar" :style="bgImageStyle">
-      </div>
-    </template>
+    <n-list-item @click="openDetail">
+      <template #prefix>
+        <div class="course-avatar" :style="bgImageStyle">
+        </div>
+      </template>
 
-    <n-thing>
-      <template #header>
-        <n-input v-if="inEditMode" v-focus ref="courseNameInputRef" class="course-name-input" placeholder="Course name"
-          v-model:value="courseNameInput" onclick="event.stopPropagation();" autosize :passively-activated="true" :loading="inputIsSaving" :disabled="inputIsSaving"
-          @keyup="handleKeyUp" />
-        <div v-else>
-          {{ course.name }}
-          <n-popover placement="right-start" trigger="hover">
-            <template #trigger>
-              <n-icon size="tiny" depth="3" style="margin-left: 0.3rem">
-                <InfoOutlined />
+      <n-thing>
+        <template #header>
+          <n-input v-if="inEditMode" v-focus ref="courseNameInputRef" class="course-name-input" placeholder="Course name"
+            v-model:value="courseNameInput" onclick="event.stopPropagation();" autosize :passively-activated="true"
+            :loading="inputIsSaving" :disabled="inputIsSaving" @keyup="handleKeyUp" />
+          <div v-else>
+            {{ course.name }}
+            <n-popover placement="right-start" trigger="hover">
+              <template #trigger>
+                <n-icon size="tiny" depth="3" style="margin-left: 0.3rem">
+                  <InfoOutlined />
+                </n-icon>
+              </template>
+              <div class="large-text">
+                <div>Author: {{ course.author }}</div>
+                <div>Version {{ course.version }}</div>
+              </div>
+            </n-popover>
+          </div>
+
+        </template>
+        <template #description>
+          <n-space size="small" style="margin-top: 4px">
+            <n-tag class="tag-chip" :bordered="false" type="default" size="small"
+              v-if="!(activeTests || completedTests || plannedTests)">
+              No tests
+            </n-tag>
+            <n-tag class="tag-chip" :bordered="false" type="warning" size="small" v-if="plannedTests">
+              Planned: {{ plannedTests }}
+            </n-tag>
+            <n-tag class="tag-chip" :bordered="false" type="info" size="small" v-if="activeTests">
+              Active: {{ activeTests }}
+            </n-tag>
+            <n-tag class="tag-chip" :bordered="false" type="success" size="small" v-if="completedTests">
+              Completed: {{ completedTests }}
+            </n-tag>
+          </n-space>
+        </template>
+      </n-thing>
+
+      <template #suffix>
+        <div style="white-space: nowrap;">
+
+          <n-button @click.stop="editCourse" v-click-outside="handleClickOutside" class="btn-course-action" size="small"
+            quaternary circle type="success">
+            <template #icon>
+              <n-icon class="icon-no-align">
+                <EditFilled />
               </n-icon>
             </template>
-            <div class="large-text">
-              <div>Author: {{ course.author }}</div>
-              <div>Version {{ course.version }}</div>
-            </div>
-          </n-popover>
+          </n-button>
+
+          <n-button @click.stop="deleteCourse" class="btn-course-action" size="small" quaternary circle type="error">
+            <template #icon>
+              <n-icon class="icon-no-align">
+                <DeleteFilled />
+              </n-icon>
+            </template>
+          </n-button>
         </div>
-
       </template>
-      <template #description>
-        <n-space size="small" style="margin-top: 4px">
-          <n-tag class="tag-chip" :bordered="false" type="default" size="small"
-            v-if="!(activeTests || completedTests || plannedTests)">
-            No tests
-          </n-tag>
-          <n-tag class="tag-chip" :bordered="false" type="warning" size="small" v-if="plannedTests">
-            Planned: {{ plannedTests }}
-          </n-tag>
-          <n-tag class="tag-chip" :bordered="false" type="info" size="small" v-if="activeTests">
-            Active: {{ activeTests }}
-          </n-tag>
-          <n-tag class="tag-chip" :bordered="false" type="success" size="small" v-if="completedTests">
-            Completed: {{ completedTests }}
-          </n-tag>
-        </n-space>
-      </template>
-    </n-thing>
-
-    <template #suffix>
-      <div style="white-space: nowrap;">
-
-        <n-button @click.stop="editCourse" v-click-outside="handleClickOutside" class="btn-course-action" size="small"
-          quaternary circle type="success">
-          <template #icon>
-            <n-icon class="icon-no-align">
-              <EditFilled />
-            </n-icon>
-          </template>
-        </n-button>
-
-        <n-button @click.stop="deleteCourse" class="btn-course-action" size="small" quaternary circle type="error">
-          <template #icon>
-            <n-icon class="icon-no-align">
-              <DeleteFilled />
-            </n-icon>
-          </template>
-        </n-button>
-      </div>
-    </template>
-  </n-list-item>
+    </n-list-item>
   </n-spin>
 </template>
 

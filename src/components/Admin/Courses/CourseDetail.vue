@@ -10,55 +10,40 @@ import type { API } from '@/services/api';
 import type { ICourseDetail, ICourse } from '@/interfaces';
 import type { DataTableColumns } from 'naive-ui';
 
-const createColumns = ({ changeDetail }: { changeDetail: (newCourseUUID: string) => void }): DataTableColumns<ICourse> => {
-  return [
-    {
-      title: 'Other versions',
-      key: 'name',
-      ellipsis: true
-    },
-    {
-      title: 'Ver.',
-      key: 'version',
-      align: 'center',
-      width: 50
-    },
-    {
-      title: 'View',
-      key: 'courseView',
-      align: 'center',
-      width: 80,
-      render(row) {
-        return h(
-          NButton,
-          {
+export default (await import('vue')).defineComponent({
+  setup() {
+    const router = useRouter();
+    const MSG = useMessage();
+    const API = inject('API') as API;
+
+    function changeDetail(newCourseUUID: string) {
+      router.push({ name: 'courseDetail', params: { courseUUID: newCourseUUID } });
+    }
+
+    const columns: DataTableColumns<ICourse> = [
+      { title: 'Other versions', key: 'name', ellipsis: true },
+      { title: 'Ver.', key: 'version', align: 'center', width: 50 },
+      {
+        title: 'View',
+        key: 'courseView',
+        align: 'center',
+        width: 80,
+        render(row: ICourse) {
+          return h(NButton, {
             circle: true,
             quaternary: true,
             size: 'small',
             class: 'btn-less-visible',
             renderIcon: () => h(RemoveRedEyeRound),
-            onClick: () => changeDetail(row.courseUUID)
-          }
-        )
-      }
-    }
-  ]
-}
+            onClick: () => changeDetail(row.courseUUID),
+          });
+        },
+      },
+    ];
 
-export default {
-  setup() {
-    const router = useRouter();
-    const MSG = useMessage();
-    const API = inject('API') as API;
-    return {
-      router, MSG, API,
-      columns: createColumns({
-        changeDetail(newCourseUUID: string) {
-          router.push({ name: 'courseDetail', params: { courseUUID: newCourseUUID } });
-        }
-      })
-    }
+    return { router, MSG, API, columns };
   },
+
   data() {
     return {
       loading: true,
@@ -83,16 +68,15 @@ export default {
     }
   },
   methods: {
-    fetchDetail(courseUUID : string) {
-      // fetch courses from the API
-      this.loading = true;
-      this.API.getCourseDetail(courseUUID).then(course => {
+    async fetchDetail(courseUUID: string) {
+      try {
+        this.loading = true;
+        this.course = await this.API.getCourseDetail(courseUUID);
+      } catch (err) {
+        this.MSG.error(err instanceof Error ? err.message : "Unknown error");
+      } finally {
         this.loading = false;
-        this.course = course;
-      }).catch(err => { // TODO: handle error in better way
-        this.loading = false;
-        this.MSG.error(err.message);
-      });
+      }
     },
     handleBack() {
       // print the router history
@@ -106,9 +90,8 @@ export default {
       return `https://articulateusercontent.com/review/${this.course.courseLocation}`;
     }
   },
-}
+})
 </script>
-
 
 <template>
   <LoadingHeader v-if="loading" />
