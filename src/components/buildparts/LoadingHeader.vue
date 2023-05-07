@@ -17,6 +17,7 @@ export default {
 
 
 <template>
+  <!-- Loading state -->
   <div>
     <div class="d-flex align-items-center">
       <n-button size="large" @click="handleBack" quaternary circle>
@@ -26,7 +27,7 @@ export default {
           </n-icon>
         </template>
       </n-button>
-      <n-h3 class="course-name">Loading...</n-h3>
+      <n-h3 class="h3-item-name">Loading...</n-h3>
     </div>
     <n-spin class="w-100" style="min-height: 200px;" />
   </div>

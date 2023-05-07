@@ -1,8 +1,9 @@
 <script lang="ts">
 
 import { inject, h } from 'vue'
-import { useMessage, NButton, NIcon, NH3, NDataTable, NSpin } from 'naive-ui';
+import { useMessage, NButton, NIcon, NH3, NDataTable } from 'naive-ui';
 import { ArrowBackFilled, RemoveRedEyeRound, AddRound } from '@vicons/material'
+import LoadingHeader from '../../buildparts/LoadingHeader.vue'
 import { useRouter } from 'vue-router';
 
 import type { API } from '@/services/api';
@@ -65,7 +66,7 @@ export default {
     }
   },
   components: {
-    NButton, NIcon, ArrowBackFilled, NH3, NDataTable, NSpin, AddRound
+    NButton, NIcon, ArrowBackFilled, NH3, NDataTable, AddRound, LoadingHeader
   },
   props: {
     courseUUID: {
@@ -110,20 +111,7 @@ export default {
 
 
 <template>
-  <!-- Loading state -->
-  <div v-if="loading">
-    <div class="d-flex align-items-center">
-      <n-button size="large" @click="handleBack" quaternary circle>
-        <template #icon>
-          <n-icon class="icon-no-align">
-            <ArrowBackFilled />
-          </n-icon>
-        </template>
-      </n-button>
-      <n-h3 class="course-name">Loading...</n-h3>
-    </div>
-    <n-spin :show="loading" class="w-100" style="min-height: 200px;" />
-  </div>
+  <LoadingHeader v-if="loading" />
 
   <!-- Loaded state -->
   <div v-else>
