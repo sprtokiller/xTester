@@ -1,5 +1,5 @@
 <script lang="ts">
-import AdminMenu from '@/components/Admin/AdminMenu.vue';
+import AdminMenu from '@/components/Admin/AdminMenu.vue'
 
 export default (await import('vue')).defineComponent({
   components: {
@@ -31,9 +31,9 @@ export default (await import('vue')).defineComponent({
 </template>
 
 <style scoped>
-  #admin-menu {
-    min-width: 9rem;
-    /* add a right shadow */
-    box-shadow: 0 0 0.5rem 0.1rem rgba(0, 0, 0, 0.1);
-  }
+#admin-menu {
+  min-width: 9rem;
+  /* add a right shadow */
+  box-shadow: 0 0 0.5rem 0.1rem rgba(0, 0, 0, 0.1);
+}
 </style>

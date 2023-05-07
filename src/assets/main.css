@@ -1,17 +1,18 @@
 @import './base.css';
 
-.icon-no-align svg{
-    vertical-align: baseline;
+.icon-no-align svg {
+  vertical-align: baseline;
 }
 
 .btn-less-visible {
-  color: var(--gray-2)
+  color: var(--gray-2);
 }
 .btn-less-visible:hover {
-  color: var(--gray-1)
+  color: var(--gray-1);
 }
 
-.n-dialog svg, .n-message svg {
+.n-dialog svg,
+.n-message svg {
   vertical-align: baseline !important;
 }
 

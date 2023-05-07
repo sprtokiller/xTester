@@ -1,17 +1,16 @@
 <script lang="ts">
-
-import { NResult, NButton } from 'naive-ui';
+import { NResult, NButton } from 'naive-ui'
 
 export default (await import('vue')).defineComponent({
   props: {
-    userHash: String,
+    userHash: String
   },
   components: {
-    NResult, NButton
+    NResult,
+    NButton
   }
 })
 </script>
-
 
 <template>
   <n-result status="404" title="404 Not Found" description="No-can-do's-ville, babydoll.">

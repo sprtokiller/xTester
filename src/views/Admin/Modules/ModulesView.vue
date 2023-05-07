@@ -1,10 +1,8 @@
 <script lang="ts">
-
 // import { RouterLink, useRouter } from 'vue-router'
 
 export default (await import('vue')).defineComponent({
   // components: {
-    
   // },
   // methods: {
   //   handleUpdateValue (key: string, item: MenuOption) {
@@ -20,7 +18,6 @@ export default (await import('vue')).defineComponent({
   // }
 })
 </script>
-
 
 <template>
   <p>I am Modules</p>

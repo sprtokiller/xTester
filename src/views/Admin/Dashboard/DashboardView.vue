@@ -1,8 +1,6 @@
 <script lang="ts">
-
 export default (await import('vue')).defineComponent({
   // components: {
-    
   // },
   // methods: {
   //   handleUpdateValue (key: string, item: MenuOption) {
@@ -18,7 +16,6 @@ export default (await import('vue')).defineComponent({
   // }
 })
 </script>
-
 
 <template>
   <p>I am dashboard</p>

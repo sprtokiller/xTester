@@ -1,15 +1,15 @@
 <script lang="ts">
-import CourseFrame from '@/components/Admin/CourseFrame.vue';
+import CourseFrame from '@/components/Admin/CourseFrame.vue'
 
 export default (await import('vue')).defineComponent({
   props: {
-    userHash: String,
+    userHash: String
   },
   components: {
     CourseFrame
   },
   mounted() {
-    console.log("A" + this.userHash);
+    console.log('A' + this.userHash)
   }
 })
 </script>

@@ -1,25 +1,25 @@
 <script lang="ts">
 import { NMessageProvider, NDialogProvider } from 'naive-ui'
 
-const padTwo = (val : number) => (val > 9 ? "" : "0") + val;
+const padTwo = (val: number) => (val > 9 ? '' : '0') + val
 
 export default (await import('vue')).defineComponent({
   components: {
-    NMessageProvider, NDialogProvider
+    NMessageProvider,
+    NDialogProvider
   },
   methods: {
-    formatDate(date : Date) {
+    formatDate(date: Date) {
       const year = date.getFullYear()
-      const month = padTwo((date.getMonth() + 1))
-      const day = padTwo((date.getDate()))
-      const hours = padTwo((date.getHours()))
-      const minutes = padTwo((date.getMinutes()))
-      const seconds = padTwo((date.getSeconds()))
+      const month = padTwo(date.getMonth() + 1)
+      const day = padTwo(date.getDate())
+      const hours = padTwo(date.getHours())
+      const minutes = padTwo(date.getMinutes())
+      const seconds = padTwo(date.getSeconds())
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
     }
   }
 })
-
 </script>
 
 <template>
@@ -32,14 +32,14 @@ export default (await import('vue')).defineComponent({
 </template>
 
 <style scoped>
-  #dev-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #000;
-    color: #fff;
-    padding: 0.5rem;
-    text-align: center;
-  }
+#dev-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  padding: 0.5rem;
+  text-align: center;
+}
 </style>

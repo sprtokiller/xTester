@@ -1,6 +1,5 @@
 <script lang="ts">
-
-import TestTable from '@/components/Admin/Tests/TestTable.vue';
+import TestTable from '@/components/Admin/Tests/TestTable.vue'
 
 export default (await import('vue')).defineComponent({
   components: {
@@ -9,7 +8,6 @@ export default (await import('vue')).defineComponent({
 })
 </script>
 
-
 <template>
-  <TestTable/>
+  <TestTable />
 </template>

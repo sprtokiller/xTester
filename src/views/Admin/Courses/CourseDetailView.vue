@@ -1,23 +1,22 @@
 <script lang="ts">
-
 import { inject, h } from 'vue'
-import { useMessage, NButton, NIcon, NH3, NDataTable } from 'naive-ui';
+import { useMessage, NButton, NIcon, NH3, NDataTable } from 'naive-ui'
 import { ArrowBackFilled, RemoveRedEyeFilled, AddRound } from '@vicons/material'
 import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 
-import type { API } from '@/services/api';
-import type { ICourseDetail, ICourse } from '@/interfaces';
-import type { DataTableColumns } from 'naive-ui';
+import type { API } from '@/services/api'
+import type { ICourseDetail, ICourse } from '@/interfaces'
+import type { DataTableColumns } from 'naive-ui'
 
 export default (await import('vue')).defineComponent({
   setup() {
-    const router = useRouter();
-    const MSG = useMessage();
-    const API = inject('API') as API;
+    const router = useRouter()
+    const MSG = useMessage()
+    const API = inject('API') as API
 
     function changeDetail(newCourseUUID: string) {
-      router.push({ name: 'courseDetail', params: { courseUUID: newCourseUUID } });
+      router.push({ name: 'courseDetail', params: { courseUUID: newCourseUUID } })
     }
 
     const columns: DataTableColumns<ICourse> = [
@@ -35,13 +34,13 @@ export default (await import('vue')).defineComponent({
             size: 'small',
             class: 'btn-less-visible',
             renderIcon: () => h(RemoveRedEyeFilled),
-            onClick: () => changeDetail(row.courseUUID),
-          });
-        },
-      },
-    ];
+            onClick: () => changeDetail(row.courseUUID)
+          })
+        }
+      }
+    ]
 
-    return { router, MSG, API, columns };
+    return { router, MSG, API, columns }
   },
 
   data() {
@@ -51,7 +50,13 @@ export default (await import('vue')).defineComponent({
     }
   },
   components: {
-    NButton, NIcon, ArrowBackFilled, NH3, NDataTable, AddRound, LoadingHeader
+    NButton,
+    NIcon,
+    ArrowBackFilled,
+    NH3,
+    NDataTable,
+    AddRound,
+    LoadingHeader
   },
   props: {
     courseUUID: {
@@ -62,7 +67,7 @@ export default (await import('vue')).defineComponent({
   watch: {
     courseUUID: {
       handler(newCourseUUID) {
-        this.fetchDetail(newCourseUUID);
+        this.fetchDetail(newCourseUUID)
       },
       immediate: true
     }
@@ -70,26 +75,26 @@ export default (await import('vue')).defineComponent({
   methods: {
     async fetchDetail(courseUUID: string) {
       try {
-        this.loading = true;
-        this.course = await this.API.getCourseDetail(courseUUID);
+        this.loading = true
+        this.course = await this.API.getCourseDetail(courseUUID)
       } catch (err) {
-        this.MSG.error(err instanceof Error ? err.message : "Unknown error");
+        this.MSG.error(err instanceof Error ? err.message : 'Unknown error')
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
     handleBack() {
       // print the router history
-      this.router.back();
+      this.router.back()
     }
   },
   computed: {
     getURL(): string | undefined {
-      if (!this.course) return undefined;
+      if (!this.course) return undefined
 
-      return `https://articulateusercontent.com/review/${this.course.courseLocation}`;
+      return `https://articulateusercontent.com/review/${this.course.courseLocation}`
     }
-  },
+  }
 })
 </script>
 
@@ -109,7 +114,8 @@ export default (await import('vue')).defineComponent({
             </template>
           </n-button>
           <n-h3 class="h3-item-name">{{ course.name }}</n-h3>
-          <n-button size="large" type="primary" secondary class="button-add-test">Add test
+          <n-button size="large" type="primary" secondary class="button-add-test"
+            >Add test
             <template #icon>
               <n-icon class="icon-no-align">
                 <AddRound />
@@ -121,13 +127,23 @@ export default (await import('vue')).defineComponent({
       <!-- preview, list of other versions -->
       <div class="col-3">
         <div class="iframe-container">
-          <iframe allowfullscreen="true" class="player" :src="getURL" scrolling="no"
-            style="width: 100%; height: 100%;"></iframe> <!-- TODO: make read-only -->
+          <iframe
+            allowfullscreen="true"
+            class="player"
+            :src="getURL"
+            scrolling="no"
+            style="width: 100%; height: 100%"
+          ></iframe>
+          <!-- TODO: make read-only -->
         </div>
-        <n-data-table :columns="columns" :data="course.otherVersions" :single-line="true" size="small" />
+        <n-data-table
+          :columns="columns"
+          :data="course.otherVersions"
+          :single-line="true"
+          size="small"
+        />
       </div>
     </div>
-
   </div>
 </template>
 

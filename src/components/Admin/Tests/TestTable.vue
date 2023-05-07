@@ -1,14 +1,16 @@
 <script lang="ts">
-
 import { inject, h } from 'vue'
-import { NDataTable, useMessage, NButton, NTag, NH2, type DataTableColumns } from 'naive-ui';
+import { NDataTable, useMessage, NButton, NTag, NH2, type DataTableColumns } from 'naive-ui'
 import { useRouter, type Router } from 'vue-router'
-import type { API } from '@/services/api';
-import type { ITestView } from '@/interfaces';
+import type { API } from '@/services/api'
+import type { ITestView } from '@/interfaces'
 import { RemoveRedEyeFilled } from '@vicons/material'
 
-
-function getChip(type: 'success' | 'error' | 'warning' | 'info' | 'default', text: string, size: 'tiny' | 'small' | 'medium' | 'large' = 'medium') {
+function getChip(
+  type: 'success' | 'error' | 'warning' | 'info' | 'default',
+  text: string,
+  size: 'tiny' | 'small' | 'medium' | 'large' = 'medium'
+) {
   return h(
     NTag,
     {
@@ -22,11 +24,11 @@ function getChip(type: 'success' | 'error' | 'warning' | 'info' | 'default', tex
 }
 
 const getState = (test: ITestView) => {
-  const currentTime = new Date();
-  const start = test.startAt ? new Date(test.startAt) : null;
-  const end = test.endAt ? new Date(test.endAt) : null;
+  const currentTime = new Date()
+  const start = test.startAt ? new Date(test.startAt) : null
+  const end = test.endAt ? new Date(test.endAt) : null
 
-  if (!start) return null;
+  if (!start) return null
 
   if (start > currentTime) {
     return getChip('warning', 'Planned')
@@ -37,22 +39,32 @@ const getState = (test: ITestView) => {
   }
 }
 
-
 function getModuleName(id: number) {
-  const moduleNames: string[] = ["Unknown", "I/O Test", "I/O Evaluation", "Timed retency", "Feedback", "Live comments"]
+  const moduleNames: string[] = [
+    'Unknown',
+    'I/O Test',
+    'I/O Evaluation',
+    'Timed retency',
+    'Feedback',
+    'Live comments'
+  ]
   // check if id is valid
-  if (id < 0 || id >= moduleNames.length) return moduleNames[0];
-  return moduleNames[id];
+  if (id < 0 || id >= moduleNames.length) return moduleNames[0]
+  return moduleNames[id]
 }
 
 const getModules = (test: ITestView) => {
-  if (!test.modules) return null;
-  return test.modules.map(module => {
+  if (!test.modules) return null
+  return test.modules.map((module) => {
     return getChip('default', getModuleName(module), 'tiny')
   })
 }
 
-const createColumns = ({ viewDetail: viewDetail }: { viewDetail: (test: ITestView) => void }): DataTableColumns<ITestView> => {
+const createColumns = ({
+  viewDetail: viewDetail
+}: {
+  viewDetail: (test: ITestView) => void
+}): DataTableColumns<ITestView> => {
   return [
     {
       title: 'Test name',
@@ -64,7 +76,7 @@ const createColumns = ({ viewDetail: viewDetail }: { viewDetail: (test: ITestVie
       key: 'state',
       width: 160,
       render(row) {
-        return getState(row);
+        return getState(row)
       }
     },
     {
@@ -73,24 +85,24 @@ const createColumns = ({ viewDetail: viewDetail }: { viewDetail: (test: ITestVie
       align: 'center',
       width: 80,
       render(row) {
-        return h(
-          NButton,
-          {
-            circle: true,
-            quaternary: true,
-            size: 'small',
-            class: 'btn-less-visible',
-            renderIcon: () => h(RemoveRedEyeFilled),
-            onClick: (event) => {event.stopPropagation(); viewDetail(row)}
+        return h(NButton, {
+          circle: true,
+          quaternary: true,
+          size: 'small',
+          class: 'btn-less-visible',
+          renderIcon: () => h(RemoveRedEyeFilled),
+          onClick: (event) => {
+            event.stopPropagation()
+            viewDetail(row)
           }
-        )
+        })
       }
     },
     {
       title: 'Modules',
       key: 'modules',
       render(test) {
-        return getModules(test);
+        return getModules(test)
       }
     }
     // TODO: Add delete and copy buttons
@@ -99,30 +111,34 @@ const createColumns = ({ viewDetail: viewDetail }: { viewDetail: (test: ITestVie
 
 export default (await import('vue')).defineComponent({
   components: {
-    NDataTable, NH2
+    NDataTable,
+    NH2
   },
   setup() {
-    const router : Router = useRouter();
-    const MSG = useMessage();
-    const API = inject('API') as API;
+    const router: Router = useRouter()
+    const MSG = useMessage()
+    const API = inject('API') as API
     return {
-      MSG, API,
+      MSG,
+      API,
       columns: createColumns({
         viewDetail(test: ITestView) {
-          router.push({ name: 'courseDetail', params: { courseUUID: test.courseUUID } });
+          router.push({ name: 'courseDetail', params: { courseUUID: test.courseUUID } })
         }
       })
     }
   },
   mounted() {
     // fetch courses from the API
-    this.API.getTestList().then(tests => {
-      this.loading = false;
-      this.tests = tests;
-    }).catch(err => {
-      this.loading = false;
-      this.MSG.error(err.message);
-    });
+    this.API.getTestList()
+      .then((tests) => {
+        this.loading = false
+        this.tests = tests
+      })
+      .catch((err) => {
+        this.loading = false
+        this.MSG.error(err.message)
+      })
   },
   data() {
     return {
@@ -133,7 +149,7 @@ export default (await import('vue')).defineComponent({
           style: 'cursor: pointer',
           onClick: () => this.handleRowClick(test)
         }
-      } 
+      }
     }
   },
   methods: {
@@ -144,14 +160,19 @@ export default (await import('vue')).defineComponent({
   },
   computed: {
     isEmpty(): boolean {
-      return this.tests.length === 0;
+      return this.tests.length === 0
     }
   }
 })
 </script>
 
-
 <template>
   <n-h2>List of tests</n-h2>
-  <n-data-table :columns="columns" :data="tests" :bordered="false" :loading="loading" :row-props="rowProps" />
+  <n-data-table
+    :columns="columns"
+    :data="tests"
+    :bordered="false"
+    :loading="loading"
+    :row-props="rowProps"
+  />
 </template>

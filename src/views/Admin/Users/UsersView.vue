@@ -1,16 +1,15 @@
 <script lang="ts">
-
 import { inject } from 'vue'
-import { /* NSpin, NButton, NH2, */ useMessage } from 'naive-ui';
-import type { API } from '@/services/api';
+import { /* NSpin, NButton, NH2, */ useMessage } from 'naive-ui'
+import type { API } from '@/services/api'
 
 export default (await import('vue')).defineComponent({
   components: {
     // NSpin, NButton, NH2
   },
-  setup () {
-    const MSG = useMessage();
-    const API = inject('API') as API;
+  setup() {
+    const MSG = useMessage()
+    const API = inject('API') as API
     return { MSG, API }
   },
   mounted() {
@@ -27,16 +26,9 @@ export default (await import('vue')).defineComponent({
       loading: true as boolean
     }
   },
-  computed: {
-
-  },
-  methods: {
-
-  }
+  computed: {},
+  methods: {}
 })
 </script>
 
-
-<template>
-  No content yet
-</template>
+<template>No content yet</template>

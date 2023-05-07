@@ -1,29 +1,34 @@
 <script lang="ts">
-
 import { inject } from 'vue'
-import { useMessage, NButton, NIcon, NH3 } from 'naive-ui';
+import { useMessage, NButton, NIcon, NH3 } from 'naive-ui'
 import { ArrowBackFilled } from '@vicons/material'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
 
-import type { API } from '@/services/api';
+import type { API } from '@/services/api'
 
 export default (await import('vue')).defineComponent({
   setup() {
-    const router = useRouter();
-    const MSG = useMessage();
-    const API = inject('API') as API;
+    const router = useRouter()
+    const MSG = useMessage()
+    const API = inject('API') as API
     return {
-      router, MSG, API
+      router,
+      MSG,
+      API
     }
   },
   data() {
     return {
-      loading: true,
+      loading: true
     }
   },
   components: {
-    NButton, NIcon, NH3, ArrowBackFilled, LoadingHeader
+    NButton,
+    NIcon,
+    NH3,
+    ArrowBackFilled,
+    LoadingHeader
   },
   props: {
     testUUID: {
@@ -34,15 +39,15 @@ export default (await import('vue')).defineComponent({
   watch: {
     testUUID: {
       handler(newTestUUID) {
-        this.fetchDetail(newTestUUID);
+        this.fetchDetail(newTestUUID)
       },
       immediate: true
     }
   },
   methods: {
-    fetchDetail(testUUID : string) {
+    fetchDetail(testUUID: string) {
       // fetch courses from the API
-      this.loading = true;
+      this.loading = true
       console.log(testUUID)
       // this.API.getCourseDetail(testUUID).then(course => { //TODO: implement
       //   this.loading = false;
@@ -53,15 +58,12 @@ export default (await import('vue')).defineComponent({
     },
     handleBack() {
       // print the router history
-      this.router.back();
+      this.router.back()
     }
   },
-  computed: {
-
-  },
+  computed: {}
 })
 </script>
-
 
 <template>
   <!-- Loading state -->
@@ -76,10 +78,8 @@ export default (await import('vue')).defineComponent({
         </n-icon>
       </template>
     </n-button>
-    <n-h3 class="h3-item-name">{{ "Sem jmeno testu" }}</n-h3>
+    <n-h3 class="h3-item-name">{{ 'Sem jmeno testu' }}</n-h3>
   </div>
-
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -7,11 +7,11 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
 
 import './assets/main.css'
-const api = new API('http://localhost:7331/api/');
+const api = new API('http://localhost:7331/api/')
 createApp(App)
-    .use(router)
-    .use(vue3GoogleLogin, {
-        clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID
-    })
-    .provide('API', api)
-    .mount('#app')
+  .use(router)
+  .use(vue3GoogleLogin, {
+    clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID
+  })
+  .provide('API', api)
+  .mount('#app')
