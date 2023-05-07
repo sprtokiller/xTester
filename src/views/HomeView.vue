@@ -1,7 +1,7 @@
 <script lang="ts">
 import CourseFrame from '@/components/CourseFrame.vue';
 
-export default {
+export default (await import('vue')).defineComponent({
   props: {
     userHash: String,
   },
@@ -11,7 +11,7 @@ export default {
   mounted() {
     console.log("A" + this.userHash);
   }
-};
+})
 </script>
 
 <template>

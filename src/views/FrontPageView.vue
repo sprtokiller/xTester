@@ -4,7 +4,7 @@ import { inject } from 'vue'
 import { useMessage, NButton } from 'naive-ui';
 import type { API } from '@/services/api';
 
-export default {
+export default (await import('vue')).defineComponent({
   components: {
     NButton
   },
@@ -36,7 +36,7 @@ export default {
       });
     }
   }
-};
+})
 </script>
 
 <template>
