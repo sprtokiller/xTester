@@ -1,5 +1,5 @@
 <script lang="ts">
-import AdminMenu from '@/components/AdminMenu.vue';
+import AdminMenu from '@/components/Admin/AdminMenu.vue';
 
 export default (await import('vue')).defineComponent({
   components: {

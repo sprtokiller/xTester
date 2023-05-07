@@ -3,7 +3,7 @@
 import { inject, h } from 'vue'
 import { useMessage, NButton, NIcon, NH3, NDataTable } from 'naive-ui';
 import { ArrowBackFilled, RemoveRedEyeFilled, AddRound } from '@vicons/material'
-import LoadingHeader from '../../buildparts/LoadingHeader.vue'
+import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
 import { useRouter } from 'vue-router';
 
 import type { API } from '@/services/api';

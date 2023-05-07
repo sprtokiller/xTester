@@ -1,5 +1,5 @@
 <script lang="ts">
-import CourseFrame from '@/components/CourseFrame.vue';
+import CourseFrame from '@/components/Admin/CourseFrame.vue';
 
 export default (await import('vue')).defineComponent({
   props: {

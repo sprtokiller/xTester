@@ -1,6 +1,6 @@
 <script lang="ts">
 
-import TestTable from './TestTable.vue';
+import TestTable from '@/components/Admin/Tests/TestTable.vue';
 
 export default (await import('vue')).defineComponent({
   components: {
