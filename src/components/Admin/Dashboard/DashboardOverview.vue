@@ -1,6 +1,6 @@
 <script lang="ts">
 
-export default {
+export default (await import('vue')).defineComponent({
   // components: {
     
   // },
@@ -16,7 +16,7 @@ export default {
   //     menuOptions: menu
   //   }
   // }
-}
+})
 </script>
 
 

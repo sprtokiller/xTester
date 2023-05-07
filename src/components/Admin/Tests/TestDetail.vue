@@ -8,7 +8,7 @@ import LoadingHeader from '../../buildparts/LoadingHeader.vue'
 
 import type { API } from '@/services/api';
 
-export default {
+export default (await import('vue')).defineComponent({
   setup() {
     const router = useRouter();
     const MSG = useMessage();
@@ -59,7 +59,7 @@ export default {
   computed: {
 
   },
-}
+})
 </script>
 
 

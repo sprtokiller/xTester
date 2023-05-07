@@ -3,7 +3,7 @@
 import { NButton, NIcon, NH3, NSpin } from 'naive-ui';
 import { ArrowBackFilled } from '@vicons/material'
 
-export default {
+export default (await import('vue')).defineComponent({
   components: {
     NButton, NIcon, NH3, NSpin, ArrowBackFilled
   },
@@ -12,7 +12,7 @@ export default {
       this.$router.back();
     }
   }
-}
+})
 </script>
 
 

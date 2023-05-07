@@ -2,7 +2,7 @@
 
 // import { RouterLink, useRouter } from 'vue-router'
 
-export default {
+export default (await import('vue')).defineComponent({
   // components: {
     
   // },
@@ -18,7 +18,7 @@ export default {
   //     menuOptions: menu
   //   }
   // }
-}
+})
 </script>
 
 

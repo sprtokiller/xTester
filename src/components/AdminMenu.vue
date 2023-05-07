@@ -28,7 +28,7 @@ function createRouterLinkVnode(where: string, label: string) {
   )
 }
 
-export default {
+export default (await import('vue')).defineComponent({
   components: {
     NMenu
   },
@@ -59,7 +59,7 @@ export default {
       }) as unknown as MenuOption[],
     }
   }
-}
+})
 </script>
 
 

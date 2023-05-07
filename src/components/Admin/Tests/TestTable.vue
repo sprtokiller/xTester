@@ -97,7 +97,7 @@ const createColumns = ({ viewDetail: viewDetail }: { viewDetail: (test: ITestVie
   ]
 }
 
-export default {
+export default (await import('vue')).defineComponent({
   components: {
     NDataTable, NH2
   },
@@ -147,7 +147,7 @@ export default {
       return this.tests.length === 0;
     }
   }
-}
+})
 </script>
 
 

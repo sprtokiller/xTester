@@ -2,11 +2,11 @@
 
 import TestTable from './TestTable.vue';
 
-export default {
+export default (await import('vue')).defineComponent({
   components: {
     TestTable
   }
-}
+})
 </script>
 
 

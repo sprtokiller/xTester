@@ -1,7 +1,7 @@
 <script lang="ts">
-export default {
+export default (await import('vue')).defineComponent({
   props: ['userHash'],
-}
+})
 </script>
 
 <template>

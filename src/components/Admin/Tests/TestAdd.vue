@@ -44,7 +44,7 @@ const createColumns = ({ changeDetail }: { changeDetail: (newCourseUUID: string)
   ]
 }
 
-export default {
+export default (await import('vue')).defineComponent({
   setup() {
     const router = useRouter();
     const MSG = useMessage();
@@ -105,7 +105,7 @@ export default {
       return `https://articulateusercontent.com/review/${this.course.courseLocation}`;
     }
   },
-}
+})
 </script>
 
 

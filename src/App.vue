@@ -3,7 +3,7 @@ import { NMessageProvider, NDialogProvider } from 'naive-ui'
 
 const padTwo = (val : number) => (val > 9 ? "" : "0") + val;
 
-export default {
+export default (await import('vue')).defineComponent({
   components: {
     NMessageProvider, NDialogProvider
   },
@@ -18,7 +18,7 @@ export default {
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
     }
   }
-}
+})
 
 </script>
 

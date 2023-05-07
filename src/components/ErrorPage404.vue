@@ -2,14 +2,14 @@
 
 import { NResult, NButton } from 'naive-ui';
 
-export default {
+export default (await import('vue')).defineComponent({
   props: {
     userHash: String,
   },
   components: {
     NResult, NButton
   }
-};
+})
 </script>
 
 
