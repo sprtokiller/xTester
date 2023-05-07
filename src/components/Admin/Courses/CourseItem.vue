@@ -33,7 +33,7 @@ export default (await import('vue')).defineComponent({
     openDetail() {
       this.$router.push({ name: 'courseDetail', params: { courseUUID: this.course.courseUUID } });
     },
-    editCourse(event: Event) {
+    editCourse() {
       this.$emit('editSelect', this.course.courseUUID);
     },
     handleClickOutside() {
@@ -42,7 +42,7 @@ export default (await import('vue')).defineComponent({
         this.renameCourse();
       }
     },
-    deleteCourse(event: Event) {
+    deleteCourse() {
       var contetnt = 'Are you sure you want to delete this course?';
       const len = this.course.tests.length;
       if (len) {
