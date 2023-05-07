@@ -11,5 +11,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  base: '/xTester/'
+  base: '/xTester/',
+  build: {
+    target: 'es2022'
+  }
 })

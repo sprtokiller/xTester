@@ -2,7 +2,7 @@
 
 import { inject, h } from 'vue'
 import { useMessage, NButton, NIcon, NH3, NDataTable } from 'naive-ui';
-import { ArrowBackFilled, RemoveRedEyeRound, AddRound } from '@vicons/material'
+import { ArrowBackFilled, RemoveRedEyeFilled, AddRound } from '@vicons/material'
 import LoadingHeader from '../../buildparts/LoadingHeader.vue'
 import { useRouter } from 'vue-router';
 
@@ -34,7 +34,7 @@ export default (await import('vue')).defineComponent({
             quaternary: true,
             size: 'small',
             class: 'btn-less-visible',
-            renderIcon: () => h(RemoveRedEyeRound),
+            renderIcon: () => h(RemoveRedEyeFilled),
             onClick: () => changeDetail(row.courseUUID),
           });
         },

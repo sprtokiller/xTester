@@ -5,13 +5,13 @@ import AdminView from '../views/AdminView.vue'
 import PageNotFoundView from '../views/PageNotFoundView.vue'
 
 /* Admin content will lazy load */
-import CourseOverview from '@/components/Admin/Courses/CourseOverview.vue'
-import CourseDetail from '@/components/Admin/Courses/CourseDetail.vue'
-import CourseImport from '@/components/Admin/Courses/CourseImport.vue'
-import DashboardOverview from '@/components/Admin/Dashboard/DashboardOverview.vue'
-import ModuleOverview from '@/components/Admin/Modules/ModuleOverview.vue'
-import TestOverview from '@/components/Admin/Tests/TestOverview.vue'
-import UserOverview from '@/components/Admin/Users/UserOverview.vue'
+// import CourseOverview from '@/components/Admin/Courses/CourseOverview.vue'
+// import CourseDetail from '@/components/Admin/Courses/CourseDetail.vue'
+// import CourseImport from '@/components/Admin/Courses/CourseImport.vue'
+// import DashboardOverview from '@/components/Admin/Dashboard/DashboardOverview.vue'
+// import ModuleOverview from '@/components/Admin/Modules/ModuleOverview.vue'
+// import TestOverview from '@/components/Admin/Tests/TestOverview.vue'
+// import UserOverview from '@/components/Admin/Users/UserOverview.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,18 +31,18 @@ const router = createRouter({
         {
           path: 'courses',
           name: 'courses',
-          component: CourseOverview,
+          component: () => import('@/components/Admin/Courses/CourseOverview.vue'),
         },
         {
           path: 'course/detail/:courseUUID',
           name: 'courseDetail',
-          component: CourseDetail,
+          component: () => import('@/components/Admin/Courses/CourseDetail.vue'),
           props: true
         },
         {
           path: 'course/new',
           name: 'courseAdd',
-          component: CourseImport,
+          component: () => import('@/components/Admin/Courses/CourseImport.vue'),
           props: (route) => ({ 
               name: route.query.name,
               author: route.query.author,
@@ -54,22 +54,22 @@ const router = createRouter({
         {
           path: '',
           name: 'dashboard',
-          component: DashboardOverview
+          component: () => import('@/components/Admin/Dashboard/DashboardOverview.vue'),
         },
         {
           path: 'modules',
           name: 'modules',
-          component: ModuleOverview
+          component: () => import('@/components/Admin/Modules/ModuleOverview.vue'),
         },
         {
           path: 'tests',
           name: 'tests',
-          component: TestOverview
+          component: () => import('@/components/Admin/Tests/TestOverview.vue'),
         },
         {
           path: 'users',
           name: 'users',
-          component: UserOverview
+          component: () => import('@/components/Admin/Users/UserOverview.vue'),
         },
         // {
         // TODO: implement not found here

@@ -5,7 +5,7 @@ import { NDataTable, useMessage, NButton, NTag, NH2, type DataTableColumns } fro
 import { useRouter, type Router } from 'vue-router'
 import type { API } from '@/services/api';
 import type { ITestView } from '@/interfaces';
-import { RemoveRedEyeRound } from '@vicons/material'
+import { RemoveRedEyeFilled } from '@vicons/material'
 
 
 function getChip(type: 'success' | 'error' | 'warning' | 'info' | 'default', text: string, size: 'tiny' | 'small' | 'medium' | 'large' = 'medium') {
@@ -80,7 +80,7 @@ const createColumns = ({ viewDetail: viewDetail }: { viewDetail: (test: ITestVie
             quaternary: true,
             size: 'small',
             class: 'btn-less-visible',
-            renderIcon: () => h(RemoveRedEyeRound),
+            renderIcon: () => h(RemoveRedEyeFilled),
             onClick: (event) => {event.stopPropagation(); viewDetail(row)}
           }
         )

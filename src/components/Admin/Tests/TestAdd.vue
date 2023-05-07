@@ -2,7 +2,7 @@
 
 import { inject, h } from 'vue'
 import { useMessage, NButton, NIcon, NH3, NDataTable, NSpin } from 'naive-ui';
-import { ArrowBackFilled, RemoveRedEyeRound, AddRound } from '@vicons/material'
+import { ArrowBackFilled, RemoveRedEyeFilled, AddRound } from '@vicons/material'
 import { useRouter } from 'vue-router';
 
 import type { API } from '@/services/api';
@@ -35,7 +35,7 @@ const createColumns = ({ changeDetail }: { changeDetail: (newCourseUUID: string)
             quaternary: true,
             size: 'small',
             class: 'btn-less-visible',
-            renderIcon: () => h(RemoveRedEyeRound),
+            renderIcon: () => h(RemoveRedEyeFilled),
             onClick: () => changeDetail(row.courseUUID)
           }
         )
