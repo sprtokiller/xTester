@@ -18,7 +18,8 @@ export default (await import('vue')).defineComponent({
   data() {
     return {
       checking: true,
-      uploading: false
+      uploading: false,
+      error: false
     }
   },
   components: {
@@ -55,12 +56,21 @@ export default (await import('vue')).defineComponent({
     },
     loadingClass() {
       return {
-        'dim-on-loading': this.checking || this.uploading
+        'dim-on-loading': this.checking || this.uploading || this.error
       }
     }
   },
   methods: {
     async checkAvailability() {
+      // if any of the props is empty, show error
+      if (!this.courseLocation || !this.groupHash || !this.name || !this.author || !this.version) {
+        this.MSG.error('Unsupported content type')
+        this.checking = false
+        this.error = true
+        return
+      }
+
+      this.error = false
       try {
         this.checking = true
         const courseUUID = await this.API.checkCourseExists(this.courseLocation, this.groupHash)
@@ -131,8 +141,8 @@ export default (await import('vue')).defineComponent({
       <template #footer>
         <!-- align to right -->
         <div class="d-flex justify-content-end">
-          <n-button @click="cancel" style="margin-right: 0.5rem" ghost>Cancel</n-button>
-          <n-button @click="addCourse" type="primary">Add</n-button>
+          <n-button @click="cancel" style="margin-right: 0.5rem" ghost :disabled="error">Cancel</n-button>
+          <n-button @click="addCourse" type="primary" :disabled="error">Add</n-button>
         </div>
       </template>
     </n-card>
