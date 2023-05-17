@@ -1,22 +1,5 @@
-<script lang="ts">
-// import { RouterLink, useRouter } from 'vue-router'
+<script setup lang="ts">
 
-export default (await import('vue')).defineComponent({
-  // components: {
-  // },
-  // methods: {
-  //   handleUpdateValue (key: string, item: MenuOption) {
-  //     }
-  // },
-  // mounted() {
-  //   console.log("Menu");
-  // },
-  // data() {
-  //   return {
-  //     menuOptions: menu
-  //   }
-  // }
-})
 </script>
 
 <template>

@@ -1,111 +1,83 @@
-<script lang="ts">
-import { inject } from 'vue'
+<script setup lang="ts">
+import { inject, ref, watchEffect } from 'vue'
 import { useMessage, NH3, NButton, NCard, NDescriptions, NDescriptionsItem, NSpin } from 'naive-ui'
 import type { API } from '@/services/api'
 import { useRouter } from 'vue-router'
 
-export default (await import('vue')).defineComponent({
-  setup() {
-    const router = useRouter()
-    const MSG = useMessage()
-    const API = inject('API') as API
-    return {
-      router,
-      MSG,
-      API
-    }
-  },
-  data() {
-    return {
-      checking: true,
-      uploading: false,
-      error: false
-    }
-  },
-  components: {
-    NButton,
-    NH3,
-    NCard,
-    NDescriptions,
-    NDescriptionsItem,
-    NSpin
-  },
-  props: {
-    name: { type: String, required: true },
-    author: { type: String, required: true },
-    version: { type: String, required: true },
-    courseLocation: { type: String, required: true },
-    groupHash: { type: String, required: true }
-  },
-  watch: {
-    watchIDs: {
-      handler() {
-        this.checkAvailability()
-      },
-      immediate: true,
-      deep: true
-    }
-  },
-  computed: {
-    // we have to use computed to watch for changes in both IDs
-    watchIDs() {
-      return {
-        courseLocation: this.courseLocation,
-        groupHash: this.groupHash
-      }
-    },
-    loadingClass() {
-      return {
-        'dim-on-loading': this.checking || this.uploading || this.error
-      }
-    }
-  },
-  methods: {
-    async checkAvailability() {
-      // if any of the props is empty, show error
-      if (!this.courseLocation || !this.groupHash || !this.name || !this.author || !this.version) {
-        this.MSG.error('Unsupported content type')
-        this.checking = false
-        this.error = true
-        return
-      }
+const router = useRouter()
+const MSG = useMessage()
+const myAPI = inject('API') as API
 
-      this.error = false
-      try {
-        this.checking = true
-        const courseUUID = await this.API.checkCourseExists(this.courseLocation, this.groupHash)
-        if (courseUUID) {
-          // redirect to course detail
-          this.$router.push({ name: 'courseDetail', params: { courseUUID: courseUUID } })
-        }
-      } catch (err) {
-        this.MSG.error(err instanceof Error ? err.message : 'Unknown error')
-      } finally {
-        this.checking = false
-      }
-    },
-    cancel() {
-      this.$router.push({ name: 'courses' })
-    },
-    async addCourse() {
-      try {
-        this.uploading = true
-        const courseUUID = await this.API.addCourse(
-          this.name,
-          this.author,
-          parseInt(this.version),
-          this.groupHash,
-          this.courseLocation
-        )
-        this.$router.push({ name: 'courseDetail', params: { courseUUID } })
-      } catch (err) {
-        this.MSG.error(err instanceof Error ? err.message : 'Unknown error')
-      } finally {
-        this.uploading = false
-      }
-    }
-  }
+const checking = ref(true)
+const uploading = ref(false)
+const error = ref(false)
+
+// define props
+const props = defineProps({
+  name: { type: String, required: true },
+  author: { type: String, required: true },
+  version: { type: String, required: true },
+  courseLocation: { type: String, required: true },
+  groupHash: { type: String, required: true }
 })
+
+// define reactive data
+watchEffect(async () => {
+  checkAvailability(props.courseLocation, props.groupHash)
+})
+
+async function checkAvailability(newCourseLocation: String, newGroupHash: String) {
+  // if any of the props is empty, show error
+  if (!props.courseLocation || !props.groupHash || !props.name || !props.author || !props.version) {
+    MSG.error('Unsupported content type')
+    checking.value = false
+    error.value = true
+    return
+  }
+
+  error.value = false
+  try {
+    checking.value = true
+    const courseUUID = await myAPI.checkCourseExists(props.courseLocation, props.groupHash)
+    if (courseUUID) {
+      // redirect to course detail
+      router.push({ name: 'courseDetail', params: { courseUUID: courseUUID } })
+    }
+  } catch (err) {
+    MSG.error(err instanceof Error ? err.message : 'Unknown error')
+  } finally {
+    checking.value = false
+  }
+}
+
+function loadingClass() {
+  return {
+    'dim-on-loading': checking.value || uploading.value || error.value
+  }
+}
+
+
+function cancel() {
+  router.push({ name: 'courses' })
+}
+async function addCourse() {
+  try {
+    uploading.value = true
+    const courseUUID = await myAPI.addCourse(
+      props.name,
+      props.author,
+      parseInt(props.version),
+      props.groupHash,
+      props.courseLocation
+    )
+    router.push({ name: 'courseDetail', params: { courseUUID } })
+  } catch (err) {
+    MSG.error(err instanceof Error ? err.message : 'Unknown error')
+  } finally {
+    uploading.value = false
+  }
+}
+
 </script>
 
 <template>
@@ -115,13 +87,7 @@ export default (await import('vue')).defineComponent({
       {{ uploading ? 'Uploading the course...' : 'Checking if course is available...' }}
     </template>
     <n-card style="max-width: 50rem; margin-left: auto; margin-right: auto; margin-top: 5%">
-      <n-descriptions
-        :class="loadingClass"
-        title="Details"
-        label-placement="left"
-        bordered
-        size="small"
-      >
+      <n-descriptions :class="loadingClass" title="Details" label-placement="left" bordered size="small">
         <n-descriptions-item label="Name:">
           {{ name }}
         </n-descriptions-item>

@@ -1,11 +1,5 @@
-<script lang="ts">
+<script setup lang="ts">
 import ErrorPage404 from '@/components/Admin/ErrorPage404.vue'
-
-export default (await import('vue')).defineComponent({
-  components: {
-    ErrorPage404
-  }
-})
 </script>
 
 <template>

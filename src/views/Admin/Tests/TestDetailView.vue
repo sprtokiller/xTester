@@ -1,5 +1,5 @@
-<script lang="ts">
-import { inject } from 'vue'
+<script setup lang="ts">
+import { inject, ref, watchEffect } from 'vue'
 import { useMessage, NButton, NIcon, NH3 } from 'naive-ui'
 import { ArrowBackFilled } from '@vicons/material'
 import { useRouter } from 'vue-router'
@@ -7,62 +7,39 @@ import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
 
 import type { API } from '@/services/api'
 
-export default (await import('vue')).defineComponent({
-  setup() {
-    const router = useRouter()
-    const MSG = useMessage()
-    const API = inject('API') as API
-    return {
-      router,
-      MSG,
-      API
-    }
-  },
-  data() {
-    return {
-      loading: true
-    }
-  },
-  components: {
-    NButton,
-    NIcon,
-    NH3,
-    ArrowBackFilled,
-    LoadingHeader
-  },
-  props: {
-    testUUID: {
-      type: String,
-      required: true
-    }
-  },
-  watch: {
-    testUUID: {
-      handler(newTestUUID) {
-        this.fetchDetail(newTestUUID)
-      },
-      immediate: true
-    }
-  },
-  methods: {
-    fetchDetail(testUUID: string) {
-      // fetch courses from the API
-      this.loading = true
-      console.log(testUUID)
-      // this.API.getCourseDetail(testUUID).then(course => { //TODO: implement
-      //   this.loading = false;
-      // }).catch(err => {
-      //   this.loading = false;
-      //   this.MSG.error(err.message);
-      // });
-    },
-    handleBack() {
-      // print the router history
-      this.router.back()
-    }
-  },
-  computed: {}
+const router = useRouter()
+const MSG = useMessage()
+const myAPI = inject('API') as API
+
+const loading = ref(true)
+// define props
+const props = defineProps({
+  testUUID: {
+    type: String,
+    required: true
+  }
 })
+
+// define reactive data
+watchEffect(() => {
+  fetchDetail(props.testUUID)
+})
+
+function fetchDetail(testUUID: string) {
+  // fetch courses from the API
+  loading.value = true
+  console.log(testUUID)
+  // this.API.getCourseDetail(testUUID).then(course => { //TODO: implement
+  //   this.loading = false;
+  // }).catch(err => {
+  //   this.loading = false;
+  //   this.MSG.error(err.message);
+  // });
+}
+function handleBack() {
+  // print the router history
+  router.back()
+}
 </script>
 
 <template>
