@@ -1,90 +1,54 @@
 <script setup lang="ts">
-import { inject, h, ref, watchEffect, computed } from 'vue'
+import { inject, h, ref, watchEffect, computed, onMount } from 'vue'
 import { useMessage, NButton, NIcon, NH3, NDataTable, NSpin } from 'naive-ui'
 import { ArrowBackFilled, RemoveRedEyeFilled, AddRound } from '@vicons/material'
 import { useRouter } from 'vue-router'
 
 import type { API } from '@/services/api'
-import type { ICourseDetail, ICourse } from '@/interfaces'
-import type { DataTableColumns } from 'naive-ui'
-
-const columns: DataTableColumns<ICourse> = [
-  {
-    title: 'Other versions',
-    key: 'name',
-    ellipsis: true
-  },
-  {
-    title: 'Ver.',
-    key: 'version',
-    align: 'center',
-    width: 50
-  },
-  {
-    title: 'View',
-    key: 'courseView',
-    align: 'center',
-    width: 80,
-    render(row) {
-      return h(NButton, {
-        circle: true,
-        quaternary: true,
-        size: 'small',
-        class: 'btn-less-visible',
-        renderIcon: () => h(RemoveRedEyeFilled),
-        onClick: () => {
-          router.push({ name: 'courseDetail', params: { courseUUID: row.courseUUID } })
-        }
-      })
-    }
-  }
-]
+import type { ICourse } from '@/interfaces'
 
 const router = useRouter()
 const MSG = useMessage()
 const myAPI = inject('API') as API
 
 const loading = ref(true)
-const course = ref({} as ICourseDetail)
+const courses = ref([] as ICourse[])
 
 // define props
 const props = defineProps({
   courseUUID: {
     type: String,
-    required: true
+    required: false
   }
 })
 
+onMount(async () => {
+  await fetchCourses()
+})
+
 watchEffect(() => {
-  fetchDetail(props.courseUUID)
+  //TODO: fetch list of courses (name + hash) on Mount
+  //fe
 })
 
 
-function fetchDetail(courseUUID: string) {
+function fetchCourses() {
   // fetch courses from the API
   loading.value = true
-  myAPI.getCourseDetail(courseUUID)
-    .then((newCourse) => {
+  myAPI.getCourses()
+    .then((newCourses) => {
       loading.value = false
-      course.value = newCourse
+      courses.value = newCourses
     })
     .catch((err) => {
-      // TODO: handle error in better way
       loading.value = false
       MSG.error(err.message)
-    })
+    }) //TODO: finally?
 }
 
 function handleBack() {
-  // print the router history
   router.back()
 }
-
-const getURL = computed(() => {
-  if (!(course.value)) return undefined
-
-  return `https://articulateusercontent.com/review/${course.value.courseLocation}`
-})
 
 </script>
 
