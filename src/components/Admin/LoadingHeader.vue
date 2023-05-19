@@ -1,21 +1,13 @@
-<script lang="ts">
+<script setup lang="ts">
 import { NButton, NIcon, NH3, NSpin } from 'naive-ui'
 import { ArrowBackFilled } from '@vicons/material'
+import { useRouter } from 'vue-router'
 
-export default (await import('vue')).defineComponent({
-  components: {
-    NButton,
-    NIcon,
-    NH3,
-    NSpin,
-    ArrowBackFilled
-  },
-  methods: {
-    handleBack() {
-      this.$router.back()
-    }
-  }
-})
+const router = useRouter()
+
+function handleBack() {
+  router.back()
+}
 </script>
 
 <template>
@@ -34,5 +26,3 @@ export default (await import('vue')).defineComponent({
     <n-spin class="w-100" style="min-height: 200px" />
   </div>
 </template>
-
-<style scoped></style>

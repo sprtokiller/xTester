@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { inject, ref, watchEffect } from 'vue'
-import { useMessage, NButton, NIcon, NH3 } from 'naive-ui'
+import { ref, watchEffect } from 'vue'
+import { /* useMessage, */ NButton, NIcon, NH3 } from 'naive-ui'
 import { ArrowBackFilled } from '@vicons/material'
 import { useRouter } from 'vue-router'
 import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
 
-import type { API } from '@/services/api'
+// import { useApi } from '@/services/api'
 
 const router = useRouter()
-const MSG = useMessage()
-const myAPI = inject('API') as API
+// const MSG = useMessage()
+// const myAPI = useApi()
 
 const loading = ref(true)
 // define props

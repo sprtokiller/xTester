@@ -1,17 +1,22 @@
+import './assets/main.css'
 import { createApp } from 'vue'
+
 import App from './App.vue'
 import { API } from '@/services/api'
 import router from './router'
 import vue3GoogleLogin from 'vue3-google-login'
+
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
 
-import './assets/main.css'
 const api = new API('http://localhost:7331/api/')
-createApp(App)
-  .use(router)
-  .use(vue3GoogleLogin, {
+
+const app = createApp(App)
+
+app.use(router)
+app.use(vue3GoogleLogin, {
     clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID
   })
-  .provide('API', api)
-  .mount('#app')
+app.provide('API', api)
+
+app.mount('#app')

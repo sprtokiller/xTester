@@ -1,8 +1,8 @@
-<script lang="ts">
-import { inject, h } from 'vue'
+<script setup lang="ts">
+import { h, ref } from 'vue'
 import { NDataTable, useMessage, NButton, NTag, NH2, type DataTableColumns } from 'naive-ui'
 import { useRouter, type Router } from 'vue-router'
-import type { API } from '@/services/api'
+import { useApi } from '@/services/api'
 import type { ITestView } from '@/interfaces'
 import { RemoveRedEyeFilled } from '@vicons/material'
 
@@ -59,120 +59,78 @@ const getModules = (test: ITestView) => {
     return getChip('default', getModuleName(module), 'tiny')
   })
 }
-
-const createColumns = ({
-  viewDetail: viewDetail
-}: {
-  viewDetail: (test: ITestView) => void
-}): DataTableColumns<ITestView> => {
-  return [
-    {
-      title: 'Test name',
-      key: 'name',
-      ellipsis: true
-    },
-    {
-      title: 'State',
-      key: 'state',
-      width: 160,
-      render(row) {
-        return getState(row)
-      }
-    },
-    {
-      title: 'Course',
-      key: 'courseView',
-      align: 'center',
-      width: 80,
-      render(row) {
-        return h(NButton, {
-          circle: true,
-          quaternary: true,
-          size: 'small',
-          class: 'btn-less-visible',
-          renderIcon: () => h(RemoveRedEyeFilled),
-          onClick: (event) => {
-            event.stopPropagation()
-            viewDetail(row)
-          }
-        })
-      }
-    },
-    {
-      title: 'Modules',
-      key: 'modules',
-      render(test) {
-        return getModules(test)
-      }
-    }
-    // TODO: Add delete and copy buttons
-  ]
-}
-
-export default (await import('vue')).defineComponent({
-  components: {
-    NDataTable,
-    NH2
+const columns: DataTableColumns<ITestView> = [
+  {
+    title: 'Test name',
+    key: 'name',
+    ellipsis: true
   },
-  setup() {
-    const router: Router = useRouter()
-    const MSG = useMessage()
-    const API = inject('API') as API
-    return {
-      MSG,
-      API,
-      columns: createColumns({
-        viewDetail(test: ITestView) {
-          router.push({ name: 'courseDetail', params: { courseUUID: test.courseUUID } })
+  {
+    title: 'State',
+    key: 'state',
+    width: 160,
+    render(row) {
+      return getState(row)
+    }
+  },
+  {
+    title: 'Course',
+    key: 'courseView',
+    align: 'center',
+    width: 80,
+    render(row) {
+      return h(NButton, {
+        circle: true,
+        quaternary: true,
+        size: 'small',
+        class: 'btn-less-visible',
+        renderIcon: () => h(RemoveRedEyeFilled),
+        onClick: (event) => {
+          event.stopPropagation()
+          router.push({ name: 'courseDetail', params: { courseUUID: row.courseUUID } })
         }
       })
     }
   },
-  mounted() {
-    // fetch courses from the API
-    this.API.getTestList()
-      .then((tests) => {
-        this.loading = false
-        this.tests = tests
-      })
-      .catch((err) => {
-        this.loading = false
-        this.MSG.error(err.message)
-      })
-  },
-  data() {
-    return {
-      loading: true,
-      tests: [] as ITestView[],
-      rowProps: (test: ITestView) => {
-        return {
-          style: 'cursor: pointer',
-          onClick: () => this.handleRowClick(test)
-        }
-      }
-    }
-  },
-  methods: {
-    handleRowClick(row: ITestView) {
-      console.log(row.testUUID)
-      //this.$router.push({ name: 'testDetail', params: { testUUID: row.testUUID } });
-    }
-  },
-  computed: {
-    isEmpty(): boolean {
-      return this.tests.length === 0
+  {
+    title: 'Modules',
+    key: 'modules',
+    render(test) {
+      return getModules(test)
     }
   }
-})
+  // TODO: Add delete and copy buttons
+]
+
+
+const router: Router = useRouter()
+const MSG = useMessage()
+const API = useApi()
+
+const loading = ref(true)
+const tests = ref([] as ITestView[])
+const rowProps = (test: ITestView) => {
+  return {
+    style: 'cursor: pointer',
+    onClick: () => {
+      console.log(test.testUUID)
+    }
+  }
+}
+
+API.getTestList()
+    .then((newTests) => {
+      tests.value = newTests
+    })
+    .catch((err) => {
+      MSG.error(err.message)
+    })
+    .finally(() => {
+      loading.value = false
+    })
 </script>
 
 <template>
   <n-h2>List of tests</n-h2>
-  <n-data-table
-    :columns="columns"
-    :data="tests"
-    :bordered="false"
-    :loading="loading"
-    :row-props="rowProps"
-  />
+  <n-data-table :columns="columns" :data="tests" :bordered="false" :loading="loading" :row-props="rowProps" />
 </template>

@@ -1,20 +1,12 @@
-<script lang="ts">
-import { NMenu } from 'naive-ui'
-import { h } from 'vue'
-// import type { Component } from 'vue'
-import { RouterLink, type RouteLocationNormalized } from 'vue-router'
-// import { NIcon, useMessage } from 'naive-ui'
-import type { MenuOption } from 'naive-ui'
-// import {
-//   BookOutline as BookIcon,
-//   PersonOutline as PersonIcon,
-//   WineOutline as WineIcon,
-//   HomeOutline as HomeIcon
-// } from '@vicons/ionicons5'
+<template>
+  <n-menu :options="menuOptions"/>
+</template>
 
-// function renderIcon (icon: Component) {
-//   return () => h(NIcon, null, { default: () => h(icon) })
-// }
+<script setup lang="ts">
+import { NMenu } from 'naive-ui'
+import { h, nextTick } from 'vue'
+import { useRoute, RouterLink, onBeforeRouteUpdate, type RouteRecordName } from 'vue-router'
+import type { MenuOption } from 'naive-ui'
 
 function createRouterLinkVnode(where: string, label: string) {
   return h(
@@ -28,63 +20,50 @@ function createRouterLinkVnode(where: string, label: string) {
   )
 }
 
-export default (await import('vue')).defineComponent({
-  components: {
-    NMenu
-  },
-  watch: {
-    $route: {
-      handler(to) {
-        this.$nextTick(() => {
-          this.onRouteChange(to)
-        })
-      },
-      immediate: true
-    }
-  },
-  data() {
-    const pathGroups = ['dashboard', 'course', 'test', 'user', 'module']
+onRouteChange(useRoute().name)
 
-    const menuPaths = [
-      ['dashboard', 'Home'],
-      [],
-      ['courses', 'Courses'],
-      ['tests', 'Tests'],
-      ['users', 'Users'],
-      ['modules', 'Modules']
-    ]
-    return {
-      pathGroups,
-      menuOptions: menuPaths.map((location: string[], index: number) => {
-        return location.length === 2
-          ? {
-              label: () => createRouterLinkVnode(location[0], location[1]),
-              key: location[0]
-              // onClick: () => this.changeTab(location[0])
-            }
-          : {
-              key: 'divider-' + index,
-              type: 'divider'
-            }
-      }) as unknown as MenuOption[]
-    }
-  },
-  methods: {
-    onRouteChange(to: RouteLocationNormalized) {
-      const name = to.name as string
-      // find the index of path group that is the substring of the current path
-      const index = this.pathGroups.findIndex((pathGroup: string) => name.includes(pathGroup))
-      const menuItem: HTMLElement = document.querySelectorAll('.n-menu-item-content')[
-        index
-      ] as HTMLElement
-      if (menuItem) menuItem.click()
-    }
-  }
+onBeforeRouteUpdate((to) => {
+  onRouteChange(to.name)
 })
+
+
+const menuPaths = [
+  ['dashboard', 'Home'],
+  [],
+  ['courses', 'Courses'],
+  ['tests', 'Tests'],
+  ['users', 'Users'],
+  ['modules', 'Modules']
+]
+
+const menuOptions = menuPaths.map((location: string[], index: number) => {
+  return location.length === 2
+    ? {
+      label: () => createRouterLinkVnode(location[0], location[1]),
+      key: location[0]
+    }
+    : {
+      key: 'divider-' + index,
+      type: 'divider'
+    }
+}) as unknown as MenuOption[]
+
+function onRouteChange(to: RouteRecordName | undefined | null) {
+  if (!to) return
+
+  const name: string = to as string
+  const pathGroups: string[] = ['dashboard', 'course', 'test', 'user', 'module']
+  const index: number = pathGroups.findIndex((pathGroup: string) => name.includes(pathGroup))
+
+  if (index === -1) return
+
+  nextTick(() => {
+    // find the index of path group that is the substring of the current path
+    const menuItem: HTMLElement = document.querySelectorAll('.n-menu-item-content')[index] as HTMLElement
+
+    if (menuItem) menuItem.click()
+  })
+}
+
+
 </script>
-
-<template>
-  <n-menu :options="menuOptions" />
-</template>
-
-<style scoped></style>

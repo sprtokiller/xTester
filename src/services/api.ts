@@ -1,11 +1,16 @@
 import axios, { type AxiosInstance } from 'axios'
 import type { ICourseView, ITestView, ICourseDetail } from '@/interfaces'
+import { inject } from 'vue';
 
-export interface BackendApiInjection extends API {
-  login: (googleCredential: string) => Promise<void>
+export interface BackendApiInjection extends API {}
+
+export function useApi() : BackendApiInjection {
+  const apiInstance = inject('API') as BackendApiInjection;
+  if (!apiInstance) {
+    throw new Error('API is not provided');
+  }
+  return apiInstance;
 }
-
-export declare function useApi(): BackendApiInjection;
 
 export class API {
   private static api: AxiosInstance

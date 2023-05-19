@@ -1,18 +1,54 @@
+<template>
+  <LoadingHeader v-if="loading" />
+
+  <!-- Loaded state -->
+  <div v-else>
+    <div class="row">
+      <div class="col-9">
+        <div class="d-flex align-items-center">
+          <n-button size="large" @click="handleBack" quaternary circle>
+            <template #icon>
+              <n-icon class="icon-no-align">
+                <ArrowBackFilled />
+              </n-icon>
+            </template>
+          </n-button>
+          <n-h3 class="h3-item-name">{{ course.name }}</n-h3>
+          <n-button size="large" type="primary" secondary class="button-add-test">Add test
+            <template #icon>
+              <n-icon class="icon-no-align">
+                <AddRound />
+              </n-icon>
+            </template>
+          </n-button>
+        </div>
+      </div>
+      <!-- preview, list of other versions -->
+      <div class="col-3">
+        <div class="iframe-container">
+          <iframe allowfullscreen="true" class="player" :src="getURL" scrolling="no"></iframe>
+          <!-- TODO: make read-only -->
+        </div>
+        <n-data-table :columns="columns" :data="course.otherVersions" :single-line="true" size="small" />
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
-import { inject, h, ref, watchEffect, computed } from 'vue'
+import { h, ref, watchEffect, computed } from 'vue'
 import { useMessage, NButton, NIcon, NH3, NDataTable } from 'naive-ui'
 import { ArrowBackFilled, RemoveRedEyeFilled, AddRound } from '@vicons/material'
 import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
 import { useRouter } from 'vue-router'
 
-import type { API } from '@/services/api'
+import { useApi } from '@/services/api'
 import type { ICourseDetail, ICourse } from '@/interfaces'
 import type { DataTableColumns } from 'naive-ui'
 
 const router = useRouter()
 const MSG = useMessage()
-const myAPI = inject('API') as API
-
+const API = useApi()
 const columns: DataTableColumns<ICourse> = [
   {
     title: 'Other versions',
@@ -45,8 +81,10 @@ const columns: DataTableColumns<ICourse> = [
   }
 ]
 
+// define refs
 const loading = ref(true)
 const course = ref({} as ICourseDetail)
+
 // define props
 const props = defineProps({
   courseUUID: {
@@ -62,15 +100,16 @@ watchEffect(() => {
 function fetchDetail(courseUUID: string) {
   // fetch courses from the API
   loading.value = true
-  myAPI.getCourseDetail(courseUUID)
+  API.getCourseDetail(courseUUID)
     .then((newCourse) => {
-      loading.value = false
       course.value = newCourse
     })
     .catch((err) => {
       // TODO: handle error in better way
-      loading.value = false
       MSG.error(err.message)
+    })
+    .finally(() => {
+      loading.value = false
     })
 }
 
@@ -86,45 +125,13 @@ const getURL = computed(() => {
 })
 </script>
 
-<template>
-  <LoadingHeader v-if="loading" />
-
-  <!-- Loaded state -->
-  <div v-else>
-    <div class="row">
-      <div class="col-9">
-        <div class="d-flex align-items-center">
-          <n-button size="large" @click="handleBack" quaternary circle>
-            <template #icon>
-              <n-icon class="icon-no-align">
-                <ArrowBackFilled />
-              </n-icon>
-            </template>
-          </n-button>
-          <n-h3 class="h3-item-name">{{ course.name }}</n-h3>
-          <n-button size="large" type="primary" secondary class="button-add-test">Add test
-            <template #icon>
-              <n-icon class="icon-no-align">
-                <AddRound />
-              </n-icon>
-            </template>
-          </n-button>
-        </div>
-      </div>
-      <!-- preview, list of other versions -->
-      <div class="col-3">
-        <div class="iframe-container">
-          <iframe allowfullscreen="true" class="player" :src="getURL" scrolling="no"
-            style="width: 100%; height: 100%"></iframe>
-          <!-- TODO: make read-only -->
-        </div>
-        <n-data-table :columns="columns" :data="course.otherVersions" :single-line="true" size="small" />
-      </div>
-    </div>
-  </div>
-</template>
 
 <style scoped>
+
+.iframe-container .player {
+  width: 100%;
+  height: 100%;
+}
 .iframe-container {
   position: relative;
   width: 100%;

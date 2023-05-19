@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { inject, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useMessage, NH3, NButton, NCard, NDescriptions, NDescriptionsItem, NSpin } from 'naive-ui'
-import type { API } from '@/services/api'
+import { useApi } from '@/services/api'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const MSG = useMessage()
-const myAPI = inject('API') as API
+const API = useApi()
 
 const checking = ref(true)
 const uploading = ref(false)
@@ -28,7 +28,7 @@ watchEffect(async () => {
 
 async function checkAvailability(newCourseLocation: String, newGroupHash: String) {
   // if any of the props is empty, show error
-  if (!props.courseLocation || !props.groupHash || !props.name || !props.author || !props.version) {
+  if (!newCourseLocation || !newGroupHash || !props.name || !props.author || !props.version) {
     MSG.error('Unsupported content type')
     checking.value = false
     error.value = true
@@ -38,7 +38,7 @@ async function checkAvailability(newCourseLocation: String, newGroupHash: String
   error.value = false
   try {
     checking.value = true
-    const courseUUID = await myAPI.checkCourseExists(props.courseLocation, props.groupHash)
+    const courseUUID = await API.checkCourseExists(props.courseLocation, props.groupHash)
     if (courseUUID) {
       // redirect to course detail
       router.push({ name: 'courseDetail', params: { courseUUID: courseUUID } })
@@ -63,7 +63,7 @@ function cancel() {
 async function addCourse() {
   try {
     uploading.value = true
-    const courseUUID = await myAPI.addCourse(
+    const courseUUID = await API.addCourse(
       props.name,
       props.author,
       parseInt(props.version),
