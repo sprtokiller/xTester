@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts"> //TODO: Change to setup script
 import { inject } from 'vue'
 import { useMessage, NButton } from 'naive-ui'
 import type { API } from '@/services/api'

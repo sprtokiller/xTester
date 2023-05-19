@@ -1,6 +1,12 @@
 import axios, { type AxiosInstance } from 'axios'
 import type { ICourseView, ITestView, ICourseDetail } from '@/interfaces'
 
+export interface BackendApiInjection extends API {
+  login: (googleCredential: string) => Promise<void>
+}
+
+export declare function useApi(): BackendApiInjection;
+
 export class API {
   private static api: AxiosInstance
 

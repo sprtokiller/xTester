@@ -1,11 +1,11 @@
-<script lang="ts">
-export default (await import('vue')).defineComponent({
-  props: ['userHash']
-})
+<script setup lang="ts">
+const props = defineProps({
+  userHash: String
+});
 </script>
 
 <template>
-  <div>Hash pushed to iframe: {{ userHash }}</div>
+  <div>Hash pushed to iframe: {{ props.userHash }}</div>
   <iframe
     allowfullscreen="true"
     class="player"

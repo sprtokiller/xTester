@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { inject, h, ref, watchEffect, computed, onMount } from 'vue'
+import { inject, h, ref, watchEffect, computed, onMounted } from 'vue'
 import { useMessage, NButton, NIcon, NH3, NDataTable, NSpin } from 'naive-ui'
 import { ArrowBackFilled, RemoveRedEyeFilled, AddRound } from '@vicons/material'
 import { useRouter } from 'vue-router'
 
-import type { API } from '@/services/api'
+import { useApi } from '@/services/api'
 import type { ICourse } from '@/interfaces'
 
 const router = useRouter()
 const MSG = useMessage()
-const myAPI = inject('API') as API
+const API = useApi()
 
 const loading = ref(true)
 const courses = ref([] as ICourse[])
@@ -22,7 +22,7 @@ const props = defineProps({
   }
 })
 
-onMount(async () => {
+onMounted(async () => {
   await fetchCourses()
 })
 
@@ -35,15 +35,16 @@ watchEffect(() => {
 function fetchCourses() {
   // fetch courses from the API
   loading.value = true
-  myAPI.getCourses()
+  API.getCourseList()
     .then((newCourses) => {
-      loading.value = false
       courses.value = newCourses
     })
     .catch((err) => {
-      loading.value = false
       MSG.error(err.message)
-    }) //TODO: finally?
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
 function handleBack() {
@@ -70,36 +71,7 @@ function handleBack() {
 
   <!-- Loaded state -->
   <div v-else>
-    <div class="row">
-      <div class="col-9">
-        <div class="d-flex align-items-center">
-          <n-button size="large" @click="handleBack" quaternary circle>
-            <template #icon>
-              <n-icon class="icon-no-align">
-                <ArrowBackFilled />
-              </n-icon>
-            </template>
-          </n-button>
-          <n-h3 class="course-name">{{ course.name }}</n-h3>
-          <n-button size="large" type="primary" secondary class="button-add-test">Add test
-            <template #icon>
-              <n-icon class="icon-no-align">
-                <AddRound />
-              </n-icon>
-            </template>
-          </n-button>
-        </div>
-      </div>
-      <!-- preview, list of other versions -->
-      <div class="col-3">
-        <div class="iframe-container">
-          <iframe allowfullscreen="true" class="player" :src="getURL" scrolling="no"
-            style="width: 100%; height: 100%"></iframe>
-          <!-- TODO: make read-only -->
-        </div>
-        <n-data-table :columns="columns" :data="course.otherVersions" :single-line="true" size="small" />
-      </div>
-    </div>
+
   </div>
 </template>
 

@@ -1,22 +1,16 @@
-<script lang="ts">
+<script setup lang="ts">
 import CourseFrame from '@/components/Admin/CourseFrame.vue'
+// import { defineProps } from 'vue'
 
-export default (await import('vue')).defineComponent({
-  props: {
-    userHash: String
-  },
-  components: {
-    CourseFrame
-  },
-  mounted() {
-    console.log('A' + this.userHash)
-  }
+const props = defineProps({
+  userHash: String
 })
+
 </script>
 
 <template>
   <main>
-    <div>Hash from URL is: {{ userHash }}</div>
-    <CourseFrame :userHash="userHash" />
+    <div>Hash from URL is: {{ props.userHash }}</div>
+    <CourseFrame :userHash="props.userHash" />
   </main>
 </template>
