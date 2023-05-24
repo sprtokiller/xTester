@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { NMessageProvider, NDialogProvider, NConfigProvider, darkTheme, lightTheme } from 'naive-ui'
 
-const t = ref(false)
+const t = ref(true)
 
 const toggleTheme = () => {
   t.value = !t.value
