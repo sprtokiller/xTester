@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { inject, onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { NList, NSpin, NScrollbar, NEmpty, NButton, useMessage, NH2 } from 'naive-ui'
 import CourseItem from '@/components/Admin/Courses/CourseItem.vue'
 import type { ICourseView } from '@/interfaces'
-import type { API } from '@/services/api'
+import { useApi } from '@/services/api'
 
 
 const MSG = useMessage()
-const myAPI = inject('API') as API
+const API = useApi()
 
 const loading = ref(true)
 const courses = ref([] as ICourseView[])
@@ -16,7 +16,7 @@ const editUUID = ref('' as string)
 onMounted(async () => {
   try {
     loading.value = true
-    courses.value = await myAPI.getCourseList()
+    courses.value = await API.getCourseList()
   } catch (err) {
     MSG.error(err instanceof Error ? err.message : 'Unknown error')
   } finally {

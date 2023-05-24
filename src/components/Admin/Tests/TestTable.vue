@@ -113,7 +113,7 @@ const rowProps = (test: ITestView) => {
   return {
     style: 'cursor: pointer',
     onClick: () => {
-      console.log(test.testUUID)
+      router.push({ name: 'testDetail', params: { testUUID: test.testUUID } })
     }
   }
 }

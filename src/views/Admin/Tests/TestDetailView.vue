@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { /* useMessage, */ NButton, NIcon, NH3 } from 'naive-ui'
-import { ArrowBackFilled } from '@vicons/material'
-import { useRouter } from 'vue-router'
+import { useMessage, NH3, NCard } from 'naive-ui'
+import BackButton from '@/components/Admin/BackButton.vue'
 import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
+import type { ITestView } from '@/interfaces'
+import { useApi } from '@/services/api'
+import TestModules from '@/components/Admin/Tests/TestModules.vue'
 
-// import { useApi } from '@/services/api'
-
-const router = useRouter()
-// const MSG = useMessage()
-// const myAPI = useApi()
+const MSG = useMessage()
+const API = useApi()
 
 const loading = ref(true)
+const test = ref({} as ITestView)
+
 // define props
 const props = defineProps({
   testUUID: {
@@ -26,20 +27,17 @@ watchEffect(() => {
 })
 
 function fetchDetail(testUUID: string) {
-  // fetch courses from the API
+  // fetch test detail from the API
   loading.value = true
-  console.log(testUUID)
-  // this.API.getCourseDetail(testUUID).then(course => { //TODO: implement
-  //   this.loading = false;
-  // }).catch(err => {
-  //   this.loading = false;
-  //   this.MSG.error(err.message);
-  // });
+  API.getTestDetail(testUUID).then(newTest => {
+    test.value = newTest;
+  }).catch(err => {
+    MSG.error(err.message);
+  }).finally(() => {
+    loading.value = false;
+  })
 }
-function handleBack() {
-  // print the router history
-  router.back()
-}
+
 </script>
 
 <template>
@@ -47,16 +45,14 @@ function handleBack() {
   <LoadingHeader v-if="loading" />
 
   <!-- Loaded state -->
-  <div v-else class="d-flex align-items-center">
-    <n-button size="large" @click="handleBack" quaternary circle>
-      <template #icon>
-        <n-icon class="icon-no-align">
-          <ArrowBackFilled />
-        </n-icon>
-      </template>
-    </n-button>
-    <n-h3 class="h3-item-name">{{ 'Sem jmeno testu' }}</n-h3>
+  <div v-else class="d-flex align-items-center" style="margin-bottom: 1rem">
+    <BackButton />
+    <n-h3 class="h3-item-name">{{ test.name }}</n-h3>
   </div>
+  <n-card style="margin-bottom: 0.75rem">
+    <pre>{{ JSON.stringify(test, null, 2) }}</pre>
+  </n-card>
+  <TestModules :modules="test.modules ?? []"/>
 </template>
 
 <style scoped></style>

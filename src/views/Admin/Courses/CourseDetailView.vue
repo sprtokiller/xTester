@@ -1,47 +1,11 @@
-<template>
-  <LoadingHeader v-if="loading" />
-
-  <!-- Loaded state -->
-  <div v-else>
-    <div class="row">
-      <div class="col-9">
-        <div class="d-flex align-items-center">
-          <n-button size="large" @click="handleBack" quaternary circle>
-            <template #icon>
-              <n-icon class="icon-no-align">
-                <ArrowBackFilled />
-              </n-icon>
-            </template>
-          </n-button>
-          <n-h3 class="h3-item-name">{{ course.name }}</n-h3>
-          <n-button size="large" type="primary" secondary class="button-add-test">Add test
-            <template #icon>
-              <n-icon class="icon-no-align">
-                <AddRound />
-              </n-icon>
-            </template>
-          </n-button>
-        </div>
-      </div>
-      <!-- preview, list of other versions -->
-      <div class="col-3">
-        <div class="iframe-container">
-          <iframe allowfullscreen="true" class="player" :src="getURL" scrolling="no"></iframe>
-          <!-- TODO: make read-only -->
-        </div>
-        <n-data-table :columns="columns" :data="course.otherVersions" :single-line="true" size="small" />
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { h, ref, watchEffect, computed } from 'vue'
-import { useMessage, NButton, NIcon, NH3, NDataTable } from 'naive-ui'
-import { ArrowBackFilled, RemoveRedEyeFilled, AddRound } from '@vicons/material'
+import { useMessage, NButton, NH3, NDataTable } from 'naive-ui'
+import { RemoveRedEyeFilled } from '@vicons/material'
 import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
 import { useRouter } from 'vue-router'
-
+import BackButton from '@/components/Admin/BackButton.vue'
+import AddTestButton from '@/components/Admin/AddTestButton.vue'
 import { useApi } from '@/services/api'
 import type { ICourseDetail, ICourse } from '@/interfaces'
 import type { DataTableColumns } from 'naive-ui'
@@ -113,9 +77,8 @@ function fetchDetail(courseUUID: string) {
     })
 }
 
-function handleBack() {
-  // print the router history
-  router.back()
+function handleAddTest() {
+  router.push({ name: 'testAdd', query: { courseUUID: course.value.courseUUID } })
 }
 
 const getURL = computed(() => {
@@ -125,13 +88,37 @@ const getURL = computed(() => {
 })
 </script>
 
+<template>
+  <LoadingHeader v-if="loading" />
+
+  <!-- Loaded state -->
+  <div v-else>
+    <div class="row">
+      <div class="col-9">
+        <div class="d-flex align-items-center">
+          <BackButton />
+          <n-h3 class="h3-item-name">{{ course.name }}</n-h3>
+          <AddTestButton :course-u-u-i-d="course.courseUUID"/>
+        </div>
+      </div>
+      <!-- preview, list of other versions -->
+      <div class="col-3">
+        <div class="iframe-container">
+          <iframe allowfullscreen="true" class="player" :src="getURL" scrolling="no"></iframe>
+          <!-- TODO: make read-only -->
+        </div>
+        <n-data-table :columns="columns" :data="course.otherVersions" :single-line="true" size="small" />
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
-
 .iframe-container .player {
   width: 100%;
   height: 100%;
 }
+
 .iframe-container {
   position: relative;
   width: 100%;
@@ -147,10 +134,5 @@ const getURL = computed(() => {
   left: 0;
   width: 100%;
   height: 100%;
-}
-
-.button-add-test {
-  margin-left: auto;
-  padding-left: 12px;
 }
 </style>
