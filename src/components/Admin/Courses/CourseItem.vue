@@ -10,7 +10,8 @@ import {
   NInput,
   NSpin,
   useMessage,
-  useDialog
+  useDialog,
+  useThemeVars
 } from 'naive-ui'
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -160,9 +161,11 @@ const imageURL = computed(() => {
 </script>
 
 <template>
-  <n-spin :show="courseIsDeleting">
-    <n-list-item @click="openDetail">
-      <template #prefix>
+  <div :style="{'--gray-1': useThemeVars().value.textColor2, '--gray-2': useThemeVars().value.textColor3, '--gray-3': useThemeVars().value.textColorDisabled}">
+
+    <n-spin :show="courseIsDeleting">
+      <n-list-item @click="openDetail">
+        <template #prefix>
         <div class="course-avatar" :style="bgImageStyle"></div>
       </template>
 
@@ -189,9 +192,9 @@ const imageURL = computed(() => {
         <template #description>
           <n-space size="small" style="margin-top: 4px">
             <n-tag class="tag-chip" :bordered="false" type="default" size="small"
-              v-if="!(activeTests || completedTests || plannedTests)">
-              No tests
-            </n-tag>
+            v-if="!(activeTests || completedTests || plannedTests)">
+            No tests
+          </n-tag>
             <n-tag class="tag-chip" :bordered="false" type="warning" size="small" v-if="plannedTests">
               Planned: {{ plannedTests }}
             </n-tag>
@@ -204,18 +207,18 @@ const imageURL = computed(() => {
           </n-space>
         </template>
       </n-thing>
-
+      
       <template #suffix>
         <div style="white-space: nowrap">
           <n-button @click.stop="editCourse" v-click-outside="handleClickOutside" class="btn-course-action" size="small"
-            quaternary circle type="success">
-            <template #icon>
+          quaternary circle type="success">
+          <template #icon>
               <n-icon class="icon-no-align">
                 <EditFilled />
               </n-icon>
             </template>
           </n-button>
-
+          
           <n-button @click.stop="deleteCourse" class="btn-course-action" size="small" quaternary circle type="error">
             <template #icon>
               <n-icon class="icon-no-align">
@@ -227,9 +230,11 @@ const imageURL = computed(() => {
       </template>
     </n-list-item>
   </n-spin>
+</div>
 </template>
 
 <style scoped>
+
 .tag-chip {
   cursor: pointer;
 }
@@ -244,7 +249,7 @@ const imageURL = computed(() => {
 .course-name-input {
   width: 100%;
   font-size: 1rem;
-  color: var(--gray-1);
+  color: var(--gray-1); /* textColor 2 */
   border: none;
   background-color: white;
   padding: 0;
@@ -253,11 +258,11 @@ const imageURL = computed(() => {
 }
 
 .n-list-item:hover .btn-course-action {
-  color: var(--gray-2);
+  color: var(--gray-2);  /* textColor 3 */
 }
 
 .btn-course-action {
-  color: var(--gray-3);
+  color: var(--gray-3);  /* textColor Disabled */
   margin-left: 0.5rem;
 }
 .n-list-item:hover .btn-course-action:hover {
