@@ -22,13 +22,15 @@ export interface ICourseDetail extends ICourse {
   otherVersions?: ICourse[]
 }
 
+export type EndType = 'MANUAL' | 'PLAN' 
+
 export interface ITest {
   testUUID: string
   name: string
   courseUUID: string
   createdAt: Date
   startAt?: Date
-  endType: 'PLAN' | 'MANUAL' | 'AUTO'
+  endType: EndType
   endAt?: Date
 }
 
