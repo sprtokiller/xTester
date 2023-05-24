@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ErrorPage404View from '../views/Admin/ErrorPage404View.vue'
+import ErrorPage404View from '@/views/Admin/ErrorPage404View.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -53,6 +54,20 @@ const router = createRouter({
           path: 'tests',
           name: 'tests',
           component: () => import('@/views/Admin/Tests/TestsView.vue')
+        },
+        {
+          path: 'test/new',
+          name: 'testAdd',
+          component: () => import('@/views/Admin/Tests/TestAddView.vue'),
+          props: (route) => ({
+            courseUUID: route.query.courseUUID
+          })
+        },
+        {
+          path: 'test/detail/:testUUID',
+          name: 'testDetail',
+          component: () => import('@/views/Admin/Tests/TestDetailView.vue'),
+          props: true
         },
         {
           path: 'users',
