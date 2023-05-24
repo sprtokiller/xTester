@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
-import { NDataTable, useMessage, NButton, NTag, NH2, type DataTableColumns } from 'naive-ui'
+import { NDataTable, useMessage, NButton, NTag, type DataTableColumns } from 'naive-ui'
 import { useRouter, type Router } from 'vue-router'
 import { useApi } from '@/services/api'
 import type { ITestView } from '@/interfaces'
@@ -131,6 +131,5 @@ API.getTestList()
 </script>
 
 <template>
-  <n-h2>List of tests</n-h2>
   <n-data-table :columns="columns" :data="tests" :bordered="false" :loading="loading" :row-props="rowProps" />
 </template>
