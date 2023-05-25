@@ -38,16 +38,14 @@ export interface ITestView extends ITest {
   modules?: number[]
 }
 
-export interface IUser {
-  userUUID: string
+export interface ITester {
+  testerUUID: string
   firstname?: string
   lastname?: string
   email?: string
 }
 
-export interface IUserGroup {
-  name: string
-  userUUIDs: IUser[]
+export interface IGroup {
+  groupName: string
   groupUUID: string
-  colorID: number
 }
