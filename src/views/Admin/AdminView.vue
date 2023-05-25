@@ -10,8 +10,9 @@ import { NLayout, NLayoutSider, NLayoutContent } from 'naive-ui';
         <AdminMenu />
       </nav>
     </n-layout-sider>
-    <n-layout-content class="flex-fill h-100 p-2 p-sm-4">
-      <main class="h-100">
+    <n-layout-content class="flex-fill h-100 " :native-scrollbar="false">
+  
+      <main class="h-100 p-2 p-sm-4">
         <div class="d-flex align-items-center justify-content-center">
           <div class="container">
             <router-view />
