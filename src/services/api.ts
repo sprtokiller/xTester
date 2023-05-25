@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from 'axios'
-import type { ICourseView, ITestView, ICourseDetail, EndType } from '@/interfaces'
+import type { ICourseView, ITestView, ICourseDetail, EndType, ITester } from '@/interfaces'
 import { inject } from 'vue';
 
 export interface BackendApiInjection extends API {}
@@ -107,5 +107,22 @@ export class API {
   // L
   async getTestList(): Promise<ITestView[]> {
     return API.request<ITestView[]>(`GET`, `/test/list`)
+  }
+  /* ------------- TESTER ------------- */
+  // C
+  async addTester(firstname: string, lastname: string, email: string): Promise<string> {
+    return API.request<string>(`POST`, `/tester/add`, {
+      firstname : firstname.length > 0 ? firstname : null,
+      lastname : lastname.length > 0 ? lastname : null,
+      email : email.length > 0 ? email : null
+    })
+  }
+  // D
+  async deleteTester(testerUUID: string): Promise<void> {
+    return API.request<void>(`DELETE`, `/tester/delete/${API.e(testerUUID)}`)
+  }
+  // L
+  async getTesterList(): Promise<ITester[]> {
+    return API.request<ITester[]>(`GET`, `/tester/list`)
   }
 }
