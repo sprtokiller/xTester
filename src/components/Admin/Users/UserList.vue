@@ -1,23 +1,25 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 import { useMessage, NCard, NH4, NSpin, NList, NEmpty, NInput, NPagination } from 'naive-ui'
 import UserItem from '@/components/Admin/Users/UserItem.vue'
 import AddTesterButton from '@/components/Admin/Users/AddTesterButton.vue'
 import type { ITester } from '@/interfaces'
-import { useApi } from '@/services/api'
+import { useTesterStore } from '@/stores/Admin/testerStore'
 
 const PER_PAGE = 10
-const page = ref(1)
-const loading = ref(true)
-const testers = ref([] as ITester[])
-const searchValue = ref('')
+
+const store = useTesterStore()
 const MSG = useMessage()
-const API = useApi()
+
+const page: Ref<number> = ref(1)
+const loading: Ref<boolean> = ref(true)
+const searchValue: Ref<string> = ref('')
 
 onMounted(async () => {
   try {
     loading.value = true
-    testers.value = await API.getTesterList()
+    await store.fetchTesters()
   } catch (err) {
     MSG.error(err instanceof Error ? err.message : 'Unknown error')
   } finally {
@@ -25,29 +27,16 @@ onMounted(async () => {
   }
 })
 
-function addTester(tester: ITester) {
-  testers.value.push(tester)
-}
-
-function deleteTester(testerUUID: string) {
-  // delete the tester from the array
-  testers.value = testers.value.filter((tester) => tester.testerUUID !== testerUUID)
-}
-
-const isEmpty = computed(() => {
-  return testers.value.length === 0
-})
-
-const pageCount = computed(() => {
+const pageCount: ComputedRef<number> = computed(() => {
   return Math.ceil(filteredTesters.value.length / PER_PAGE)
 })
 
-const shownTesters = computed(() => {
+const shownTesters: ComputedRef<ITester[]> = computed(() => {
   return filteredTesters.value.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE)
 })
 
-const filteredTesters = computed(() => {
-  return testers.value.filter((tester) => {
+const filteredTesters: ComputedRef<ITester[]> = computed(() => {
+  return store.testers.filter((tester) => {
     if (searchValue.value === '') return true
 
     const terms = searchValue.value.toLowerCase().split(' ').filter((term) => term !== '')
@@ -73,22 +62,22 @@ const filteredTesters = computed(() => {
   <div style="padding-bottom: 0.75rem; padding-top: 0.75rem;">
     <n-card embedded style="min-height: 200px">
       <div class="d-flex">
-        <n-h4>User list</n-h4>
+        <n-h4>Tester list</n-h4>
       </div>
       <div class="d-flex" style="margin-bottom: 0.5rem;">
         <n-input size="medium" placeholder="Search" v-model:value="searchValue" />
-        <AddTesterButton @addTester="addTester"/>
+        <AddTesterButton />
       </div>
 
       <n-spin :show="loading" style="min-height: 5rem">
         <n-list hoverable style="background-color: transparent">
           <!-- add a UserItem for each user -->
-          <UserItem v-for="tester in shownTesters" :key="tester.testerUUID" @deleteTester="deleteTester"
+          <UserItem v-for="tester in shownTesters" :key="tester.testerUUID"
             :tester="tester" />
           <n-pagination v-if="pageCount > 1 " v-model:page="page" :page-count="pageCount" style="margin-top: 0.5rem" />
         </n-list>
-        <n-empty style="margin-top: 1rem" description="No users found!" v-if="filteredTesters.length === 0 && !loading && !isEmpty" />
-        <n-empty style="margin-top: 1rem" description="No users. Add someone to test your courses!" v-if="!loading && isEmpty" />
+        <n-empty style="margin-top: 1rem" description="No testers found!" v-if="filteredTesters.length === 0 && !loading && !store.isEmpty" />
+        <n-empty style="margin-top: 1rem" description="No testers. Add someone to test your courses!" v-if="!loading && store.isEmpty" />
       </n-spin>
     </n-card>
   </div>

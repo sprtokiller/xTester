@@ -1,28 +1,23 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { Ref } from 'vue'
 import { NButton, NIcon, NModal, NCard, NForm, NFormItem, NInput, useMessage, NSpin, NInputNumber } from 'naive-ui'
 import type { FormInst, FormRules } from 'naive-ui'
-import { useApi } from '@/services/api'
-import type { IGroupView } from '@/interfaces'
 import { AddRound } from '@vicons/material'
+import { useGroupStore } from '@/stores/Admin/groupStore'
 
+const store = useGroupStore()
 const MSG = useMessage()
-const API = useApi()
 
-const uploading = ref(false)
-const showModal = ref(false)
-const formRef = ref<FormInst | null>(null)
-const formValue = ref({
-  groupName: '',
-  groupAnonymousCount: 0,
-} as IFormData)
+const uploading: Ref<boolean> = ref(false)
+const showModal: Ref<boolean> = ref(false)
+const formRef: Ref<FormInst | null> = ref(null)
+const formValue: Ref<IFormData> = ref({ groupName: '', groupAnonymousCount: 0 })
 
 interface IFormData {
   groupName: string,
   groupAnonymousCount: number
 }
-
-const emit = defineEmits(['addGroup'])
 
 const rules: FormRules = {
   groupName: {
@@ -38,16 +33,16 @@ const rules: FormRules = {
   }
 }
 
-function openModal() {
+function openModal(): void {
   resetForm()
   showModal.value = true
 }
 
-function closeModal() {
+function closeModal(): void {
   showModal.value = false
 }
 
-function resetForm() {
+function resetForm(): void {
   formValue.value = {
     groupName: '',
     groupAnonymousCount: 0
@@ -61,24 +56,12 @@ async function addGroup() {
     return
   }
 
-  var groupUUID = ''
   try {
     uploading.value = true
-    groupUUID = await API.addGroup(
-      formValue.value.groupName,
-      formValue.value.groupAnonymousCount
-    )
+    await store.addGroup(formValue.value.groupName, formValue.value.groupAnonymousCount)
   } catch (err) {
     MSG.error(err instanceof Error ? err.message : 'Unknown error')
   } finally {
-    const group : IGroupView = {
-      groupName: formValue.value.groupName,
-      groupAnonymousCount: formValue.value.groupAnonymousCount,
-      groupTestersCount: 0,
-      groupUUID: groupUUID
-    }
-    console.log(group)
-    emit('addGroup', group)
     uploading.value = false
     resetForm()
     closeModal()
@@ -96,19 +79,17 @@ async function addGroup() {
   </n-button>
 
   <n-modal v-model:show="showModal">
-    <n-card title="Add a new group" style="width: 600px" :bordered="false" size="large" role="dialog" aria-modal="true" >
+    <n-card title="Add a new group" style="width: 600px" :bordered="false" size="large" role="dialog" aria-modal="true">
       <n-spin :show="uploading">
-
-      
-      <n-form ref="formRef" :model="formValue" :rules="rules" :disabled="uploading">
-        <n-form-item path="groupName" label="Group name">
-          <n-input v-model:value="formValue.groupName" placeholder="Default test group" />
-        </n-form-item>
-        <n-form-item path="groupAnonymousCount" label="Anonymous testers" >
-          <n-input-number :min="0" :max="1000" v-model:value="formValue.groupAnonymousCount" style="width: 100%;" />
-        </n-form-item>
-      </n-form>
-    </n-spin>
+        <n-form ref="formRef" :model="formValue" :rules="rules" :disabled="uploading">
+          <n-form-item path="groupName" label="Group name">
+            <n-input v-model:value="formValue.groupName" placeholder="Default test group" />
+          </n-form-item>
+          <n-form-item path="groupAnonymousCount" label="Anonymous testers">
+            <n-input-number :min="0" :max="1000" v-model:value="formValue.groupAnonymousCount" style="width: 100%;" />
+          </n-form-item>
+        </n-form>
+      </n-spin>
       <div class="d-flex justify-content-end align-items-center">
         <n-button @click.stop="closeModal" style="margin-right: 0.5rem" ghost>Cancel</n-button>
         <n-button @click.stop="addGroup" type="primary">Add</n-button>

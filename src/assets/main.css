@@ -1,5 +1,5 @@
 .icon-no-align svg {
-  vertical-align: baseline;
+  vertical-align: baseline !important;
 }
 
 .btn-less-visible {

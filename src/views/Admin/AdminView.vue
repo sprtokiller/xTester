@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import AdminMenu from '@/components/Admin/AdminMenu.vue'
-import { NLayout, NLayoutSider, NLayoutContent } from 'naive-ui';
+import { NLayout, NLayoutSider, NLayoutContent, useThemeVars } from 'naive-ui';
 </script>
 
 <template>
-  <n-layout has-sider class="d-flex vw-100 vh-100">
+  <n-layout has-sider class="d-flex vw-100 vh-100"
+  :style="{ '--gray-1': useThemeVars().value.textColor2, '--gray-2': useThemeVars().value.textColor3, '--gray-3': useThemeVars().value.textColorDisabled }">
     <n-layout-sider id="admin-menu" class="h-100" width="200">
       <nav>
         <AdminMenu />

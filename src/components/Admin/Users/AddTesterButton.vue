@@ -1,34 +1,29 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
 import { NButton, NIcon, NModal, NCard, NForm, NFormItem, NInput, useThemeVars, useMessage, NSpin } from 'naive-ui'
 import type { FormInst, FormRules } from 'naive-ui'
-import { useApi } from '@/services/api'
 import type { ITester } from '@/interfaces'
 import { AddRound } from '@vicons/material'
+import { useTesterStore } from '@/stores/Admin/testerStore'
 
-const feedback = computed(() => {
+const store = useTesterStore()
+const MSG = useMessage()
+
+const feedback: ComputedRef<boolean> = computed(() => {
   return (formValue.value.firstname == '' && formValue.value.lastname == '' && formValue.value.email == '')
 })
 
-const MSG = useMessage()
-const API = useApi()
-
-const uploading = ref(false)
-const showModal = ref(false)
-const formRef = ref<FormInst | null>(null)
-const formValue = ref({
-  firstname: '',
-  lastname: '',
-  email: ''
-} as IFormData)
+const uploading: Ref<boolean> = ref(false)
+const showModal: Ref<boolean> = ref(false)
+const formRef: Ref<FormInst | null> = ref(null)
+const formValue: Ref<IFormData> = ref({firstname: '', lastname: '',  email: ''})
 
 interface IFormData {
   firstname: string,
   lastname: string,
   email: string,
 }
-
-const emit = defineEmits(['addTester'])
 
 const rules: FormRules = {
   firstname: {
@@ -76,24 +71,12 @@ async function addTester() {
     return
   }
 
-  var testerUUID = ''
   try {
     uploading.value = true
-    testerUUID = await API.addTester(
-      formValue.value.firstname,
-      formValue.value.lastname,
-      formValue.value.email
-    )
+    await store.addTester(formValue.value.firstname, formValue.value.lastname, formValue.value.email)
   } catch (err) {
     MSG.error(err instanceof Error ? err.message : 'Unknown error')
   } finally {
-    const tester : ITester = {
-      firstname: formValue.value.firstname != '' ? formValue.value.firstname : undefined,
-      lastname: formValue.value.lastname != '' ? formValue.value.lastname : undefined,
-      email: formValue.value.email != '' ? formValue.value.email : undefined,
-      testerUUID: testerUUID
-    }
-    emit('addTester', tester)
     uploading.value = false
     resetForm()
     closeModal()

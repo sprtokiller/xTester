@@ -1,6 +1,6 @@
 import './assets/main.css'
 import { createApp } from 'vue'
-
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import { API } from '@/services/api'
 import router from './router'
@@ -10,9 +10,10 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
 
 const api = new API('http://localhost:7331/api/')
-
+const pinia = createPinia()
 const app = createApp(App)
 
+app.use(pinia)
 app.use(router)
 app.use(vue3GoogleLogin, {
     clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID
