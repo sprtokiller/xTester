@@ -77,10 +77,6 @@ function fetchDetail(courseUUID: string) {
     })
 }
 
-function handleAddTest() {
-  router.push({ name: 'testAdd', query: { courseUUID: course.value.courseUUID } })
-}
-
 const getURL = computed(() => {
   if (!(course.value)) return undefined
 
@@ -98,7 +94,7 @@ const getURL = computed(() => {
         <div class="d-flex align-items-center">
           <BackButton />
           <n-h3 class="h3-item-name">{{ course.name }}</n-h3>
-          <AddTestButton :course-u-u-i-d="course.courseUUID"/>
+          <AddTestButton :courseUUID="course.courseUUID"/>
         </div>
       </div>
       <!-- preview, list of other versions -->

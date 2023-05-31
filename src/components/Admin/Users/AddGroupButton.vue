@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { NButton, NIcon, NModal, NCard, NForm, NFormItem, NInput, useThemeVars, useMessage, NSpin, NInputNumber } from 'naive-ui'
+import { NButton, NIcon, NModal, NCard, NForm, NFormItem, NInput, useMessage, NSpin, NInputNumber } from 'naive-ui'
 import type { FormInst, FormRules } from 'naive-ui'
 import { useApi } from '@/services/api'
-import type { IGroup, IGroupView } from '@/interfaces'
+import type { IGroupView } from '@/interfaces'
 import { AddRound } from '@vicons/material'
 
 const MSG = useMessage()
