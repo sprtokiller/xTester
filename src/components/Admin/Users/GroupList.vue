@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useMessage, NCard, NH4, NSpin, NList, NEmpty, NInput, NPagination } from 'naive-ui'
-import UserItem from '@/components/Admin/Users/UserItem.vue'
-import AddTesterButton from '@/components/Admin/Users/AddTesterButton.vue'
-import type { ITester } from '@/interfaces'
+import GroupItem from '@/components/Admin/Users/GroupItem.vue'
+import AddGroupButton from '@/components/Admin/Users/AddGroupButton.vue'
+import type { IGroupView } from '@/interfaces'
 import { useApi } from '@/services/api'
 
 const PER_PAGE = 10
 const page = ref(1)
 const loading = ref(true)
-const testers = ref([] as ITester[])
+const groups = ref([] as IGroupView[])
 const searchValue = ref('')
 const MSG = useMessage()
 const API = useApi()
@@ -17,7 +17,7 @@ const API = useApi()
 onMounted(async () => {
   try {
     loading.value = true
-    testers.value = await API.getTesterList()
+    groups.value = await API.getGroupList()
   } catch (err) {
     MSG.error(err instanceof Error ? err.message : 'Unknown error')
   } finally {
@@ -25,38 +25,36 @@ onMounted(async () => {
   }
 })
 
-function addTester(tester: ITester) {
-  testers.value.push(tester)
+function addGroup(group: IGroupView) {
+  groups.value.push(group)
 }
 
-function deleteTester(testerUUID: string) {
-  // delete the tester from the array
-  testers.value = testers.value.filter((tester) => tester.testerUUID !== testerUUID)
+function deleteGroup(groupUUID: string) {
+  // delete the group from the array
+  groups.value = groups.value.filter((group) => group.groupUUID !== groupUUID)
 }
 
 const isEmpty = computed(() => {
-  return testers.value.length === 0
+  return groups.value.length === 0
 })
 
 const pageCount = computed(() => {
-  return Math.ceil(filteredTesters.value.length / PER_PAGE)
+  return Math.ceil(filteredGroups.value.length / PER_PAGE)
 })
 
-const shownTesters = computed(() => {
-  return filteredTesters.value.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE)
+const shownGroups = computed(() => {
+  return filteredGroups.value.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE)
 })
 
-const filteredTesters = computed(() => {
-  return testers.value.filter((tester) => {
+const filteredGroups = computed(() => {
+  return groups.value.filter((group) => {
     if (searchValue.value === '') return true
 
     const terms = searchValue.value.toLowerCase().split(' ').filter((term) => term !== '')
 
     for (const term of terms) {
       if (!(
-        (tester.firstname ?? '').toLowerCase().includes(term) ||
-        (tester.lastname ?? '').toLowerCase().includes(term) ||
-        (tester.email ?? '').toLowerCase().includes(term)
+        (group.groupName ?? '').toLowerCase().includes(term)
       )) {
         return false
       }
@@ -73,22 +71,22 @@ const filteredTesters = computed(() => {
   <div style="padding-bottom: 0.75rem; padding-top: 0.75rem;">
     <n-card embedded style="min-height: 200px">
       <div class="d-flex">
-        <n-h4>User list</n-h4>
+        <n-h4>Group list</n-h4>
       </div>
       <div class="d-flex" style="margin-bottom: 0.5rem;">
         <n-input size="medium" placeholder="Search" v-model:value="searchValue" />
-        <AddTesterButton @addTester="addTester"/>
+        <AddGroupButton @addGroup="addGroup"/>
       </div>
 
       <n-spin :show="loading" style="min-height: 5rem">
         <n-list hoverable style="background-color: transparent">
           <!-- add a UserItem for each user -->
-          <UserItem v-for="tester in shownTesters" :key="tester.testerUUID" @deleteTester="deleteTester"
-            :tester="tester" />
+          <GroupItem v-for="group in shownGroups" :key="group.groupUUID" @deleteGroup="deleteGroup"
+            :group="group" />
           <n-pagination v-if="pageCount > 1 " v-model:page="page" :page-count="pageCount" style="margin-top: 0.5rem" />
         </n-list>
-        <n-empty style="margin-top: 1rem" description="No users found!" v-if="filteredTesters.length === 0 && !loading && !isEmpty" />
-        <n-empty style="margin-top: 1rem" description="No users. Add someone to test your courses!" v-if="!loading && isEmpty" />
+        <n-empty style="margin-top: 1rem" description="No groups found!" v-if="filteredGroups.length === 0 && !loading && !isEmpty" />
+        <n-empty style="margin-top: 1rem" description="No groups. Only groups can be assigned to course tests!" v-if="!loading && isEmpty" />
       </n-spin>
     </n-card>
   </div>

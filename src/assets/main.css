@@ -9,9 +9,7 @@
   color: var(--gray-1);
 }
 
-.n-dialog svg,
-.n-message svg,
-.n-date-picker svg {
+[class^="n-"] svg {
   vertical-align: baseline !important;
 }
 

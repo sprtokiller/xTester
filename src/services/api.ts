@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from 'axios'
-import type { ICourseView, ITestView, ICourseDetail, EndType, ITester } from '@/interfaces'
+import type { ICourseView, ITestView, ICourseDetail, EndType, ITester, IGroupView } from '@/interfaces'
 import { inject } from 'vue';
 
 export interface BackendApiInjection extends API {}
@@ -124,5 +124,21 @@ export class API {
   // L
   async getTesterList(): Promise<ITester[]> {
     return API.request<ITester[]>(`GET`, `/tester/list`)
+  }
+  /* ------------- GROUP ------------- */
+  // C
+  async addGroup(groupName: string, groupAnonymousCount: number): Promise<string> {
+    return API.request<string>(`POST`, `/group/add`, {
+      groupName,
+      groupAnonymousCount
+    })
+  }
+  // D
+  async deleteGroup(groupUUID: string): Promise<void> {
+    return API.request<void>(`DELETE`, `/group/delete/${API.e(groupUUID)}`)
+  }
+  // L
+  async getGroupList(): Promise<IGroupView[]> {
+    return API.request<IGroupView[]>(`GET`, `/group/list`)
   }
 }

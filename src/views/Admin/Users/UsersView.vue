@@ -5,6 +5,7 @@ import { NH2, NScrollbar } from 'naive-ui'
 // import { useApi } from '@/services/api'
 
 import UserList from '@/components/Admin/Users/UserList.vue'
+import GroupList from '@/components/Admin/Users/GroupList.vue'
 
 // const router = useRouter()
 // const MSG = useMessage()
@@ -25,8 +26,7 @@ import UserList from '@/components/Admin/Users/UserList.vue'
       </div>
       <!-- right column -->
       <div class="col-6">
-        <UserList />
-        <UserList />
+        <GroupList />
       </div>
     </div>
   </NScrollbar>
