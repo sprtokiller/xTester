@@ -133,6 +133,10 @@ export class API {
       groupAnonymousCount
     })
   }
+  // R (sort of)
+  async getGroupTesterUUIDs(groupUUID: string): Promise<string[]> {
+    return API.request<string[]>(`GET`, `/group/testers/${API.e(groupUUID)}`)
+  }
   // D
   async deleteGroup(groupUUID: string): Promise<void> {
     return API.request<void>(`DELETE`, `/group/delete/${API.e(groupUUID)}`)

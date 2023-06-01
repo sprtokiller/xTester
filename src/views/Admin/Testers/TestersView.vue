@@ -15,11 +15,11 @@ import AssignTestersModal from '@/components/Admin/Testers/AssignTestersModal.vu
   <NScrollbar>
     <div class="row">
       <!-- left column -->
-      <div class="col-6">
+      <div class="col-12 col-md-6">
         <TesterList />
       </div>
       <!-- right column -->
-      <div class="col-6">
+      <div class="col-12 col-md-6">
         <GroupList />
       </div>
     </div>

@@ -10,8 +10,7 @@ import {
   NInput,
   NSpin,
   useMessage,
-  useDialog,
-  useThemeVars
+  useDialog
 } from 'naive-ui'
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -161,8 +160,6 @@ const imageURL = computed(() => {
 </script>
 
 <template>
-  <div :style="{'--gray-1': useThemeVars().value.textColor2, '--gray-2': useThemeVars().value.textColor3, '--gray-3': useThemeVars().value.textColorDisabled}">
-
     <n-spin :show="courseIsDeleting">
       <n-list-item @click="openDetail">
         <template #prefix>
@@ -230,7 +227,6 @@ const imageURL = computed(() => {
       </template>
     </n-list-item>
   </n-spin>
-</div>
 </template>
 
 <style scoped>
