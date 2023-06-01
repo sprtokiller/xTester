@@ -58,7 +58,7 @@ const rules: FormRules = {
   startAtEndAt: {
     type: 'array',
     validator (rule: FormItemRule, value: [number, number]) {
-      return value[1] > new Date().getTime()
+      return value[1] > new Date().getTime() && value[1] > value[0]
     },
     message: 'The test must end in the future',
     trigger: ['input', 'blur']
@@ -92,7 +92,7 @@ async function addTest(e: MouseEvent) {
       formValue.value.startAt,
       formValue.value.startAtEndAt[1]
     )
-    router.push({ name: 'testDetail', params: { testUUID } })
+    router.push({ name: 'testingDetail', params: { testUUID } })
   } catch (err) {
     MSG.error(err instanceof Error ? err.message : 'Unknown error')
   } finally {
@@ -102,6 +102,15 @@ async function addTest(e: MouseEvent) {
 
 function cancel() {
   router.back()
+}
+
+function rewriteStartAt() {
+  formValue.value.startAt = formValue.value.startAtEndAt[0]
+}
+
+function rewriteStartAtEndAt() {
+  formValue.value.startAtEndAt[0] = formValue.value.startAt
+  formValue.value.startAtEndAt[1] = formValue.value.startAt + 7 * 24 * 60 * 60 * 1000
 }
 
 onMounted(async () => {
@@ -169,10 +178,11 @@ onMounted(async () => {
                 </div>
               </n-form-item>
               <n-form-item v-if="formValue.endType == 'MANUAL'" path="startAt" label="Test will start at:">
-                <n-date-picker v-model:value="formValue.startAt" type="datetime" :on-change="() => {formValue.startAtEndAt[0] = formValue.startAt}"/>
+                <n-date-picker v-model:value="formValue.startAt" type="datetime" v-on:change="rewriteStartAtEndAt"/>
+                  <!-- TestAddView.vue:128 [naive/date-picker]: `on-change` is deprecated, please use `on-update:value` instead. //TODO: --> 
               </n-form-item>
               <n-form-item v-else path="startAtEndAt" label="Test will be accesible during:">
-                <n-date-picker v-model:value="formValue.startAtEndAt" type="datetimerange" :on-change="() => {formValue.startAt = formValue.startAtEndAt[0]}"/>
+                <n-date-picker v-model:value="formValue.startAtEndAt" type="datetimerange" v-on:change="rewriteStartAt"/>
               </n-form-item>
             </n-form>
 

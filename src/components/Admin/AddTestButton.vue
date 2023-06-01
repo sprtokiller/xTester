@@ -14,7 +14,7 @@ const props = defineProps({
 const router = useRouter()
 
 function handleAddTest() {
-  router.push({ name: 'testAdd', query: { courseUUID: props.courseUUID } })
+  router.push({ name: 'testingNew', query: { courseUUID: props.courseUUID } })
 }
 
 </script>

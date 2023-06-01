@@ -4,33 +4,23 @@ import { NButton, NTransfer, NModal, NCard, useMessage, NSpin } from 'naive-ui'
 import { useApi } from '@/services/api'
 import type { IGroupView, ITester } from '@/interfaces'
 import { useGroupStore } from '@/stores/Admin/groupStore'
+import { useTesterStore } from '@/stores/Admin/testerStore'
 
-const store = useGroupStore()
-
-const props = defineProps({
-
-users: {
-  type: Array as () => ITester[],
-  required: true
-},
-groupUUID: {
-  type: String,
-  required: true
-}
-})
+const groupStore = useGroupStore()
+const testerStore = useTesterStore()
 
 const MSG = useMessage()
 const API = useApi()
 
 const value = ref([])
 const uploading = ref(false)
+
 const showModal =  computed(() => {
-  return (props.groupUUID != '')
+  return (groupStore.selectedGroupUUID != '')
 })
 
-const emit = defineEmits(['closeModal'])
 function closeModal() {
-  emit('closeModal')
+  groupStore.selectGroup('')
 }
 
 async function saveAssign() {
@@ -38,10 +28,10 @@ async function saveAssign() {
 }
 
 const options = computed(() => {
-  return props.users.map((user) => {
+  return testerStore.testers.map((tester) => {
     return {
-      value: user.testerUUID,
-      label: user.firstname + ' ' + user.lastname,
+      value: tester.testerUUID,
+      label: tester.firstname + ' ' + tester.lastname,
     }
   })
 })
@@ -49,7 +39,7 @@ const options = computed(() => {
 
 <template>
   <n-modal v-model:show="showModal">
-    <n-card title="Assign users to group" style="width: 600px" :bordered="false" size="large" role="dialog" aria-modal="true" >
+    <n-card title="Assign testers to group" style="width: 600px" :bordered="false" size="large" role="dialog" aria-modal="true" >
       <n-transfer
       ref="transfer"
       v-model:value="value"

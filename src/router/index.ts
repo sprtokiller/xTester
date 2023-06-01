@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ErrorPage404View from '@/views/Admin/ErrorPage404View.vue'
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -19,7 +18,7 @@ const router = createRouter({
       children: [
         {
           path: 'courses',
-          name: 'courses',
+          name: 'courseList',
           component: () => import('@/views/Admin/Courses/CoursesView.vue')
         },
         {
@@ -29,8 +28,8 @@ const router = createRouter({
           props: true
         },
         {
-          path: 'course/new',
-          name: 'courseAdd',
+          path: 'course/import',
+          name: 'courseImport',
           component: () => import('@/views/Admin/Courses/CourseImportView.vue'),
           props: (route) => ({
             name: route.query.name,
@@ -47,17 +46,17 @@ const router = createRouter({
         },
         {
           path: 'modules',
-          name: 'modules',
+          name: 'moduleList',
           component: () => import('@/views/Admin/Modules/ModulesView.vue')
         },
         {
           path: 'tests',
-          name: 'tests',
+          name: 'testingList',
           component: () => import('@/views/Admin/Tests/TestsView.vue')
         },
         {
           path: 'test/new',
-          name: 'testAdd',
+          name: 'testingNew',
           component: () => import('@/views/Admin/Tests/TestAddView.vue'),
           props: (route) => ({
             courseUUID: route.query.courseUUID
@@ -65,14 +64,14 @@ const router = createRouter({
         },
         {
           path: 'test/detail/:testUUID',
-          name: 'testDetail',
+          name: 'testingDetail',
           component: () => import('@/views/Admin/Tests/TestDetailView.vue'),
           props: true
         },
         {
-          path: 'users',
-          name: 'users',
-          component: () => import('@/views/Admin/Users/UsersView.vue')
+          path: 'testers',
+          name: 'testerList',
+          component: () => import('@/views/Admin/Testers/TestersView.vue')
         }
         // {
         // TODO: implement not found here

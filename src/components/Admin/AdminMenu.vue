@@ -30,10 +30,10 @@ onBeforeRouteUpdate((to) => {
 const menuPaths = [
   ['dashboard', 'Home'],
   [],
-  ['courses', 'Courses'],
-  ['tests', 'Tests'],
-  ['users', 'Users'],
-  ['modules', 'Modules']
+  ['courseList', 'Courses'],
+  ['testingList', 'Tests'],
+  ['testerList', 'Testers'],
+  ['moduleList', 'Modules']
 ]
 
 const menuOptions = menuPaths.map((location: string[], index: number) => {
@@ -52,7 +52,7 @@ function onRouteChange(to: RouteRecordName | undefined | null) {
   if (!to) return
 
   const name: string = to as string
-  const pathGroups: string[] = ['dashboard', 'course', 'test', 'user', 'module']
+  const pathGroups: string[] = ['dashboard', 'course', 'testing', 'tester', 'module']
   const index: number = pathGroups.findIndex((pathGroup: string) => name.includes(pathGroup))
 
   if (index === -1) return

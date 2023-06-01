@@ -58,7 +58,7 @@ function loadingClass() {
 
 
 function cancel() {
-  router.push({ name: 'courses' })
+  router.push({ name: 'courseList' })
 }
 async function addCourse() {
   try {

@@ -2,8 +2,8 @@
 import { ref, computed, onMounted } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 import { useMessage, NCard, NH4, NSpin, NList, NEmpty, NInput, NPagination } from 'naive-ui'
-import GroupItem from '@/components/Admin/Users/GroupItem.vue'
-import AddGroupButton from '@/components/Admin/Users/AddGroupButton.vue'
+import GroupItem from '@/components/Admin/Testers/GroupItem.vue'
+import AddGroupButton from '@/components/Admin/Testers/AddGroupButton.vue'
 import type { IGroupView } from '@/interfaces'
 import { useGroupStore } from '@/stores/Admin/groupStore'
 
@@ -64,7 +64,7 @@ const filteredGroups: ComputedRef<IGroupView[]> = computed(() => {
 
       <n-spin :show="loading" style="min-height: 5rem">
         <n-list hoverable clickable style="background-color: transparent">
-          <!-- add a UserItem for each user -->
+          <!-- add a TesterItem for each tester -->
           <GroupItem v-for="group in shownGroups" :key="group.groupUUID"
             :group="group" />
           <n-pagination v-if="pageCount > 1 " v-model:page="page" :page-count="pageCount" style="margin-top: 0.5rem" />

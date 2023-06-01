@@ -2,8 +2,8 @@
 import { ref, computed, onMounted } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 import { useMessage, NCard, NH4, NSpin, NList, NEmpty, NInput, NPagination } from 'naive-ui'
-import UserItem from '@/components/Admin/Users/UserItem.vue'
-import AddTesterButton from '@/components/Admin/Users/AddTesterButton.vue'
+import TesterItem from '@/components/Admin/Testers/TesterItem.vue'
+import AddTesterButton from '@/components/Admin/Testers/AddTesterButton.vue'
 import type { ITester } from '@/interfaces'
 import { useTesterStore } from '@/stores/Admin/testerStore'
 
@@ -71,8 +71,8 @@ const filteredTesters: ComputedRef<ITester[]> = computed(() => {
 
       <n-spin :show="loading" style="min-height: 5rem">
         <n-list hoverable style="background-color: transparent">
-          <!-- add a UserItem for each user -->
-          <UserItem v-for="tester in shownTesters" :key="tester.testerUUID"
+          <!-- add a TesterItem for each tester -->
+          <TesterItem v-for="tester in shownTesters" :key="tester.testerUUID"
             :tester="tester" />
           <n-pagination v-if="pageCount > 1 " v-model:page="page" :page-count="pageCount" style="margin-top: 0.5rem" />
         </n-list>
