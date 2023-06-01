@@ -137,6 +137,10 @@ export class API {
   async getGroupTesterUUIDs(groupUUID: string): Promise<string[]> {
     return API.request<string[]>(`GET`, `/group/testers/${API.e(groupUUID)}`)
   }
+  // U (sort of)
+  async assignTestersToGroup(groupUUID: string, testerUUIDs: string[]): Promise<void> {
+    return API.request<void>(`PUT`, `/group/testers/${API.e(groupUUID)}`, { testerUUIDs })
+  }
   // D
   async deleteGroup(groupUUID: string): Promise<void> {
     return API.request<void>(`DELETE`, `/group/delete/${API.e(groupUUID)}`)

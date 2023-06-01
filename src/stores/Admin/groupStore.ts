@@ -39,6 +39,13 @@ export const useGroupStore = defineStore('groupStore', () => {
     groups.value = groups.value.filter((group) => group.groupUUID !== groupUUID)
   }
 
+  function modifySelectedGroupTesterCount(newCount: number): void {
+    const group = groups.value.find((group) => group.groupUUID === selectedGroupUUID.value)
+    if (group) {
+      group.groupTestersCount = newCount
+    }
+  }
+
   function selectGroup(groupUUID: string = ''): void {
     selectedGroupUUID.value = groupUUID
   }
@@ -50,6 +57,6 @@ export const useGroupStore = defineStore('groupStore', () => {
   return { 
     groups, selectedGroupUUID,
     isEmpty,
-    addGroup, deleteGroup, selectGroup, fetchGroups 
+    addGroup, deleteGroup, modifySelectedGroupTesterCount, selectGroup, fetchGroups 
   }
 })

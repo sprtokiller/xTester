@@ -47,7 +47,17 @@ watchEffect(async () => {
 function closeModal(): void { showModal.value = false }
 
 async function saveAssign() {
-  
+  try {
+    loading.value = true
+    await API.assignTestersToGroup(groupStore.selectedGroupUUID, selected.value)
+    MSG.success('Testers assigned to group')
+  } catch (err) {
+    MSG.error(err instanceof Error ? err.message : 'Unknown error')
+  } finally {
+    loading.value = false
+    groupStore.modifySelectedGroupTesterCount(selected.value.length)
+    closeModal()
+  }
 }
 
 const options: ComputedRef<Option[]> = computed(() => {
