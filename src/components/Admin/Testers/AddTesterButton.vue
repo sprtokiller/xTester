@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { Ref, ComputedRef } from 'vue'
-import { NButton, NIcon, NModal, NCard, NForm, NFormItem, NInput, useThemeVars, useMessage, NSpin } from 'naive-ui'
+import { NButton, NIcon, NModal, NCard, NForm, NFormItem, NInput, useMessage, NSpin } from 'naive-ui'
 import type { FormInst, FormRules } from 'naive-ui'
-import type { ITester } from '@/interfaces'
 import { AddRound } from '@vicons/material'
 import { useTesterStore } from '@/stores/Admin/testerStore'
 
@@ -17,7 +16,7 @@ const feedback: ComputedRef<boolean> = computed(() => {
 const uploading: Ref<boolean> = ref(false)
 const showModal: Ref<boolean> = ref(false)
 const formRef: Ref<FormInst | null> = ref(null)
-const formValue: Ref<IFormData> = ref({firstname: '', lastname: '',  email: ''})
+const formValue: Ref<IFormData> = ref({ firstname: '', lastname: '', email: '' })
 
 interface IFormData {
   firstname: string,
@@ -43,16 +42,16 @@ const rules: FormRules = {
   }
 }
 
-function openModal() {
+function openModal(): void {
   resetForm()
   showModal.value = true
 }
 
-function closeModal() {
+function closeModal(): void {
   showModal.value = false
 }
 
-function resetForm() {
+function resetForm(): void {
   formValue.value = {
     firstname: '',
     lastname: '',
@@ -60,7 +59,7 @@ function resetForm() {
   }
 }
 
-async function addTester() {
+async function addTester(): Promise<void> {
   try {
     await formRef.value?.validate()
   } catch (err) {
@@ -94,24 +93,23 @@ async function addTester() {
   </n-button>
 
   <n-modal v-model:show="showModal">
-    <n-card title="Add a new user" style="width: 600px" :bordered="false" size="large" role="dialog" aria-modal="true" >
+    <n-card title="Add a new user" style="width: 600px" :bordered="false" size="large" role="dialog" aria-modal="true">
       <n-spin :show="uploading">
-
-      
-      <n-form ref="formRef" :model="formValue" :rules="rules" :disabled="uploading">
-        <n-form-item path="firstname" label="First name">
-          <n-input v-model:value="formValue.firstname" placeholder="John" />
-        </n-form-item>
-        <n-form-item path="lastname" label="Last name">
-          <n-input v-model:value="formValue.lastname" placeholder="Doe" />
-        </n-form-item>
-        <n-form-item path="email" label="Email">
-          <n-input v-model:value="formValue.email" placeholder="john@doe.com" />
-        </n-form-item>
-      </n-form>
-    </n-spin>
+        <n-form ref="formRef" :model="formValue" :rules="rules" :disabled="uploading">
+          <n-form-item path="firstname" label="First name">
+            <n-input v-model:value="formValue.firstname" placeholder="John" />
+          </n-form-item>
+          <n-form-item path="lastname" label="Last name">
+            <n-input v-model:value="formValue.lastname" placeholder="Doe" />
+          </n-form-item>
+          <n-form-item path="email" label="Email">
+            <n-input v-model:value="formValue.email" placeholder="john@doe.com" />
+          </n-form-item>
+        </n-form>
+      </n-spin>
       <div class="d-flex justify-content-end align-items-center">
-        <div class="fade-opacity" :style="{ 'color': useThemeVars().value.errorColor, 'width':'100%', 'opacity' : feedback && !uploading && showModal ? '1' : '0' }">Please enter at least one field</div>
+        <div class="feedback fade-opacity w-100" :style="{ 'opacity': feedback && !uploading && showModal ? '1' : '0' }">
+          Please enter at least one field</div>
         <n-button @click.stop="closeModal" style="margin-right: 0.5rem" ghost>Cancel</n-button>
         <n-button @click.stop="addTester" type="primary">Add</n-button>
       </div>
@@ -123,6 +121,10 @@ async function addTester() {
 .button-add-tester {
   margin-left: 0.75rem;
   padding-left: 12px;
+}
+
+.feedback {
+  color: var(--error-color);
 }
 
 .fade-opacity {
