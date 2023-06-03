@@ -75,15 +75,6 @@ const rules: FormRules = {
   }
 }
 
-/**
- *               <span style="color: var(--gray-3); margin-left: 0.5rem;">
-                {{ group.groupTestersCount }}
-                <n-icon size="medium">
-                  <PersonFilled style="vertical-align: bottom !important;" />
-                </n-icon>
-              </span>
- */
-
 function renderLabel(option: SelectOption) {
   return [
     option.label as string,
@@ -118,6 +109,7 @@ async function addTest(e: MouseEvent) {
   }
 
   try {
+    // TODO: better loading, send groupUUIDs, implement in backend
     uploading.value = true
     const testUUID = await API.addTest(
       formValue.value.courseUUID ?? '',
