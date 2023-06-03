@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { h, ref, watchEffect, computed } from 'vue'
+import type { Ref } from 'vue'
 import { useMessage, NButton, NH3, NDataTable } from 'naive-ui'
 import { RemoveRedEyeFilled } from '@vicons/material'
 import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
 import { useRouter } from 'vue-router'
 import BackButton from '@/components/Admin/BackButton.vue'
 import AddTestButton from '@/components/Admin/AddTestButton.vue'
+import TestNoGroupsWarning from '@/components/Admin/Tests/TestNoGroupsWarning.vue'
 import { useApi } from '@/services/api'
 import type { ICourseDetail, ICourse } from '@/interfaces'
 import type { DataTableColumns } from 'naive-ui'
@@ -13,6 +15,8 @@ import type { DataTableColumns } from 'naive-ui'
 const router = useRouter()
 const MSG = useMessage()
 const API = useApi()
+
+
 const columns: DataTableColumns<ICourse> = [
   {
     title: 'Other versions',
@@ -46,8 +50,9 @@ const columns: DataTableColumns<ICourse> = [
 ]
 
 // define refs
-const loading = ref(true)
-const course = ref({} as ICourseDetail)
+const showWarning: Ref<boolean> = ref(false)
+const loading: Ref<boolean> = ref(true)
+const course: Ref<ICourseDetail | undefined> = ref(undefined)
 
 // define props
 const props = defineProps({
@@ -69,8 +74,8 @@ function fetchDetail(courseUUID: string) {
       course.value = newCourse
     })
     .catch((err) => {
-      // TODO: handle error in better way
       MSG.error(err.message)
+      router.push({ name: 'courseList' })
     })
     .finally(() => {
       loading.value = false
@@ -88,14 +93,15 @@ const getURL = computed(() => {
   <LoadingHeader v-if="loading" />
 
   <!-- Loaded state -->
-  <div v-else>
+  <div v-else-if="course">
     <div class="row">
       <div class="col-9">
         <div class="d-flex align-items-center">
           <BackButton />
           <n-h3 class="h3-item-name">{{ course.name }}</n-h3>
-          <AddTestButton :courseUUID="course.courseUUID"/>
+          <AddTestButton :courseUUID="course.courseUUID" @show-warning="showWarning=true" />
         </div>
+        <TestNoGroupsWarning v-if="showWarning"/>
       </div>
       <!-- preview, list of other versions -->
       <div class="col-3">
@@ -113,6 +119,7 @@ const getURL = computed(() => {
 .iframe-container .player {
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 
 .iframe-container {
