@@ -90,8 +90,4 @@ const options: ComputedRef<Option[]> = computed(() => {
   margin-left: 0.75rem;
   padding-left: 12px;
 }
-
-.fade-opacity {
-  transition: opacity 0.1s ease-in-out;
-}
 </style>

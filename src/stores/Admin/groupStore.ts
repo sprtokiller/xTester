@@ -18,20 +18,21 @@ export const useGroupStore = defineStore('groupStore', () => {
   })
   
   // actions
-  async function addGroup(groupName: string, groupAnonymousCount: number): Promise<void> {
+  async function addGroup(groupName: string): Promise<void> {
     const groupUUID = await API.addGroup(
-      groupName,
-      groupAnonymousCount
+      groupName
     )
 
     const group: IGroupView = {
       groupName: groupName,
-      groupAnonymousCount: groupAnonymousCount,
       groupTestersCount: 0,
       groupUUID: groupUUID
     }
 
     groups.value.push(group)
+    
+    // select the newly created group
+    selectGroup(groupUUID)
   }
 
   async function deleteGroup(groupUUID: string): Promise<void> {

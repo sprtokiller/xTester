@@ -12,8 +12,10 @@ import type { Ref } from 'vue'
 import { DeleteFilled } from '@vicons/material'
 import type { ITester } from '@/interfaces'
 import { useTesterStore } from '@/stores/Admin/testerStore'
+import { useGroupStore } from '@/stores/Admin/groupStore'
 
-const store = useTesterStore()
+const testerStore = useTesterStore()
+const groupStore = useGroupStore()
 
 const props = defineProps({
   tester: {
@@ -37,7 +39,8 @@ function deleteTester(): void {
     onPositiveClick: async () => {
       try {
         testerIsDeleting.value = true
-        await store.deleteTester(props.tester.testerUUID)
+        await testerStore.deleteTester(props.tester.testerUUID)
+        groupStore.fetchGroups()
         MSG.success('Tester deleted successfully')
       } catch (err) {
         MSG.error(err instanceof Error ? err.message : 'Unknown error')

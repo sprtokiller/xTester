@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Ref } from 'vue'
-import { NButton, NIcon, NModal, NCard, NForm, NFormItem, NInput, useMessage, NSpin, NInputNumber } from 'naive-ui'
+import { NButton, NIcon, NModal, NCard, NForm, NFormItem, NInput, useMessage, NSpin } from 'naive-ui'
 import type { FormInst, FormRules } from 'naive-ui'
 import { AddRound } from '@vicons/material'
 import { useGroupStore } from '@/stores/Admin/groupStore'
@@ -12,11 +12,10 @@ const MSG = useMessage()
 const uploading: Ref<boolean> = ref(false)
 const showModal: Ref<boolean> = ref(false)
 const formRef: Ref<FormInst | null> = ref(null)
-const formValue: Ref<IFormData> = ref({ groupName: '', groupAnonymousCount: 0 })
+const formValue: Ref<IFormData> = ref({ groupName: '' })
 
 interface IFormData {
   groupName: string,
-  groupAnonymousCount: number
 }
 
 const rules: FormRules = {
@@ -24,11 +23,6 @@ const rules: FormRules = {
     type: 'string',
     required: true,
     message: 'Please enter a name for the test group',
-    trigger: ['input', 'blur']
-  },
-  groupAnonymousCount: {
-    type: 'number',
-    required: true,
     trigger: ['input', 'blur']
   }
 }
@@ -44,8 +38,7 @@ function closeModal(): void {
 
 function resetForm(): void {
   formValue.value = {
-    groupName: '',
-    groupAnonymousCount: 0
+    groupName: ''
   }
 }
 
@@ -58,7 +51,7 @@ async function addGroup() {
 
   try {
     uploading.value = true
-    await store.addGroup(formValue.value.groupName, formValue.value.groupAnonymousCount)
+    await store.addGroup(formValue.value.groupName)
   } catch (err) {
     MSG.error(err instanceof Error ? err.message : 'Unknown error')
   } finally {
@@ -84,9 +77,6 @@ async function addGroup() {
         <n-form ref="formRef" :model="formValue" :rules="rules" :disabled="uploading">
           <n-form-item path="groupName" label="Group name">
             <n-input v-model:value="formValue.groupName" placeholder="Default test group" />
-          </n-form-item>
-          <n-form-item path="groupAnonymousCount" label="Anonymous testers">
-            <n-input-number :min="0" :max="1000" v-model:value="formValue.groupAnonymousCount" style="width: 100%;" />
           </n-form-item>
         </n-form>
       </n-spin>

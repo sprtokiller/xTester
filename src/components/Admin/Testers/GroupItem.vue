@@ -12,7 +12,7 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { DeleteFilled } from '@vicons/material'
 import type { IGroupView } from '@/interfaces'
-import { PersonFilled, PersonOffFilled } from '@vicons/material'
+import { PersonFilled } from '@vicons/material'
 import { useGroupStore } from '@/stores/Admin/groupStore'
 
 const store = useGroupStore()
@@ -72,19 +72,6 @@ function deleteGroup(): void {
             </template>
             <div class="large-text">
               <div>{{ group.groupTestersCount }} named testers</div>
-            </div>
-          </n-popover>
-          <n-popover placement="right-start" trigger="hover">
-            <template #trigger>
-              <span style="color: var(--gray-3); margin-left: 0.5rem;">
-                {{ group.groupAnonymousCount }}
-                <n-icon size="medium">
-                  <PersonOffFilled style="vertical-align: bottom !important;" />
-                </n-icon>
-              </span>
-            </template>
-            <div class="large-text">
-              <div>{{ group.groupAnonymousCount }} anonymous testers</div>
             </div>
           </n-popover>
         </div>

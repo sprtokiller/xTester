@@ -1,44 +1,69 @@
 <script setup lang="ts">
-import { ref, onMounted, h } from 'vue'
+import { ref, onMounted, h, watchEffect } from 'vue'
 import type { Ref } from 'vue'
-import { useMessage, NButton, NH3, NSpin, NCard, NForm, NFormItem, NInput, NSelect, NRadioGroup, NRadioButton, NDatePicker, NIcon } from 'naive-ui'
+import { useMessage, NButton, NH3, NSpin, NCard, NForm, NFormItem, NInput, NSelect, NRadioGroup, NRadioButton, NDatePicker, NTable, NIcon, NSpace, NInputNumber, NDescriptions, NDescriptionsItem } from 'naive-ui'
 import type { FormInst, SelectOption, FormRules, FormItemRule } from 'naive-ui'
 import { useRouter } from 'vue-router'
-import { PersonFilled, PersonOffFilled } from '@vicons/material'
-
+import { PersonFilled } from '@vicons/material'
+import { useTesterStore } from '@/stores/Admin/testerStore'
+import { useGroupStore } from '@/stores/Admin/groupStore'
 import BackButton from '@/components/Admin/BackButton.vue'
 import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
 import { useApi } from '@/services/api'
-import type { ICourseView, EndType } from '@/interfaces'
+import type { ICourseView, EndType, ITester, IGroupView } from '@/interfaces'
+import dayjs from 'dayjs'
 
 const router = useRouter()
 const MSG = useMessage()
 const API = useApi()
+const testerStore = useTesterStore()
+const groupStore = useGroupStore()
 
 const loading: Ref<boolean> = ref(true)
 const error: Ref<boolean> = ref(false)
 const uploading: Ref<boolean> = ref(false)
+const step: Ref<number> = ref(1)
+const msgOpacity: Ref<number> = ref(0)
+const courseName: Ref<string> = ref('')
+const formatedTime: Ref<string> = ref('')
+const previewTesters: Ref<ITester[]> = ref([])
 
-const formRef: Ref<FormInst | null> = ref(null)
-const formValue: Ref<IFormData> = ref({
+const courseOptions: Ref<SelectOption[]> = ref([])
+const testerOptions: Ref<SelectOption[]> = ref([])
+const groupOptions: Ref<SelectOption[]> = ref([])
+
+const formRef1: Ref<FormInst | null> = ref(null)
+const formRef2: Ref<FormInst | null> = ref(null)
+
+const formValue1: Ref<IFormData1> = ref({
   courseUUID: null,
   name: '',
-  groupUUIDs: [],
   endType: 'MANUAL',
   startAt: new Date().getTime(),
   startAtEndAt: [new Date().getTime(), new Date().getTime() + 7 * 24 * 60 * 60 * 1000]
 })
 
-interface IFormData {
+const formValue2: Ref<IFormData2> = ref({
+  testerUUIDs: [],
+  groupUUIDs: [],
+  anonymousTesterCount: 0,
+})
+
+interface IFormData1 {
   courseUUID: string | null,
   name: string,
-  groupUUIDs: string[],
   endType: EndType,
   startAt: number
   startAtEndAt: [number, number]
 }
 
-const rules: FormRules = {
+interface IFormData2 {
+  testerUUIDs: string[],
+  groupUUIDs: string[],
+  anonymousTesterCount: number
+}
+
+const rules1: FormRules = {
   courseUUID: {
     required: true,
     message: 'Please select a course from the list',
@@ -47,12 +72,6 @@ const rules: FormRules = {
   name: {
     required: true,
     message: 'Please enter a name for the test',
-    trigger: ['input', 'blur']
-  },
-  groupUUIDs: {
-    type: 'array',
-    required: true,
-    message: 'Please select at least one group',
     trigger: ['input', 'blur']
   },
   endType: {
@@ -75,22 +94,42 @@ const rules: FormRules = {
   }
 }
 
+const rules2: FormRules = {
+  testerUUIDs: {
+    type: 'array',
+    trigger: ['input', 'blur'],
+    validator() {
+      msgOpacity.value = (formValue2.value?.testerUUIDs.length + formValue2.value?.groupUUIDs.length + formValue2.value?.anonymousTesterCount === 0) ? 1 : 0
+      return true
+    },
+  },
+  groupUUIDs: {
+    type: 'array',
+    trigger: ['input', 'blur'],
+    validator() {
+      msgOpacity.value = (formValue2.value?.testerUUIDs.length + formValue2.value?.groupUUIDs.length + formValue2.value?.anonymousTesterCount === 0) ? 1 : 0
+      return true
+    },
+  },
+  anonymousTesterCount: {
+    type: 'number',
+    trigger: ['input', 'blur'],
+    validator() {
+      msgOpacity.value = (formValue2.value?.testerUUIDs.length + formValue2.value?.groupUUIDs.length + formValue2.value?.anonymousTesterCount === 0) ? 1 : 0
+      return true
+    },
+  }
+}
+
 function renderLabel(option: SelectOption) {
   return [
     option.label as string,
     h('span', { style: { color: 'var(--gray-3)', marginLeft: '0.5rem' } }, [
       (option as any).nCount,
-      h(NIcon, {size: 'medium', style: { verticalAlign: '-0.15em' } }, { default: () => h(PersonFilled) }),
-    ]),
-    h('span', { style: { color: 'var(--gray-3)', marginLeft: '0.5rem' } }, [
-      (option as any).aCount,
-      h(NIcon, {size: 'medium', style: { verticalAlign: '-0.15em' } }, { default: () => h(PersonOffFilled) }),
-    ]),
+      h(NIcon, { size: 'medium', style: { verticalAlign: '-0.15em' } }, { default: () => h(PersonFilled) }),
+    ])
   ]
 }
-
-const courseOptions: Ref<SelectOption[]> = ref([])
-const groupOptions: Ref<SelectOption[]> = ref([])
 
 // define props
 const props = defineProps({
@@ -100,25 +139,54 @@ const props = defineProps({
   }
 })
 
-async function addTest(e: MouseEvent) {
-  e.preventDefault()
+async function goToStep(newStep: number, validateStep: number | null = null) {
   try {
-    await formRef.value?.validate()
+    switch (validateStep) {
+      case 1:
+        await formRef1.value?.validate()
+        break;
+      case 2:
+        await formRef2.value?.validate()
+        if (msgOpacity.value === 1) return
+        break;
+      default:
+        break;
+    }
   } catch (err) {
     return
   }
 
+  step.value = newStep
+  if (newStep === 3) preview()
+}
+
+async function preview() {
+  // find the course name from the courseUUID in the courseOptions
+  courseName.value = courseOptions.value.find(course => course.value === formValue1.value.courseUUID)?.label as string
+  formatedTime.value = dayjs(formValue1.value.startAt).format('YYYY-MM-DD HH:mm:ss') + ' - ' + dayjs(formValue1.value.startAtEndAt[1]).format('YYYY-MM-DD HH:mm:ss')
   try {
-    // TODO: better loading, send groupUUIDs, implement in backend
+    uploading.value = true
+    previewTesters.value = await API.getTesterPreview(formValue2.value.testerUUIDs, formValue2.value.groupUUIDs)
+  } catch (err) {
+    MSG.error(err instanceof Error ? err.message : 'Unknown error')
+  } finally {
+    uploading.value = false
+  }
+}
+
+async function addTest() {
+  try {
     uploading.value = true
     const testUUID = await API.addTest(
-      formValue.value.courseUUID ?? '',
-      formValue.value.name,
-      formValue.value.endType,
-      formValue.value.startAt,
-      formValue.value.startAtEndAt[1]
+      formValue1.value.courseUUID ?? '',
+      formValue1.value.name,
+      formValue1.value.endType,
+      formValue1.value.startAt,
+      formValue1.value.startAtEndAt[1],
+      formValue2.value.anonymousTesterCount,
+      previewTesters.value.map(tester => tester.testerUUID)
     )
-    router.push({ name: 'testingDetail', params: { testUUID } })
+    // router.push({ name: 'testingDetail', params: { testUUID } })
   } catch (err) {
     MSG.error(err instanceof Error ? err.message : 'Unknown error')
   } finally {
@@ -127,44 +195,72 @@ async function addTest(e: MouseEvent) {
 }
 
 function cancel() {
-  router.back()
+  router.back() 
 }
 
-function rewriteStartAt() {
-  formValue.value.startAt = formValue.value.startAtEndAt[0]
-}
+watchEffect(() => {
+  if (formValue1.value.endType != 'MANUAL') {
+    if (formValue1.value.startAtEndAt[0] < new Date().getTime()) {
+      formValue1.value.startAtEndAt[0] = new Date().getTime()
+      formValue1.value.startAtEndAt[1] = new Date().getTime() + 7 * 24 * 60 * 60 * 1000
+    }
+    formValue1.value.startAt = formValue1.value.startAtEndAt[0]
+  }
+})
 
-function rewriteStartAtEndAt() {
-  formValue.value.startAtEndAt[0] = formValue.value.startAt
-  formValue.value.startAtEndAt[1] = formValue.value.startAt + 7 * 24 * 60 * 60 * 1000
-}
+watchEffect(() => {
+  if (formValue1.value.endType == 'MANUAL') {
+    if (formValue1.value.startAt < new Date().getTime()) {
+      formValue1.value.startAt = new Date().getTime()
+    }
+
+    formValue1.value.startAtEndAt[0] = formValue1.value.startAt
+    formValue1.value.startAtEndAt[1] = formValue1.value.startAt + 7 * 24 * 60 * 60 * 1000
+  }
+})
+
 
 onMounted(async () => {
   try {
     loading.value = true
-    // get the list of groups TODO: store
-    groupOptions.value = (await API.getGroupList()).map((group) => {
-      return {
-        label: group.groupName,
-        value: group.groupUUID,
-        nCount: group.groupTestersCount,
-        aCount: group.groupAnonymousCount
-      }
-    })
-    // get the list of courses
-    const courses: ICourseView[] = await API.getCourseList()
-    courseOptions.value = (courses).map((course) => {
+    const data = await Promise.all([
+      API.getCourseList(),
+      API.getTesterList(),
+      API.getGroupList()
+    ])
+
+    // set the stores
+    testerStore.testers = data[1] as ITester[]
+    groupStore.groups = data[2] as IGroupView[]
+
+    courseOptions.value = (data[0] as ICourseView[]).map((course) => {
       return {
         label: course.name + ' (ver. ' + course.version + ', ' + course.author + ')',
         value: course.courseUUID
       }
     })
+
+    testerOptions.value = (data[1] as ITester[]).map((tester) => {
+      return {
+        value: tester.testerUUID,
+        label: tester.firstname + ' ' + tester.lastname + ' (' + tester.email + ')'
+      }
+    })
+
+    groupOptions.value = (data[2] as IGroupView[]).map((group) => {
+      return {
+        label: group.groupName,
+        value: group.groupUUID,
+        nCount: group.groupTestersCount
+      }
+    })
+
     // try to set the default value
     if (props.courseUUID) {
-      const course = courses.find((course) => course.courseUUID === props.courseUUID)
+      const course = data[0].find((course) => course.courseUUID === props.courseUUID)
       if (course) {
-        formValue.value.courseUUID = course.courseUUID
-        formValue.value.name = `Test of '${course.name}' (version ${course.version})`
+        formValue1.value.courseUUID = course.courseUUID
+        formValue1.value.name = `Test of '${course.name}' (version ${course.version})`
       }
     }
   } catch (err) {
@@ -188,48 +284,128 @@ onMounted(async () => {
       </div>
     </div>
     <div class="row mt-4">
-      <div class="col-12 col-sm-8 offset-sm-2 d-flex align-items-center">
+      <div class="col-12 col-lg-8 offset-lg-2 d-flex align-items-center">
         <n-spin :show="uploading" style="width: 100%;">
-          <n-card style="width: 100%;">
-
-            <n-form ref="formRef" :model="formValue" :rules="rules">
-              <n-form-item path="courseUUID" label="Course">
-                <n-select v-model:value="formValue.courseUUID" filterable :options="courseOptions"
-                  placeholder="Select a course" />
-              </n-form-item>
-              <n-form-item path="name" label="Test name">
-                <n-input v-model:value="formValue.name" placeholder="Test Name" />
-              </n-form-item>
-              <n-form-item path="groupUUIDs" label="Groups">
-                <n-select v-model:value="formValue.groupUUIDs" filterable multiple :options="groupOptions"
-                  :render-label="renderLabel" placeholder="Select groups" />
-              </n-form-item>
-              <n-form-item path="endType" label="When should the test end?">
-                <div class="d-flex flex-row flex-wrap align-items-center">
-                  <n-radio-group v-model:value="formValue.endType" name="RBG1" style="margin-right: 1rem;">
-                    <n-radio-button value="MANUAL" label="Manually" />
-                    <n-radio-button value="PLAN" label="Scheduled" />
-                  </n-radio-group>
-                  <div class="m-1">
-                    {{ formValue.endType == 'MANUAL' ?
-                      'The test will be open until you close it. You can do this in the test details.' :
-                      'The test will close itself when you specify it. We will notify you when this happens.' }}
+          <!-- 1st step -->
+          <n-card style="width: 100%;" v-if="step === 1" title="Step 1: Settings">
+            <n-form ref="formRef1" :model="formValue1" :rules="rules1">
+              <n-space vertical>
+                <n-form-item path="courseUUID" label="Course">
+                  <n-select v-model:value="formValue1.courseUUID" filterable :options="courseOptions"
+                    placeholder="Select a course" />
+                </n-form-item>
+                <n-form-item path="name" label="Test name">
+                  <n-input v-model:value="formValue1.name" placeholder="Test Name" />
+                </n-form-item>
+                <n-form-item path="endType" label="When should the test end?">
+                  <div class="d-flex flex-row flex-wrap align-items-center">
+                    <n-radio-group v-model:value="formValue1.endType" name="RBG1" style="margin-right: 1rem;">
+                      <n-radio-button value="MANUAL" label="Manually" />
+                      <n-radio-button value="PLAN" label="Scheduled" />
+                    </n-radio-group>
+                    <div class="m-1">
+                      {{ formValue1.endType == 'MANUAL' ?
+                        'The test will be open until you close it. You can do this in the test details.' :
+                        'The test will close itself when you specify it. We will notify you when this happens.' }}
+                    </div>
                   </div>
-                </div>
-              </n-form-item>
-              <n-form-item v-if="formValue.endType == 'MANUAL'" path="startAt" label="Test will start at:">
-                <n-date-picker v-model:value="formValue.startAt" type="datetime" v-on:change="rewriteStartAtEndAt" />
-                <!-- TestAddView.vue:128 [naive/date-picker]: `on-change` is deprecated, please use `on-update:value` instead. //TODO: -->
-              </n-form-item>
-              <n-form-item v-else path="startAtEndAt" label="Test will be accesible during:">
-                <n-date-picker v-model:value="formValue.startAtEndAt" type="datetimerange" v-on:change="rewriteStartAt" />
-              </n-form-item>
+                </n-form-item>
+                <n-form-item v-if="formValue1.endType == 'MANUAL'" path="startAt" label="Test will start at:">
+                  <n-date-picker v-model:value="formValue1.startAt" type="datetime" />
+                </n-form-item>
+                <n-form-item v-else path="startAtEndAt" label="Test will be accesible during:">
+                  <n-date-picker v-model:value="formValue1.startAtEndAt" type="datetimerange" />
+                </n-form-item>
+              </n-space>
             </n-form>
 
             <template #action>
               <div class="d-flex justify-content-end">
-                <n-button @click="cancel" style="margin-right: 0.5rem" ghost :disabled="error">Cancel</n-button>
-                <n-button @click="addTest" type="primary" :disabled="error">Add</n-button>
+                <n-button @click.stop="cancel" style="margin-right: 0.5rem" ghost :disabled="error">Cancel</n-button>
+                <n-button @click.stop="goToStep(2, 1)" type="primary" :disabled="error">Continue</n-button>
+              </div>
+            </template>
+          </n-card>
+
+          <!-- 2nd step -->
+          <n-card style="width: 100%;" v-if="step === 2" title="Step 2: Select testers">
+            <n-form ref="formRef2" :model="formValue2" :rules="rules2">
+              <n-space vertical>
+                <span class="hint-label">Select testers or entire tester groups. Overlaps will be merged.</span>
+                <n-form-item path="testerUUIDs" label="Testers">
+                  <n-select v-model:value="formValue2.testerUUIDs" filterable multiple :options="testerOptions"
+                    placeholder="Select testers" />
+                </n-form-item>
+                <n-form-item path="groupUUIDs" label="Groups">
+                  <n-select v-model:value="formValue2.groupUUIDs" filterable multiple :options="groupOptions"
+                    :render-label="renderLabel" placeholder="...or groups" />
+                </n-form-item>
+                <span class="hint-label">You can also add anonymous testers, but you will have to send them the link to
+                  the test manually.</span>
+                <n-form-item path="anonymousTesterCount" label="Anonymous testers">
+                  <n-input-number :min="0" :max="1000" v-model:value="formValue2.anonymousTesterCount"
+                    style="width: 100%;" />
+                </n-form-item>
+                <span class="error-label fade-opacity" :style="{ opacity: msgOpacity }">Please add some testers to your
+                  test.</span>
+              </n-space>
+            </n-form>
+
+            <template #action>
+              <div class="d-flex justify-content-between">
+                <n-button @click.stop="goToStep(1)" style="margin-right: 0.5rem" ghost :disabled="error">Back</n-button>
+                <div>
+                  <n-button @click="cancel" style="margin-right: 0.5rem" ghost :disabled="error">Cancel</n-button>
+                  <n-button @click="goToStep(3, 2)" type="primary" :disabled="error">Preview</n-button>
+                </div>
+              </div>
+            </template>
+          </n-card>
+
+          <!-- 3rd step -->
+          <n-card style="width: 100%;" v-if="step === 3" title="Step 3: Overview">
+            <n-space vertical>
+              <n-descriptions label-placement="left" bordered size="small">
+                <n-descriptions-item label="Course:">
+                  {{ courseName }}
+                </n-descriptions-item>
+                <n-descriptions-item label="Test name:">
+                  {{ formValue1.name }}
+                </n-descriptions-item>
+                <n-descriptions-item label="Author:">
+                  {{ formValue1.endType == 'MANUAL' ? 'Manually' : 'Scheduled' }}
+                </n-descriptions-item>
+                <n-descriptions-item label="Time:">
+                  {{ formatedTime }}
+                </n-descriptions-item>
+                <n-descriptions-item label="Anonymous testers:">
+                  {{ formValue2.anonymousTesterCount }}
+                </n-descriptions-item>
+              </n-descriptions>
+              <n-table striped>
+                <thead>
+                  <tr>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="tester in previewTesters" :key="tester.testerUUID">
+                    <td>{{ tester.firstname }}</td>
+                    <td>{{ tester.lastname }}</td>
+                    <td>{{ tester.email }}</td>
+                  </tr>
+                </tbody>
+              </n-table>
+            </n-space>
+            <template #action>
+              <div class="d-flex justify-content-between">
+                <n-button @click.stop="goToStep(2)" style="margin-right: 0.5rem" ghost :disabled="error">Back</n-button>
+                <div>
+                  <n-button @click="cancel" style="margin-right: 0.5rem" ghost :disabled="error">Cancel</n-button>
+                  <n-button @click="addTest" type="primary" :disabled="error">Add test</n-button>
+                </div>
               </div>
             </template>
           </n-card>
@@ -238,3 +414,15 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.hint-label {
+  padding-left: 2px;
+  font-style: italic;
+}
+
+.error-label {
+  padding-left: 2px;
+  color: var(--error-color)
+}
+</style>

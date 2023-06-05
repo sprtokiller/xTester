@@ -7,7 +7,7 @@ import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
 import { useRouter } from 'vue-router'
 import BackButton from '@/components/Admin/BackButton.vue'
 import AddTestButton from '@/components/Admin/AddTestButton.vue'
-import TestNoGroupsWarning from '@/components/Admin/Tests/TestNoGroupsWarning.vue'
+import TestNoUsersWarning from '@/components/Admin/Tests/TestNoUsersWarning.vue'
 import { useApi } from '@/services/api'
 import type { ICourseDetail, ICourse } from '@/interfaces'
 import type { DataTableColumns } from 'naive-ui'
@@ -49,8 +49,6 @@ const columns: DataTableColumns<ICourse> = [
   }
 ]
 
-// define refs
-const showWarning: Ref<boolean> = ref(false)
 const loading: Ref<boolean> = ref(true)
 const course: Ref<ICourseDetail | undefined> = ref(undefined)
 
@@ -99,15 +97,14 @@ const getURL = computed(() => {
         <div class="d-flex align-items-center">
           <BackButton />
           <n-h3 class="h3-item-name">{{ course.name }}</n-h3>
-          <AddTestButton :courseUUID="course.courseUUID" @show-warning="showWarning=true" />
+          <AddTestButton :courseUUID="course.courseUUID" />
         </div>
-        <TestNoGroupsWarning v-if="showWarning"/>
+        <TestNoUsersWarning />
       </div>
       <!-- preview, list of other versions -->
       <div class="col-3">
         <div class="iframe-container">
           <iframe allowfullscreen="true" class="player" :src="getURL" scrolling="no"></iframe>
-          <!-- TODO: make read-only -->
         </div>
         <n-data-table :columns="columns" :data="course.otherVersions" :single-line="true" size="small" />
       </div>

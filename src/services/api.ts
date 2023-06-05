@@ -91,13 +91,15 @@ export class API {
 
   /* ------------- TEST ------------- */
   // C
-  async addTest(courseUUID: string, name: string, endType: EndType, startAt: number, endAt: number): Promise<string> {
+  async addTest(courseUUID: string, name: string, endType: EndType, startAt: number, endAt: number, anonymousCount: number, testerUUIDs: string[]): Promise<string> {
     return API.request<string>(`POST`, `/test/add`, {
       courseUUID,
       name,
       endType,
       startAt,
-      endAt
+      endAt,
+      anonymousCount,
+      testerUUIDs
     })
   }
   // R
@@ -109,6 +111,10 @@ export class API {
     return API.request<ITestView[]>(`GET`, `/test/list`)
   }
   /* ------------- TESTER ------------- */
+  // Preview of testers
+  async getTesterPreview(testerUUIDs: string[], groupUUIDs: string[]): Promise<ITester[]> {
+    return API.request<ITester[]>(`POST`, `/tester/preview`, {testerUUIDs, groupUUIDs})
+  }
   // C
   async addTester(firstname: string, lastname: string, email: string): Promise<string> {
     return API.request<string>(`POST`, `/tester/add`, {
@@ -127,10 +133,9 @@ export class API {
   }
   /* ------------- GROUP ------------- */
   // C
-  async addGroup(groupName: string, groupAnonymousCount: number): Promise<string> {
+  async addGroup(groupName: string): Promise<string> {
     return API.request<string>(`POST`, `/group/add`, {
-      groupName,
-      groupAnonymousCount
+      groupName
     })
   }
   // R (sort of)
