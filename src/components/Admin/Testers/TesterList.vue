@@ -39,14 +39,19 @@ const filteredTesters: ComputedRef<ITester[]> = computed(() => {
   return store.testers.filter((tester) => {
     if (searchValue.value === '') return true
 
-    const terms = searchValue.value.toLowerCase().split(' ').filter((term) => term !== '')
+    const terms = searchValue.value
+      .toLowerCase()
+      .split(' ')
+      .filter((term) => term !== '')
 
     for (const term of terms) {
-      if (!(
-        (tester.firstname ?? '').toLowerCase().includes(term) ||
-        (tester.lastname ?? '').toLowerCase().includes(term) ||
-        (tester.email ?? '').toLowerCase().includes(term)
-      )) {
+      if (
+        !(
+          (tester.firstname ?? '').toLowerCase().includes(term) ||
+          (tester.lastname ?? '').toLowerCase().includes(term) ||
+          (tester.email ?? '').toLowerCase().includes(term)
+        )
+      ) {
         return false
       }
     }
@@ -54,17 +59,15 @@ const filteredTesters: ComputedRef<ITester[]> = computed(() => {
     return true
   })
 })
-
-
 </script>
 
 <template>
-  <div style="padding-bottom: 0.75rem; padding-top: 0.75rem;">
+  <div style="padding-bottom: 0.75rem; padding-top: 0.75rem">
     <n-card embedded style="min-height: 200px">
       <div class="d-flex">
         <n-h4>Tester list</n-h4>
       </div>
-      <div class="d-flex" style="margin-bottom: 0.5rem;">
+      <div class="d-flex" style="margin-bottom: 0.5rem">
         <n-input size="medium" placeholder="Search" v-model:value="searchValue" />
         <AddTesterButton />
       </div>
@@ -72,12 +75,24 @@ const filteredTesters: ComputedRef<ITester[]> = computed(() => {
       <n-spin :show="loading" style="min-height: 5rem">
         <n-list hoverable style="background-color: transparent">
           <!-- add a TesterItem for each tester -->
-          <TesterItem v-for="tester in shownTesters" :key="tester.testerUUID"
-            :tester="tester" />
-          <n-pagination v-if="pageCount > 1 " v-model:page="page" :page-count="pageCount" style="margin-top: 0.5rem" />
+          <TesterItem v-for="tester in shownTesters" :key="tester.testerUUID" :tester="tester" />
+          <n-pagination
+            v-if="pageCount > 1"
+            v-model:page="page"
+            :page-count="pageCount"
+            style="margin-top: 0.5rem"
+          />
         </n-list>
-        <n-empty style="margin-top: 1rem" description="No testers found!" v-if="filteredTesters.length === 0 && !loading && !store.isEmpty" />
-        <n-empty style="margin-top: 1rem" description="No testers. Add someone to test your courses!" v-if="!loading && store.isEmpty" />
+        <n-empty
+          style="margin-top: 1rem"
+          description="No testers found!"
+          v-if="filteredTesters.length === 0 && !loading && !store.isEmpty"
+        />
+        <n-empty
+          style="margin-top: 1rem"
+          description="No testers. Add someone to test your courses!"
+          v-if="!loading && store.isEmpty"
+        />
       </n-spin>
     </n-card>
   </div>

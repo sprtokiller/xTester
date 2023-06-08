@@ -8,7 +8,6 @@ const router = useRouter()
 function handleBack() {
   router.back()
 }
-
 </script>
 
 <template>

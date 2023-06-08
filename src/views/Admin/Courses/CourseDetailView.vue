@@ -16,7 +16,6 @@ const router = useRouter()
 const MSG = useMessage()
 const API = useApi()
 
-
 const columns: DataTableColumns<ICourse> = [
   {
     title: 'Other versions',
@@ -81,7 +80,7 @@ function fetchDetail(courseUUID: string) {
 }
 
 const getURL = computed(() => {
-  if (!(course.value)) return undefined
+  if (!course.value) return undefined
 
   return `https://articulateusercontent.com/review/${course.value.courseLocation}`
 })
@@ -106,7 +105,12 @@ const getURL = computed(() => {
         <div class="iframe-container">
           <iframe allowfullscreen="true" class="player" :src="getURL" scrolling="no"></iframe>
         </div>
-        <n-data-table :columns="columns" :data="course.otherVersions" :single-line="true" size="small" />
+        <n-data-table
+          :columns="columns"
+          :data="course.otherVersions"
+          :single-line="true"
+          size="small"
+        />
       </div>
     </div>
   </div>

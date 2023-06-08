@@ -16,12 +16,10 @@ export const useGroupStore = defineStore('groupStore', () => {
   const isEmpty: ComputedRef<boolean> = computed(() => {
     return groups.value.length === 0
   })
-  
+
   // actions
   async function addGroup(groupName: string): Promise<void> {
-    const groupUUID = await API.addGroup(
-      groupName
-    )
+    const groupUUID = await API.addGroup(groupName)
 
     const group: IGroupView = {
       groupName: groupName,
@@ -30,7 +28,7 @@ export const useGroupStore = defineStore('groupStore', () => {
     }
 
     groups.value.push(group)
-    
+
     // select the newly created group
     selectGroup(groupUUID)
   }
@@ -55,9 +53,14 @@ export const useGroupStore = defineStore('groupStore', () => {
     groups.value = await API.getGroupList()
   }
 
-  return { 
-    groups, selectedGroupUUID,
+  return {
+    groups,
+    selectedGroupUUID,
     isEmpty,
-    addGroup, deleteGroup, modifySelectedGroupTesterCount, selectGroup, fetchGroups 
+    addGroup,
+    deleteGroup,
+    modifySelectedGroupTesterCount,
+    selectGroup,
+    fetchGroups
   }
 })

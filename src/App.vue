@@ -14,7 +14,6 @@ window.addEventListener('keydown', (e) => {
     toggleTheme()
   }
 })
-
 </script>
 
 <template>

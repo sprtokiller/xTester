@@ -29,15 +29,17 @@ watchEffect(() => {
 function fetchDetail(testUUID: string) {
   // fetch test detail from the API
   loading.value = true
-  API.getTestDetail(testUUID).then(newTest => {
-    test.value = newTest;
-  }).catch(err => {
-    MSG.error(err.message);
-  }).finally(() => {
-    loading.value = false;
-  })
+  API.getTestDetail(testUUID)
+    .then((newTest) => {
+      test.value = newTest
+    })
+    .catch((err) => {
+      MSG.error(err.message)
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
-
 </script>
 
 <template>
@@ -52,7 +54,7 @@ function fetchDetail(testUUID: string) {
   <n-card style="margin-bottom: 0.75rem">
     <pre>{{ JSON.stringify(test, null, 2) }}</pre>
   </n-card>
-  <TestModules :modules="test.modules ?? []"/>
+  <TestModules :modules="test.modules ?? []" />
 </template>
 
 <style scoped></style>

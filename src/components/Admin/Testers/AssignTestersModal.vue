@@ -13,19 +13,19 @@ const testerStore = useTesterStore()
 const MSG = useMessage()
 const API = useApi()
 
-const selected: Ref<any> = ref(["ac085844-27a0-4b3d-af15-8b3cdcc86805"])
+const selected: Ref<any> = ref(['ac085844-27a0-4b3d-af15-8b3cdcc86805'])
 const loading: Ref<boolean> = ref(false)
 
 const showModal: WritableComputedRef<boolean> = computed({
   get(): boolean {
-    return (groupStore.selectedGroupUUID != '')
+    return groupStore.selectedGroupUUID != ''
   },
   set(newValue: boolean): void {
     if (!newValue) {
       groupStore.selectGroup('')
     }
-  },
-});
+  }
+})
 
 // watch groupStore.selectedGroupUUID and fire a GET request on change
 watchEffect(async () => {
@@ -42,9 +42,11 @@ watchEffect(async () => {
   } finally {
     loading.value = false
   }
-});
+})
 
-function closeModal(): void { showModal.value = false }
+function closeModal(): void {
+  showModal.value = false
+}
 
 async function saveAssign() {
   try {
@@ -72,10 +74,22 @@ const options: ComputedRef<Option[]> = computed(() => {
 
 <template>
   <n-modal v-model:show="showModal">
-    <n-card title="Assign testers to group" style="width: 80vw" :bordered="false" size="large" role="dialog"
-      aria-modal="true">
+    <n-card
+      title="Assign testers to group"
+      style="width: 80vw"
+      :bordered="false"
+      size="large"
+      role="dialog"
+      aria-modal="true"
+    >
       <n-spin :show="loading && showModal">
-        <n-transfer :disabled="loading" v-model:value="selected" virtual-scroll :options="options" source-filterable />
+        <n-transfer
+          :disabled="loading"
+          v-model:value="selected"
+          virtual-scroll
+          :options="options"
+          source-filterable
+        />
         <div class="d-flex justify-content-end align-items-center" style="margin-top: 1rem">
           <n-button @click.stop="closeModal" style="margin-right: 0.5rem" ghost>Cancel</n-button>
           <n-button @click.stop="saveAssign" type="primary">Save</n-button>

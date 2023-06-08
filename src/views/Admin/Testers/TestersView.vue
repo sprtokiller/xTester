@@ -4,7 +4,6 @@ import { NH2, NScrollbar } from 'naive-ui'
 import TesterList from '@/components/Admin/Testers/TesterList.vue'
 import GroupList from '@/components/Admin/Testers/GroupList.vue'
 import AssignTestersModal from '@/components/Admin/Testers/AssignTestersModal.vue'
-
 </script>
 
 <template>

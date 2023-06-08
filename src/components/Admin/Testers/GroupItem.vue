@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import {
-  NListItem,
-  NButton,
-  NIcon,
-  NSpin,
-  NPopover,
-  useMessage,
-  useDialog
-} from 'naive-ui'
+import { NListItem, NButton, NIcon, NSpin, NPopover, useMessage, useDialog } from 'naive-ui'
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { DeleteFilled } from '@vicons/material'
@@ -63,10 +55,10 @@ function deleteGroup(): void {
           <span>{{ group.groupName }}</span>
           <n-popover placement="right-start" trigger="hover">
             <template #trigger>
-              <span style="color: var(--gray-3); margin-left: 0.5rem;">
+              <span style="color: var(--gray-3); margin-left: 0.5rem">
                 {{ group.groupTestersCount }}
                 <n-icon size="medium">
-                  <PersonFilled style="vertical-align: bottom !important;" />
+                  <PersonFilled style="vertical-align: bottom !important" />
                 </n-icon>
               </span>
             </template>
@@ -76,7 +68,14 @@ function deleteGroup(): void {
           </n-popover>
         </div>
         <template #suffix>
-          <n-button @click.stop="deleteGroup" class="btn-course-action" size="small" quaternary circle type="error">
+          <n-button
+            @click.stop="deleteGroup"
+            class="btn-course-action"
+            size="small"
+            quaternary
+            circle
+            type="error"
+          >
             <template #icon>
               <n-icon class="icon-no-align">
                 <DeleteFilled />
@@ -105,4 +104,5 @@ function deleteGroup(): void {
 
 .n-list-item:hover .btn-course-action:hover {
   color: var(--gray-1);
-}</style>
+}
+</style>

@@ -15,12 +15,12 @@ export const useTesterStore = defineStore('testerStore', () => {
   const isEmpty: ComputedRef<boolean> = computed(() => {
     return testers.value.length === 0
   })
-  
+
   // actions
   async function addTester(firstname: string, lastname: string, email: string) {
     const testerUUID = await API.addTester(firstname, lastname, email)
 
-    const tester : ITester = {
+    const tester: ITester = {
       firstname: firstname != '' ? firstname : undefined,
       lastname: lastname != '' ? lastname : undefined,
       email: email != '' ? email : undefined,
@@ -35,13 +35,15 @@ export const useTesterStore = defineStore('testerStore', () => {
     testers.value = testers.value.filter((tester) => tester.testerUUID !== testerUUID)
   }
 
-  async function fetchTesters(){
+  async function fetchTesters() {
     testers.value = await API.getTesterList()
   }
 
-  return { 
+  return {
     testers,
     isEmpty,
-    addTester, deleteTester, fetchTesters 
+    addTester,
+    deleteTester,
+    fetchTesters
   }
 })

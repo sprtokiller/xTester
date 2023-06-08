@@ -1,6 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useMessage, NCard, NH4, NButton, NH3, NSpin, NForm, NFormItem, NInput, NSelect, NRadioGroup, NRadioButton, NDatePicker } from 'naive-ui'
+import {
+  useMessage,
+  NCard,
+  NH4,
+  NButton,
+  NH3,
+  NSpin,
+  NForm,
+  NFormItem,
+  NInput,
+  NSelect,
+  NRadioGroup,
+  NRadioButton,
+  NDatePicker
+} from 'naive-ui'
 import { useRouter, type Router } from 'vue-router'
 import { useApi } from '@/services/api'
 
@@ -28,7 +42,6 @@ const props = defineProps({
     required: true
   }
 })
-
 </script>
 
 <template>

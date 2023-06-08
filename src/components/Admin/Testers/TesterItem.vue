@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import {
-  NListItem,
-  NButton,
-  NIcon,
-  NSpin,
-  useMessage,
-  useDialog
-} from 'naive-ui'
+import { NListItem, NButton, NIcon, NSpin, useMessage, useDialog } from 'naive-ui'
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { DeleteFilled } from '@vicons/material'
@@ -56,11 +49,19 @@ function deleteTester(): void {
   <n-spin :show="testerIsDeleting">
     <n-list-item>
       <div>
-        <span>{{ tester.firstname }} {{ tester.lastname }}</span>&nbsp;
-        <span style="color: var(--gray-3);">{{ tester.email }}</span>
+        <span>{{ tester.firstname }} {{ tester.lastname }}</span
+        >&nbsp;
+        <span style="color: var(--gray-3)">{{ tester.email }}</span>
       </div>
       <template #suffix>
-        <n-button @click.stop="deleteTester" class="btn-course-action" size="small" quaternary circle type="error">
+        <n-button
+          @click.stop="deleteTester"
+          class="btn-course-action"
+          size="small"
+          quaternary
+          circle
+          type="error"
+        >
           <template #icon>
             <n-icon class="icon-no-align">
               <DeleteFilled />
@@ -88,4 +89,5 @@ function deleteTester(): void {
 
 .n-list-item:hover .btn-course-action:hover {
   color: var(--gray-1);
-}</style>
+}
+</style>

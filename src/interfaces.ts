@@ -22,7 +22,7 @@ export interface ICourseDetail extends ICourse {
   otherVersions?: ICourse[]
 }
 
-export type EndType = 'MANUAL' | 'PLAN' 
+export type EndType = 'MANUAL' | 'PLAN'
 
 export interface ITest {
   testUUID: string

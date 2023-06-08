@@ -1,7 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Ref } from 'vue'
-import { NButton, NIcon, NModal, NCard, NForm, NFormItem, NInput, useMessage, NSpin } from 'naive-ui'
+import {
+  NButton,
+  NIcon,
+  NModal,
+  NCard,
+  NForm,
+  NFormItem,
+  NInput,
+  useMessage,
+  NSpin
+} from 'naive-ui'
 import type { FormInst, FormRules } from 'naive-ui'
 import { AddRound } from '@vicons/material'
 import { useGroupStore } from '@/stores/Admin/groupStore'
@@ -15,7 +25,7 @@ const formRef: Ref<FormInst | null> = ref(null)
 const formValue: Ref<IFormData> = ref({ groupName: '' })
 
 interface IFormData {
-  groupName: string,
+  groupName: string
 }
 
 const rules: FormRules = {
@@ -63,7 +73,8 @@ async function addGroup() {
 </script>
 
 <template>
-  <n-button size="medium" @click="openModal" type="primary" secondary class="button-add-group">Add group
+  <n-button size="medium" @click="openModal" type="primary" secondary class="button-add-group"
+    >Add group
     <template #icon>
       <n-icon class="icon-no-align">
         <AddRound />
@@ -72,7 +83,14 @@ async function addGroup() {
   </n-button>
 
   <n-modal v-model:show="showModal">
-    <n-card title="Add a new group" style="width: 600px" :bordered="false" size="large" role="dialog" aria-modal="true">
+    <n-card
+      title="Add a new group"
+      style="width: 600px"
+      :bordered="false"
+      size="large"
+      role="dialog"
+      aria-modal="true"
+    >
       <n-spin :show="uploading">
         <n-form ref="formRef" :model="formValue" :rules="rules" :disabled="uploading">
           <n-form-item path="groupName" label="Group name">

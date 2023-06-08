@@ -102,7 +102,6 @@ const columns: DataTableColumns<ITestView> = [
   // TODO: Add delete and copy buttons
 ]
 
-
 const router: Router = useRouter()
 const MSG = useMessage()
 const API = useApi()
@@ -119,17 +118,23 @@ const rowProps = (test: ITestView) => {
 }
 
 API.getTestList()
-    .then((newTests) => {
-      tests.value = newTests
-    })
-    .catch((err) => {
-      MSG.error(err.message)
-    })
-    .finally(() => {
-      loading.value = false
-    })
+  .then((newTests) => {
+    tests.value = newTests
+  })
+  .catch((err) => {
+    MSG.error(err.message)
+  })
+  .finally(() => {
+    loading.value = false
+  })
 </script>
 
 <template>
-  <n-data-table :columns="columns" :data="tests" :bordered="false" :loading="loading" :row-props="rowProps" />
+  <n-data-table
+    :columns="columns"
+    :data="tests"
+    :bordered="false"
+    :loading="loading"
+    :row-props="rowProps"
+  />
 </template>

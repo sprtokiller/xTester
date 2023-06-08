@@ -1,15 +1,22 @@
 import axios, { type AxiosInstance } from 'axios'
-import type { ICourseView, ITestView, ICourseDetail, EndType, ITester, IGroupView } from '@/interfaces'
-import { inject } from 'vue';
+import type {
+  ICourseView,
+  ITestView,
+  ICourseDetail,
+  EndType,
+  ITester,
+  IGroupView
+} from '@/interfaces'
+import { inject } from 'vue'
 
 export interface BackendApiInjection extends API {}
 
-export function useApi() : BackendApiInjection {
-  const apiInstance = inject('API') as BackendApiInjection;
+export function useApi(): BackendApiInjection {
+  const apiInstance = inject('API') as BackendApiInjection
   if (!apiInstance) {
-    throw new Error('API is not provided');
+    throw new Error('API is not provided')
   }
-  return apiInstance;
+  return apiInstance
 }
 
 export class API {
@@ -91,7 +98,15 @@ export class API {
 
   /* ------------- TEST ------------- */
   // C
-  async addTest(courseUUID: string, name: string, endType: EndType, startAt: number, endAt: number, anonymousCount: number, testerUUIDs: string[]): Promise<string> {
+  async addTest(
+    courseUUID: string,
+    name: string,
+    endType: EndType,
+    startAt: number,
+    endAt: number,
+    anonymousCount: number,
+    testerUUIDs: string[]
+  ): Promise<string> {
     return API.request<string>(`POST`, `/test/add`, {
       courseUUID,
       name,
@@ -113,14 +128,14 @@ export class API {
   /* ------------- TESTER ------------- */
   // Preview of testers
   async getTesterPreview(testerUUIDs: string[], groupUUIDs: string[]): Promise<ITester[]> {
-    return API.request<ITester[]>(`POST`, `/tester/preview`, {testerUUIDs, groupUUIDs})
+    return API.request<ITester[]>(`POST`, `/tester/preview`, { testerUUIDs, groupUUIDs })
   }
   // C
   async addTester(firstname: string, lastname: string, email: string): Promise<string> {
     return API.request<string>(`POST`, `/tester/add`, {
-      firstname : firstname.length > 0 ? firstname : null,
-      lastname : lastname.length > 0 ? lastname : null,
-      email : email.length > 0 ? email : null
+      firstname: firstname.length > 0 ? firstname : null,
+      lastname: lastname.length > 0 ? lastname : null,
+      email: email.length > 0 ? email : null
     })
   }
   // D

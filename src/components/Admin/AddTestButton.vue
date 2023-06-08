@@ -15,12 +15,11 @@ const props = defineProps({
 function handleAddTest() {
   router.push({ name: 'testingNew', query: { courseUUID: props.courseUUID } })
 }
-
 </script>
 
 <template>
-  <n-button size="large" @click="handleAddTest" type="primary" secondary
-    class="button-add-test">Add test
+  <n-button size="large" @click="handleAddTest" type="primary" secondary class="button-add-test"
+    >Add test
     <template #icon>
       <n-icon class="icon-no-align">
         <AddRound />

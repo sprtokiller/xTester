@@ -9,7 +9,7 @@
   color: var(--gray-1);
 }
 
-[class^="n-"] svg {
+[class^='n-'] svg {
   vertical-align: baseline !important;
 }
 

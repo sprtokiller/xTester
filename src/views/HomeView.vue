@@ -5,7 +5,6 @@ import CourseFrame from '@/components/Admin/CourseFrame.vue'
 const props = defineProps({
   userHash: String
 })
-
 </script>
 
 <template>

@@ -39,25 +39,29 @@ const filteredGroups: ComputedRef<IGroupView[]> = computed(() => {
   return store.groups.filter((group) => {
     if (searchValue.value === '') return true
 
-    const terms = searchValue.value.toLowerCase().split(' ').filter((term) => term !== '')
+    const terms = searchValue.value
+      .toLowerCase()
+      .split(' ')
+      .filter((term) => term !== '')
 
     for (const term of terms) {
-      if (!((group.groupName ?? '').toLowerCase().includes(term))) { return false }
+      if (!(group.groupName ?? '').toLowerCase().includes(term)) {
+        return false
+      }
     }
 
     return true
   })
 })
-
 </script>
 
 <template>
-  <div style="padding-bottom: 0.75rem; padding-top: 0.75rem;">
+  <div style="padding-bottom: 0.75rem; padding-top: 0.75rem">
     <n-card embedded style="min-height: 200px">
       <div class="d-flex">
         <n-h4>Group list</n-h4>
       </div>
-      <div class="d-flex" style="margin-bottom: 0.5rem;">
+      <div class="d-flex" style="margin-bottom: 0.5rem">
         <n-input size="medium" placeholder="Search" v-model:value="searchValue" />
         <AddGroupButton />
       </div>
@@ -65,12 +69,24 @@ const filteredGroups: ComputedRef<IGroupView[]> = computed(() => {
       <n-spin :show="loading" style="min-height: 5rem">
         <n-list hoverable clickable style="background-color: transparent">
           <!-- add a TesterItem for each tester -->
-          <GroupItem v-for="group in shownGroups" :key="group.groupUUID"
-            :group="group" />
-          <n-pagination v-if="pageCount > 1 " v-model:page="page" :page-count="pageCount" style="margin-top: 0.5rem" />
+          <GroupItem v-for="group in shownGroups" :key="group.groupUUID" :group="group" />
+          <n-pagination
+            v-if="pageCount > 1"
+            v-model:page="page"
+            :page-count="pageCount"
+            style="margin-top: 0.5rem"
+          />
         </n-list>
-        <n-empty style="margin-top: 1rem" description="No groups found!" v-if="filteredGroups.length === 0 && !loading && !store.isEmpty" />
-        <n-empty style="margin-top: 1rem" description="No groups. Only groups can be assigned to course tests!" v-if="!loading && store.isEmpty" />
+        <n-empty
+          style="margin-top: 1rem"
+          description="No groups found!"
+          v-if="filteredGroups.length === 0 && !loading && !store.isEmpty"
+        />
+        <n-empty
+          style="margin-top: 1rem"
+          description="No groups. Only groups can be assigned to course tests!"
+          v-if="!loading && store.isEmpty"
+        />
       </n-spin>
     </n-card>
   </div>

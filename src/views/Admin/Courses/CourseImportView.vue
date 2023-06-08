@@ -56,7 +56,6 @@ function loadingClass() {
   }
 }
 
-
 function cancel() {
   router.push({ name: 'courseList' })
 }
@@ -77,7 +76,6 @@ async function addCourse() {
     uploading.value = false
   }
 }
-
 </script>
 
 <template>
@@ -87,7 +85,13 @@ async function addCourse() {
       {{ uploading ? 'Uploading the course...' : 'Checking if course is available...' }}
     </template>
     <n-card style="max-width: 50rem; margin-left: auto; margin-right: auto; margin-top: 5%">
-      <n-descriptions :class="loadingClass" title="Details" label-placement="left" bordered size="small">
+      <n-descriptions
+        :class="loadingClass"
+        title="Details"
+        label-placement="left"
+        bordered
+        size="small"
+      >
         <n-descriptions-item label="Name:">
           {{ name }}
         </n-descriptions-item>
@@ -107,7 +111,9 @@ async function addCourse() {
       <template #footer>
         <!-- align to right -->
         <div class="d-flex justify-content-end">
-          <n-button @click="cancel" style="margin-right: 0.5rem" ghost :disabled="error">Cancel</n-button>
+          <n-button @click="cancel" style="margin-right: 0.5rem" ghost :disabled="error"
+            >Cancel</n-button
+          >
           <n-button @click="addCourse" type="primary" :disabled="error">Add</n-button>
         </div>
       </template>

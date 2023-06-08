@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps({
   userHash: String
-});
+})
 </script>
 
 <template>

@@ -3,7 +3,7 @@ import { NAlert, NButton, useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import type { Ref } from 'vue'
-import { useTesterStore } from '@/stores/Admin/testerStore';
+import { useTesterStore } from '@/stores/Admin/testerStore'
 
 const store = useTesterStore()
 const router = useRouter()
@@ -26,14 +26,14 @@ onMounted(async () => {
 function handleManageTesters() {
   router.push({ name: 'testerList' })
 }
-
 </script>
 
 <template>
-  <n-alert class="group-alert" title="No tester groups" type="warning" :closable='true' v-if="show">
+  <n-alert class="group-alert" title="No tester groups" type="warning" :closable="true" v-if="show">
     <div class="d-flex align-items-center">
       <div class="alert-text">
-        It seems that you don't have any preset testers. This way, all of the testers will be anonymous, which can be a problem if you want to track their progress.
+        It seems that you don't have any preset testers. This way, all of the testers will be
+        anonymous, which can be a problem if you want to track their progress.
       </div>
       <n-button @click="handleManageTesters" type="warning" secondary>
         Manage testers now

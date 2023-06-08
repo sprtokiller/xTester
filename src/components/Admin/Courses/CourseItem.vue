@@ -19,11 +19,10 @@ import { InfoOutlined, EditFilled, DeleteFilled } from '@vicons/material'
 import type { ICourseView } from '@/interfaces'
 import { clickOutside, focus } from '@/directives'
 
-const vFocus = focus;
-const vClickOutside = clickOutside;
+const vFocus = focus
+const vClickOutside = clickOutside
 
 const props = defineProps({
-
   editUUID: {
     type: String,
     required: false
@@ -112,7 +111,6 @@ async function renameCourse() {
   }
 }
 
-
 const inEditMode = computed(() => {
   return props.editUUID === props.course.courseUUID
 })
@@ -156,21 +154,31 @@ const imageURL = computed(() => {
       return '/unknown.svg'
   }
 })
-
 </script>
 
 <template>
-    <n-spin :show="courseIsDeleting">
-      <n-list-item @click="openDetail">
-        <template #prefix>
+  <n-spin :show="courseIsDeleting">
+    <n-list-item @click="openDetail">
+      <template #prefix>
         <div class="course-avatar" :style="bgImageStyle"></div>
       </template>
 
       <n-thing>
         <template #header>
-          <n-input v-if="inEditMode" v-focus ref="courseNameInputRef" class="course-name-input" placeholder="Course name"
-            v-model:value="courseNameInput" @click.stop autosize :passively-activated="true" :loading="inputIsSaving"
-            :disabled="inputIsSaving" @keyup="handleKeyUp" />
+          <n-input
+            v-if="inEditMode"
+            v-focus
+            ref="courseNameInputRef"
+            class="course-name-input"
+            placeholder="Course name"
+            v-model:value="courseNameInput"
+            @click.stop
+            autosize
+            :passively-activated="true"
+            :loading="inputIsSaving"
+            :disabled="inputIsSaving"
+            @keyup="handleKeyUp"
+          />
           <div v-else>
             {{ course.name }}
             <n-popover placement="right-start" trigger="hover">
@@ -188,35 +196,66 @@ const imageURL = computed(() => {
         </template>
         <template #description>
           <n-space size="small" style="margin-top: 4px">
-            <n-tag class="tag-chip" :bordered="false" type="default" size="small"
-            v-if="!(activeTests || completedTests || plannedTests)">
-            No tests
-          </n-tag>
-            <n-tag class="tag-chip" :bordered="false" type="warning" size="small" v-if="plannedTests">
+            <n-tag
+              class="tag-chip"
+              :bordered="false"
+              type="default"
+              size="small"
+              v-if="!(activeTests || completedTests || plannedTests)"
+            >
+              No tests
+            </n-tag>
+            <n-tag
+              class="tag-chip"
+              :bordered="false"
+              type="warning"
+              size="small"
+              v-if="plannedTests"
+            >
               Planned: {{ plannedTests }}
             </n-tag>
             <n-tag class="tag-chip" :bordered="false" type="info" size="small" v-if="activeTests">
               Active: {{ activeTests }}
             </n-tag>
-            <n-tag class="tag-chip" :bordered="false" type="success" size="small" v-if="completedTests">
+            <n-tag
+              class="tag-chip"
+              :bordered="false"
+              type="success"
+              size="small"
+              v-if="completedTests"
+            >
               Completed: {{ completedTests }}
             </n-tag>
           </n-space>
         </template>
       </n-thing>
-      
+
       <template #suffix>
         <div style="white-space: nowrap">
-          <n-button @click.stop="editCourse" v-click-outside="handleClickOutside" class="btn-course-action" size="small"
-          quaternary circle type="success">
-          <template #icon>
+          <n-button
+            @click.stop="editCourse"
+            v-click-outside="handleClickOutside"
+            class="btn-course-action"
+            size="small"
+            quaternary
+            circle
+            type="success"
+          >
+            <template #icon>
               <n-icon class="icon-no-align">
                 <EditFilled />
               </n-icon>
             </template>
           </n-button>
-          
-          <n-button @click.stop="deleteCourse" class="btn-course-action" size="small" quaternary circle type="error">
+
+          <n-button
+            @click.stop="deleteCourse"
+            class="btn-course-action"
+            size="small"
+            quaternary
+            circle
+            type="error"
+          >
             <template #icon>
               <n-icon class="icon-no-align">
                 <DeleteFilled />
@@ -230,7 +269,6 @@ const imageURL = computed(() => {
 </template>
 
 <style scoped>
-
 .tag-chip {
   cursor: pointer;
 }
@@ -254,11 +292,11 @@ const imageURL = computed(() => {
 }
 
 .n-list-item:hover .btn-course-action {
-  color: var(--gray-2);  /* textColor 3 */
+  color: var(--gray-2); /* textColor 3 */
 }
 
 .btn-course-action {
-  color: var(--gray-3);  /* textColor Disabled */
+  color: var(--gray-3); /* textColor Disabled */
   margin-left: 0.5rem;
 }
 .n-list-item:hover .btn-course-action:hover {

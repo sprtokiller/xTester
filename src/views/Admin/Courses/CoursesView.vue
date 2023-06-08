@@ -5,7 +5,6 @@ import CourseItem from '@/components/Admin/Courses/CourseItem.vue'
 import type { ICourseView } from '@/interfaces'
 import { useApi } from '@/services/api'
 
-
 const MSG = useMessage()
 const API = useApi()
 
@@ -53,8 +52,15 @@ function renameCourse(courseUUID: string, newName: string) {
     <n-spin :show="loading" style="min-height: 200px">
       <n-list hoverable clickable>
         <!-- add a CourseItem for each course -->
-        <CourseItem v-for="course in courses" :course="course" v-bind:editUUID="editUUID" v-bind:key="course.courseUUID"
-          @editSelect="editSelect" @deleteCourse="deleteCourse" @renameCourse="renameCourse" />
+        <CourseItem
+          v-for="course in courses"
+          :course="course"
+          v-bind:editUUID="editUUID"
+          v-bind:key="course.courseUUID"
+          @editSelect="editSelect"
+          @deleteCourse="deleteCourse"
+          @renameCourse="renameCourse"
+        />
       </n-list>
       <n-empty description="No e-learning courses found :(" v-if="!loading && isEmpty">
         <template #extra>
