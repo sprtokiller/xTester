@@ -58,6 +58,9 @@ function getType(record: IXRecordView): "default" | "success" | "error" | "warni
 }
 
 const displayResult = computed(() => {
+  if (result.value.length === 0)
+    return []
+
   const displayResult: (IXRecordView | IXRecordView[])[] = []
 
   // when two or more following items have the same verb and object, replace them with an array of type IXRecordView[]
@@ -82,6 +85,9 @@ const displayResult = computed(() => {
 
 // get results of a tester by testerUUID
 const selectedTesterResult = computed(() => {
+  if (result.value.length === 0)
+    return []
+
   return result.value.filter((item) => item.testerUUID === selectedTesterUUID.value).sort((a, b) => {
     return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
   })
@@ -91,11 +97,17 @@ const selectedTesterResult = computed(() => {
 
 // get list of unique testerUUID
 const listTesterUUID = computed(() => {
+  if (result.value.length === 0)
+    return []
+
   const list = result.value.map((item) => item.testerUUID)
   return [...new Set(list)]
 })
 
 const testerDetails = computed(() => {
+  if (result.value.length === 0)
+    return []
+
   var index = 1;
   return listTesterUUID.value.map((testerUUID) => {
     return testerStore.readDetails(testerUUID) ?? {
@@ -107,6 +119,8 @@ const testerDetails = computed(() => {
 })
 
 const selectOptions = computed(() => {
+  if (result.value.length === 0)
+    return []
   return testerDetails.value.map((tester) => {
     return {
       label: tester.firstname + " " + tester.lastname,
@@ -116,6 +130,8 @@ const selectOptions = computed(() => {
 })
 
 const testerSessionResults = computed(() => {
+  if (result.value.length === 0)
+    return []
   // split selectedTesterResult into array of array of IXRecordView
   const testerSessionResults: IXRecordView[][] = []
   let session: IXRecordView[] = []
@@ -137,6 +153,8 @@ const testerSessionResults = computed(() => {
 
 // generate session options 
 const sessionOptionss = computed(() => {
+  if (result.value.length === 0)
+    return []
   const options: SelectOption[] = []
   testerSessionResults.value.map((session, index) => {
     options.push({
