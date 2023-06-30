@@ -1,10 +1,20 @@
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { h, ref, onMounted } from 'vue'
 import { NDataTable, useMessage, NButton, NTag, type DataTableColumns } from 'naive-ui'
 import { useRouter, type Router } from 'vue-router'
-import { useApi } from '@/services/api'
 import type { ITestView } from '@/interfaces'
-import { RemoveRedEyeFilled } from '@vicons/material'
+import { RemoveRedEyeFilled, LockFilled } from '@vicons/material'
+import { useTestStore } from '@/stores/Admin/testStore'
+
+function getGrayText(text: string) {
+  return h(
+    'span',
+    {
+      style: 'color: var(--gray-2)'
+    },
+    { default: () => text }
+  )
+}
 
 function getChip(
   type: 'success' | 'error' | 'warning' | 'info' | 'default',
@@ -39,26 +49,27 @@ const getState = (test: ITestView) => {
   }
 }
 
-function getModuleName(id: number) {
-  const moduleNames: string[] = [
-    'Unknown',
-    'I/O Test',
-    'I/O Evaluation',
-    'Timed retency',
-    'Feedback',
-    'Live comments'
-  ]
-  // check if id is valid
-  if (id < 0 || id >= moduleNames.length) return moduleNames[0]
-  return moduleNames[id]
-}
+// function getModuleName(id: number) {
+//   const moduleNames: string[] = [
+//     'Unknown',
+//     'I/O Test',
+//     'I/O Evaluation',
+//     'Timed retency',
+//     'Feedback',
+//     'Live comments'
+//   ]
+//   // check if id is valid
+//   if (id < 0 || id >= moduleNames.length) return moduleNames[0]
+//   return moduleNames[id]
+// }
 
-const getModules = (test: ITestView) => {
-  if (!test.modules) return null
-  return test.modules.map((module) => {
-    return getChip('default', getModuleName(module), 'tiny')
-  })
-}
+// const getModules = (test: ITestView) => {
+//   if (!test.modules) return null
+//   return test.modules.map((module) => {
+//     return getChip('default', getModuleName(module), 'tiny')
+//   })
+// }
+
 const columns: DataTableColumns<ITestView> = [
   {
     title: 'Test name',
@@ -93,21 +104,60 @@ const columns: DataTableColumns<ITestView> = [
     }
   },
   {
-    title: 'Modules',
-    key: 'modules',
-    render(test) {
-      return getModules(test)
+    title: 'End',
+    key: 'endAt',
+    width: 200,
+    align: 'center',
+    render(row) {
+      const currentTime = new Date()
+      const start = row.startAt ? new Date(row.startAt) : null
+      const end = row.endAt ? new Date(row.endAt) : null
+      if (!start) return null
+
+      if (start > currentTime) {
+        return getGrayText("Not started yet ")
+      } else if (!end) {
+        // button to end test
+        return h(NButton, {
+          loading: row.endType === 'WIP',
+          disabled: row.endType === 'WIP',
+          quaternary: true,
+          size: 'small',
+          class: 'btn-less-visible',
+          renderIcon: () => h(LockFilled),
+          onClick: async (event) => {
+            event.stopPropagation()
+            try {
+              await store.lockTest(row.testUUID)
+            } catch (err) {
+              MSG.error(err instanceof Error ? err.message : 'Unknown error')
+            }
+          }
+        }, { default: () => 'Click to end'}
+        )
+      } else if (end > currentTime) {
+        return getGrayText(end.toLocaleString())
+      } else {
+        return null
+      }
     }
   }
+  // {
+  //   title: 'Modules',
+  //   key: 'modules',
+  //   render(test) {
+  //     return getModules(test)
+  //   }
+  // }
   // TODO: Add delete and copy buttons
 ]
 
 const router: Router = useRouter()
 const MSG = useMessage()
-const API = useApi()
+const store = useTestStore()
 
 const loading = ref(true)
-const tests = ref([] as ITestView[])
+
 const rowProps = (test: ITestView) => {
   return {
     style: 'cursor: pointer',
@@ -117,22 +167,23 @@ const rowProps = (test: ITestView) => {
   }
 }
 
-API.getTestList()
-  .then((newTests) => {
-    tests.value = newTests
-  })
-  .catch((err) => {
-    MSG.error(err.message)
-  })
-  .finally(() => {
+onMounted(async () => {
+  try {
+    loading.value = true
+    await store.fetchTests()
+  } catch (err) {
+    MSG.error(err instanceof Error ? err.message : 'Unknown error')
+  } finally {
     loading.value = false
-  })
+  }
+})
+
 </script>
 
 <template>
   <n-data-table
     :columns="columns"
-    :data="tests"
+    :data="store.tests"
     :bordered="false"
     :loading="loading"
     :row-props="rowProps"

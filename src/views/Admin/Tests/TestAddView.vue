@@ -235,7 +235,7 @@ async function addTest() {
       formValue2.value.anonymousTesterCount,
       previewTesters.value.map((tester) => tester.testerUUID)
     )
-    // router.push({ name: 'testingDetail', params: { testUUID } })
+    router.push({ name: 'testingDetail', params: { testUUID } })
   } catch (err) {
     MSG.error(err instanceof Error ? err.message : 'Unknown error')
   } finally {
@@ -464,7 +464,7 @@ onMounted(async () => {
                 <n-descriptions-item label="Test name:">
                   {{ formValue1.name }}
                 </n-descriptions-item>
-                <n-descriptions-item label="Author:">
+                <n-descriptions-item label="Test end:">
                   {{ formValue1.endType == 'MANUAL' ? 'Manually' : 'Scheduled' }}
                 </n-descriptions-item>
                 <n-descriptions-item label="Time:">

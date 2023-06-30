@@ -2,14 +2,16 @@ import axios, { type AxiosInstance } from 'axios'
 import type {
   ICourseView,
   ITestView,
+  ITestDetail,
   ICourseDetail,
   EndType,
   ITester,
-  IGroupView
+  IGroupView,
+  IXRecordView
 } from '@/interfaces'
 import { inject } from 'vue'
 
-export interface BackendApiInjection extends API {}
+export interface BackendApiInjection extends API { }
 
 export function useApi(): BackendApiInjection {
   const apiInstance = inject('API') as BackendApiInjection
@@ -76,6 +78,10 @@ export class API {
   async getCourseDetail(courseUUID: string): Promise<ICourseDetail> {
     return API.request<ICourseDetail>(`GET`, `/course/detail/${API.e(courseUUID)}`)
   }
+  // public R
+  async getCourseLocation(testUUID: string): Promise<string> {
+    return API.request<string>(`GET`, `/course/location/${API.e(testUUID)}`)
+  }
   // U
   async renameCourse(courseUUID: string, name: string): Promise<void> {
     return API.request<void>(`PUT`, `/course/rename/${API.e(courseUUID)}`, { name })
@@ -118,8 +124,16 @@ export class API {
     })
   }
   // R
-  async getTestDetail(testUUID: string): Promise<ITestView> {
-    return API.request<ITestView>(`GET`, `/test/detail/${API.e(testUUID)}`)
+  async getTestDetail(testUUID: string): Promise<ITestDetail> {
+    return API.request<ITestDetail>(`GET`, `/test/detail/${API.e(testUUID)}`)
+  }
+  // R x2
+  async getTestResult(testUUID: string): Promise<IXRecordView[]> {
+    return API.request<IXRecordView[]>(`GET`, `/test/result/${API.e(testUUID)}`)
+  }
+  // U
+  async lockTest(testUUID: string): Promise<void> {
+    return API.request<void>(`PUT`, `/test/lock/${API.e(testUUID)}`)
   }
   // L
   async getTestList(): Promise<ITestView[]> {
@@ -168,5 +182,31 @@ export class API {
   // L
   async getGroupList(): Promise<IGroupView[]> {
     return API.request<IGroupView[]>(`GET`, `/group/list`)
+  }
+  /* ------------- LRS ------------- */
+  async sendStartToLRS(testUUID: string, testerUUID: string, courseLocation: string): Promise<any> {
+    return API.request<any>(`POST`, `/lrs/${API.e(testUUID)}`,
+      {
+        "actor": {
+          "id": testerUUID
+        },
+        "verb": {
+          "id": "http://activitystrea.ms/schema/1.0/start",
+          'display': {
+            'en-US': "Started"
+          }
+        },
+        "object": {
+          "objectType": "Activity",
+          "definition": {
+            "name": {
+              "en-US": "Course"
+            }
+          },
+          "id": courseLocation
+        },
+        "result": null
+      }
+    )
   }
 }

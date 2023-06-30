@@ -39,11 +39,16 @@ export const useTesterStore = defineStore('testerStore', () => {
     testers.value = await API.getTesterList()
   }
 
+  function readDetails(testerUUID: string) {
+    return testers.value.find((tester) => tester.testerUUID === testerUUID)
+  }
+
   return {
     testers,
     isEmpty,
     addTester,
     deleteTester,
-    fetchTesters
+    fetchTesters,
+    readDetails
   }
 })

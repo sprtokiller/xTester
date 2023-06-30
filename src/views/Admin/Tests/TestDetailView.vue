@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { useMessage, NH3, NCard } from 'naive-ui'
+import { useMessage, NH3, NCard, NTable } from 'naive-ui'
 import BackButton from '@/components/Admin/BackButton.vue'
 import LoadingHeader from '@/components/Admin/LoadingHeader.vue'
-import type { ITestView } from '@/interfaces'
+import type { ITestDetail } from '@/interfaces'
 import { useApi } from '@/services/api'
-import TestModules from '@/components/Admin/Tests/TestModules.vue'
 
 const MSG = useMessage()
 const API = useApi()
-
+const BASE = 'http://localhost/course/'
 const loading = ref(true)
-const test = ref({} as ITestView)
+const test = ref({} as ITestDetail)
 
 // define props
 const props = defineProps({
@@ -52,9 +51,40 @@ function fetchDetail(testUUID: string) {
     <n-h3 class="h3-item-name">{{ test.name }}</n-h3>
   </div>
   <n-card style="margin-bottom: 0.75rem">
-    <pre>{{ JSON.stringify(test, null, 2) }}</pre>
+    <n-table striped>
+      <thead>
+        <tr>
+          <th>Link</th>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="tester in test.testers" :key="tester.testerUUID">
+          <td><a class="link" :href="BASE + encodeURIComponent(test.testUUID) + '/' + encodeURIComponent(tester.testerUUID)">{{BASE + encodeURIComponent(test.testUUID) + '/' + encodeURIComponent(tester.testerUUID)}}</a></td>
+          <td>{{ tester.firstname }}</td>
+          <td>{{ tester.lastname }}</td>
+          <td>{{ tester.email }}</td>
+        </tr>
+        <tr v-for="tester in test.anonymousTesters" :key="tester.anonymousTesterUUID">
+          <td :colspan="4"><a class="link" :href="BASE + encodeURIComponent(test.testUUID) + '/' + encodeURIComponent(tester.anonymousTesterUUID)">{{BASE + encodeURIComponent(test.testUUID) + '/' + encodeURIComponent(tester.anonymousTesterUUID)}}</a></td>
+        </tr>
+      </tbody>
+    </n-table>
   </n-card>
-  <TestModules :modules="test.modules ?? []" />
+  <!-- <n-card style="margin-bottom: 0.75rem">
+    <pre>{{ JSON.stringify(test, null, 2) }}</pre>
+  </n-card> -->
+  <!-- <TestModules :modules="test.modules ?? []" /> -->
 </template>
 
-<style scoped></style>
+<style scoped>
+a.link {
+  color: var(--green-1);
+}
+
+a.link:hover{
+  color: var(--green-2);
+}
+</style>

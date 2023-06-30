@@ -11,7 +11,9 @@ import { NLayout, NLayoutSider, NLayoutContent, useThemeVars } from 'naive-ui'
       '--gray-1': useThemeVars().value.textColor2,
       '--gray-2': useThemeVars().value.textColor3,
       '--gray-3': useThemeVars().value.textColorDisabled,
-      '--error-color': useThemeVars().value.errorColor
+      '--error-color': useThemeVars().value.errorColor,
+      '--green-1': useThemeVars().value.primaryColor,
+      '--green-2': useThemeVars().value.primaryColorHover
     }"
   >
     <n-layout-sider id="admin-menu" class="h-100" width="200">

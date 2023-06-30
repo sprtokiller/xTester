@@ -69,6 +69,12 @@ const router = createRouter({
           props: true
         },
         {
+          path: 'test/result/:testUUID',
+          name: 'testingResult',
+          component: () => import('@/views/Admin/Tests/TestResultView.vue'),
+          props: true
+        },
+        {
           path: 'testers',
           name: 'testerList',
           component: () => import('@/views/Admin/Testers/TestersView.vue')
@@ -79,10 +85,10 @@ const router = createRouter({
       ]
     },
     {
-      path: '/course/:userHash',
+      path: '/course/:testUUID/:testerUUID',
       name: 'course',
-      component: () => import('@/views/HomeView.vue'),
-      props: (route) => ({ userHash: route.params.userHash })
+      component: () => import('@/views/CourseView.vue'),
+      props: (route) => ({ testUUID: route.params.testUUID, testerUUID: route.params.testerUUID })
     },
     { path: '/not-found', name: 'not-found', component: ErrorPage404View }, // the only route that is not lazy loaded
     { path: '/:pathMatch(.*)*', redirect: { name: 'not-found' } }

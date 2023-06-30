@@ -32,7 +32,7 @@ const menuPaths = [
   ['courseList', 'Courses'],
   ['testingList', 'Tests'],
   ['testerList', 'Testers'],
-  ['moduleList', 'Modules']
+  // ['moduleList', 'Modules']
 ]
 
 const menuOptions = menuPaths.map((location: string[], index: number) => {
