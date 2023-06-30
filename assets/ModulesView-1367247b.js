@@ -1,1 +1,0 @@
-import{_ as o}from"./_plugin-vue_export-helper-c27b6911.js";import{r as t,o as a,c as r,a as s,w as n,F as c,b as _,d as l}from"./index-554f3ce5.js";const d={},m=_("p",null,"I am Modules",-1);function p(u,i){const e=t("router-link");return a(),r(c,null,[m,s(e,{to:"/app"},{default:n(()=>[l("Go to Dashboard")]),_:1})],64)}const h=o(d,[["render",p]]);export{h as default};
