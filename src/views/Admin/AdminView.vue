@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AdminMenu from '@/components/Admin/AdminMenu.vue'
 import { NLayout, NLayoutSider, NLayoutContent, useThemeVars } from 'naive-ui'
+
 </script>
 
 <template>
@@ -13,7 +14,11 @@ import { NLayout, NLayoutSider, NLayoutContent, useThemeVars } from 'naive-ui'
       '--gray-3': useThemeVars().value.textColorDisabled,
       '--error-color': useThemeVars().value.errorColor,
       '--green-1': useThemeVars().value.primaryColor,
-      '--green-2': useThemeVars().value.primaryColorHover
+      '--green-2': useThemeVars().value.primaryColorHover,
+      '--green-2-bg': useThemeVars().value.primaryColorHover + '26',
+      '--warn-1': useThemeVars().value.warningColorPressed,
+      '--warn-2': useThemeVars().value.warningColor,
+      '--warn-2-bg': useThemeVars().value.warningColor + '26',
     }"
   >
     <n-layout-sider id="admin-menu" class="h-100" width="200">

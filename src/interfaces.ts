@@ -94,4 +94,7 @@ export interface IXRecord {
 export interface IXRecordView extends IXRecord {
   verb: IXVerb;
   object: IXObject;
+  durationPast: number;
+  durationFuture: number;
+  durationTotal: number;
 }

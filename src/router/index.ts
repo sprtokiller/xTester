@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ErrorPage404View from '@/views/Admin/ErrorPage404View.vue'
 
 const router = createRouter({
-  history: createWebHistory('/xTester/'),
+  history: createWebHistory('/'),
   routes: [
     {
       path: '/',
